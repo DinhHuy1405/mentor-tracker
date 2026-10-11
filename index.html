@@ -129,6 +129,61 @@ label.f{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:50
 .login-card p{margin:0;color:var(--muted)}
 .login-card .btn.primary{height:42px;margin-top:4px}
 .login-card #loginmsg{font-size:13px;color:var(--muted);min-height:1.3em}
+
+/* Tổng quan bổ sung: rủi ro, việc cần xử lý, lịch tuần, phân bố bước, nhịp họp, bảng kiểm tra */
+.sec{margin:0 0 34px}
+.sec>h2{font-family:var(--serif);font-size:18px;font-weight:700;margin:0 0 4px}
+.sec>.hint{color:var(--soft);font-size:12.5px;margin:0 0 12px}
+.riskbar{display:flex;height:10px;border-radius:99px;overflow:hidden;background:var(--todo);margin:-10px 0 6px}
+.riskbar i{display:block}
+.riskbar .r0{background:var(--line2)}.riskbar .r1{background:var(--f-ok)}.riskbar .r2{background:var(--f-warn)}.riskbar .r3{background:var(--f-bad)}
+.rlegend{display:flex;flex-wrap:wrap;gap:4px 18px;font-size:12px;color:var(--muted);margin:0 0 28px}
+.rlegend b{font-weight:600;color:var(--ink)}
+.rlegend span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;background:var(--line2)}
+.rlegend .r1::before{background:var(--f-ok)}.rlegend .r2::before{background:var(--f-warn)}.rlegend .r3::before{background:var(--f-bad)}
+.at{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.at-i{display:grid;grid-template-columns:200px minmax(0,1fr);gap:6px 18px;padding:12px 18px;border-top:1px solid var(--line);border-left:3px solid var(--line2)}
+.at-i:first-child{border-top:0}
+.at-i.s3{border-left-color:var(--f-bad)}.at-i.s2{border-left-color:var(--f-warn)}.at-i.s1{border-left-color:var(--line2)}
+.at-i .who strong{display:block}.at-i .who span{color:var(--soft);font-size:12px}
+.at-i ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:2px}
+.at-i li{font-size:13.5px;color:var(--muted)}.at-i li.s3{color:var(--bad);font-weight:500}.at-i li.s2{color:var(--warn);font-weight:500}
+@media (max-width:640px){.at-i{grid-template-columns:1fr}}
+.scrollx{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.wk+.wk{margin-top:14px}
+.wkh{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin:0 0 6px}
+.week{display:grid;grid-template-columns:repeat(7,minmax(104px,1fr));gap:6px;min-width:760px}
+.day{background:var(--surface);border:1px solid var(--line);border-radius:var(--rs);padding:8px 9px;min-height:84px}
+.day.past{background:#fbfaf8}.day.today{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.day .dn{font-size:11.5px;font-weight:600;color:var(--soft);margin-bottom:6px}.day.today .dn{color:var(--ink)}
+.day .none{font-size:12px;color:var(--line2)}
+.mt{font-size:12.5px;font-weight:500;padding:4px 6px;border-radius:5px;margin-bottom:4px;line-height:1.3}
+.mt small{display:block;font-weight:400;font-size:11px;opacity:.85}
+.mt.up{background:var(--todo);color:var(--ink)}.mt.held{background:var(--ok-bg);color:var(--ok)}.mt.oth{background:var(--warn-bg);color:var(--warn)}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:34px;align-items:start}
+@media (max-width:900px){.two{grid-template-columns:minmax(0,1fr)}}
+.two>*,.sec,.scrollx{min-width:0}
+.dist{display:grid;grid-template-columns:minmax(0,170px) minmax(0,1fr) 22px;gap:2px 10px;align-items:center;margin-bottom:8px}
+.dist .lb{font-size:13px;color:var(--muted)}
+.dist .bar{height:14px;background:var(--todo);border-radius:4px;overflow:hidden}
+.dist .bar i{display:block;height:100%;background:var(--ink);border-radius:4px}
+.dist .ct{font-weight:600;text-align:right}
+.dist .who{grid-column:2/4;font-size:12px;color:var(--soft);margin-top:-2px}
+.rg{display:grid;gap:4px;align-items:center;min-width:420px}
+.rg .h{font-size:11px;color:var(--soft);text-align:center}
+.rg .nm{font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rg .c{height:24px;border-radius:4px;background:transparent;border:1px dashed var(--line)}
+.rg .c.held{background:var(--ink);border-color:var(--ink)}.rg .c.sched{background:var(--surface);border:2px solid var(--ink)}
+.rg .c.miss{background:var(--bad-bg);border:1px solid #e3b8b3}.rg .c.off{border-color:transparent}
+.rlg2{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:12px;color:var(--muted);margin-top:8px}
+.rlg2 i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:6px}
+.tbl{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;font-size:13px;min-width:860px}
+.tbl th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);font-weight:600;text-align:left;padding:10px 12px;background:#faf9f6;border-bottom:1px solid var(--line)}
+.tbl td{padding:10px 12px;border-top:1px solid var(--line);vertical-align:top}
+.tbl tr:first-child td{border-top:0}
+.tbl .w{color:var(--bad);font-weight:500}.tbl .m{color:var(--soft)}.tbl .o{color:var(--ok);font-weight:500}
+.contact{margin-top:6px;font-size:12.5px;color:var(--muted)}.contact.none{color:var(--warn)}
+.goal{margin-top:6px;font-size:13px}.goal b{font-weight:600}
 [hidden]{display:none!important}
 @media (prefers-reduced-motion:reduce){.toast{transition:none}}
 </style>
@@ -250,7 +305,31 @@ function analyze(s){
   else if(upcoming.length&&diff(parse(upcoming[0].date),t)<7) meet="Họp "+fmt(upcoming[0].date)+(upcoming[0].time?" lúc "+upcoming[0].time:"");
   else if(upcoming.length){meetNone=true; meet="Chưa có lịch họp trong 7 ngày tới (kế tiếp "+fmt(upcoming[0].date)+")"}
   else {meet="Chưa có lịch họp trong 7 ngày tới"; meetNone=true}
-  return {s:s,mk:mk,cur:cur,done:done,days:days,std:std,risk:risk,why:why,meet:meet,meetNone:meetNone,lastHeld:lastHeld,held:held,ms:ms,hasOrder:!!steps[9],heldWeek:heldWeek.length>0};
+
+  var active=(s.status||"Đang mentor")==="Đang mentor";
+  var nextM=upcoming.length?upcoming[0]:null, nextIn=nextM?diff(parse(nextM.date),t):null;
+  var missing=[];
+  if(!s.phone&&!s.email) missing.push("liên hệ");
+  if(!s.pkg) missing.push("gói");
+  if(!s.platform) missing.push("sàn");
+  if(!s.niche) missing.push("ngách");
+  if(!s.goal) missing.push("mục tiêu");
+  var attn=[];
+  if(active&&cur<=10){
+    if(s.flag==="ket") attn.push({sev:3,t:"Đang kẹt"+(s.blocker?": "+s.blocker:"")});
+    else if(s.flag==="cho"||s.flag==="cham") attn.push({sev:2,t:FLAGS[s.flag]+(s.blocker?": "+s.blocker:"")});
+    if(ratio>1.5) attn.push({sev:3,t:"Đã "+days+" ngày ở bước "+cur+", chuẩn "+std+" ngày"});
+    else if(ratio>1) attn.push({sev:2,t:"Hơi chậm ở bước "+cur+": "+days+" ngày, chuẩn "+std+" ngày"});
+    if(!nextM||nextIn>=7) attn.push({sev:2,t:"Chưa có lịch họp trong 7 ngày tới"});
+    if(!lastHeld&&startD&&diff(t,startD)>=3) attn.push({sev:2,t:"Chưa họp lần nào, đã "+diff(t,startD)+" ngày từ khi bắt đầu"});
+    else if(gap>10) attn.push({sev:2,t:gap+" ngày chưa họp"});
+    if(lastHeld&&!lastHeld.actions) attn.push({sev:1,t:"Buổi họp ngày "+fmt(lastHeld.date)+" chưa ghi action items"});
+    var stale=ms.filter(function(m){var d=parse(m.date);return d&&d<t&&m.status==="Sắp tới"}).length;
+    if(stale) attn.push({sev:2,t:stale+" buổi họp đã qua ngày nhưng vẫn ghi \"Sắp tới\", cần cập nhật trạng thái"});
+  }
+  if(active&&missing.length) attn.push({sev:1,t:"Hồ sơ còn thiếu: "+missing.join(", ")});
+  var attnSev=attn.reduce(function(m,x){return Math.max(m,x.sev)},0);
+  return {s:s,mk:mk,cur:cur,done:done,days:days,std:std,risk:risk,why:why,meet:meet,meetNone:meetNone,lastHeld:lastHeld,held:held,ms:ms,hasOrder:!!steps[9],heldWeek:heldWeek.length>0,active:active,nextM:nextM,nextIn:nextIn,missing:missing,attn:attn,attnSev:attnSev,gap:gap,startD:startD};
 }
 
 /* ---------- render: Theo dõi ---------- */
@@ -273,6 +352,8 @@ function card(a){
   var recent=a.ms.slice().sort(function(x,y){return x.date<y.date?1:-1}).slice(0,3).map(function(m){
     return fmt(m.date)+" · "+m.status+(m.notes?" · "+m.notes:"");}).join("\n")||"Chưa có buổi họp nào";
   return '<article class="stu"><div class="top"><div><span class="nm">'+esc(s.name)+'</span><span class="pk">'+esc(s.pkg||"")+'</span></div><span class="pill r'+a.risk+'">'+RL[a.risk]+'</span></div>'
+   +(s.phone||s.email?'<div class="contact">'+esc([s.phone,s.email].filter(Boolean).join(" · "))+'</div>':'<div class="contact none">Chưa có thông tin liên hệ</div>')
+   +(s.goal?'<div class="goal"><b>Mục tiêu:</b> '+esc(s.goal)+'</div>':'')
    +'<div class="track">'+seg+'</div>'
    +'<div class="meta"><span class="step">'+esc(stepTxt)+'</span><span class="days">'+esc(daysTxt)+'</span></div>'
    +(a.why.length&&a.risk>=2?'<div class="why r'+a.risk+'">'+esc(a.why.join(" · "))+'</div>':"")
@@ -282,28 +363,124 @@ function card(a){
    +'<div><h4>Mentor cần support</h4><p>'+esc(help.join("\n"))+'</p></div>'
    +'<div><h4>Action items buổi họp trước</h4><p>'+esc(prev)+'</p></div>'
    +'<div><h4>Các buổi họp gần đây</h4><p>'+esc(recent)+'</p></div>'
+   +(s.note?'<div class="full"><h4>Ghi chú chung</h4><p>'+esc(s.note)+'</p></div>':'')
    +(pb?'<div><h4>Xong bước này khi</h4><p>'+esc(pb.done)+'</p></div><div><h4>Dấu hiệu cần can thiệp</h4><p>'+esc(pb.risk)+'</p></div>':"")
    +'<div class="full"><button class="btn sm" data-copy="'+s.id+'">Sao chép tin nhắn giao bài tuần này</button></div>'
    +'</div></details></article>';
 }
+var DN=["T2","T3","T4","T5","T6","T7","CN"];
+function mondayOf(d){var x=new Date(d);x.setDate(x.getDate()-((x.getDay()+6)%7));return x}
+function addDays(d,n){var x=new Date(d);x.setDate(x.getDate()+n);return x}
+
+function secRisk(active){
+  var c={0:0,1:0,2:0,3:0}; active.forEach(function(a){c[a.risk]++});
+  var n=active.length||1;
+  var bar='<div class="riskbar" role="img" aria-label="Phân bố tình trạng">'+[3,2,1,0].map(function(k){return c[k]?'<i class="r'+k+'" style="width:'+(c[k]/n*100)+'%"></i>':''}).join("")+'</div>';
+  var lg='<div class="rlegend">'+[3,2,1,0].map(function(k){return '<span class="r'+k+'"><b>'+c[k]+'</b> '+RL[k].toLowerCase()+'</span>'}).join("")+'</div>';
+  return bar+lg;
+}
+function secAttention(active){
+  var items=active.filter(function(a){return a.attn.length}).sort(function(x,y){return y.attnSev-x.attnSev||(x.s.createdAt||0)-(y.s.createdAt||0)});
+  var h='<section class="sec"><h2>Cần xử lý</h2><p class="hint">Mọi việc có thể bị bỏ sót, sắp theo mức khẩn. Mỗi học viên chỉ xuất hiện một lần.</p>';
+  if(!items.length) return h+'<div class="empty">Không có việc tồn đọng. Mọi học viên đều có lịch họp và hồ sơ đầy đủ.</div></section>';
+  return h+'<div class="at">'+items.map(function(a){
+    return '<div class="at-i s'+a.attnSev+'"><div class="who"><strong>'+esc(a.s.name)+'</strong><span>'+a.mk+(a.cur<=10?' · bước '+a.cur+'/10':' · hoàn tất')+'</span></div><ul>'
+      +a.attn.slice().sort(function(p,q){return q.sev-p.sev}).map(function(x){return '<li class="s'+x.sev+'">'+esc(x.t)+'</li>'}).join("")+'</ul></div>';}).join("")+'</div></section>';
+}
+function secWeeks(){
+  var t=today(), m0=mondayOf(t), names={}; students.forEach(function(s){names[s.id]=s.name});
+  var out='';
+  [0,1].forEach(function(w){
+    var cells='';
+    for(var i=0;i<7;i++){
+      var d=addDays(m0,w*7+i), k=iso(d);
+      var list=meetings.filter(function(m){return m.date===k&&m.status!=="Hủy"}).sort(function(a,b){return (a.time||"")<(b.time||"")?-1:1});
+      cells+='<div class="day'+(k===iso(t)?" today":"")+(d<t?" past":"")+'"><div class="dn">'+DN[i]+' '+pad(d.getDate())+'/'+pad(d.getMonth()+1)+'</div>'
+        +(list.length?list.map(function(m){
+            var stale=d<t&&m.status==="Sắp tới";
+            return '<div class="mt '+(m.status==="Đã họp"?"held":(stale||m.status!=="Sắp tới"?"oth":"up"))+'">'+esc(names[m.studentId]||"Không rõ")+'<small>'+(m.time?esc(m.time)+' · ':'')+esc(stale?"cần cập nhật":m.status)+'</small></div>';}).join(""):'<div class="none">Trống</div>')
+        +'</div>';
+    }
+    out+='<div class="wk"><div class="wkh">'+(w?"Tuần sau":"Tuần này")+' ('+pad(addDays(m0,w*7).getDate())+'/'+pad(addDays(m0,w*7).getMonth()+1)+')</div><div class="week">'+cells+'</div></div>';
+  });
+  return '<section class="sec"><h2>Lịch họp 2 tuần</h2><p class="hint">Buổi đã qua ngày mà vẫn ghi "Sắp tới" sẽ hiện màu vàng để bạn cập nhật.</p><div class="scrollx">'+out+'</div></section>';
+}
+function secDist(active){
+  var cnt=[],who=[],i; for(i=0;i<=10;i++){cnt[i]=0;who[i]=[]}
+  active.forEach(function(a){cnt[a.cur-1]++;who[a.cur-1].push(a.s.name)});
+  var max=Math.max.apply(null,cnt.concat([1])), h='';
+  for(i=0;i<=10;i++){
+    var lb=i<10?(i+1)+". "+PB[i].name:"Hoàn tất";
+    h+='<div class="dist"><div class="lb">'+esc(lb)+'</div><div class="bar"><i style="width:'+(cnt[i]/max*100)+'%"></i></div><div class="ct">'+cnt[i]+'</div>'
+      +(who[i].length?'<div class="who">'+esc(who[i].join(", "))+'</div>':'')+'</div>';
+  }
+  return '<section class="sec"><h2>Học viên đang ở bước nào</h2><p class="hint">Mỗi học viên được tính một lần, ở bước hiện tại.</p>'+h+'</section>';
+}
+function secRhythm(active){
+  var t=today(), starts=active.map(function(a){return a.startD}).filter(Boolean);
+  if(!starts.length) return '';
+  var first=mondayOf(new Date(Math.min.apply(null,starts))), last=addDays(mondayOf(t),7), weeks=[];
+  for(var d=new Date(first);d<=last&&weeks.length<12;d=addDays(d,7)) weeks.push(new Date(d));
+  var cols='150px repeat('+weeks.length+',minmax(30px,1fr))';
+  var h='<div class="rg" style="grid-template-columns:'+cols+'"><div></div>'+weeks.map(function(w){return '<div class="h">'+pad(w.getDate())+'/'+pad(w.getMonth()+1)+'</div>'}).join("");
+  active.slice().sort(function(a,b){return (a.s.createdAt||0)-(b.s.createdAt||0)}).forEach(function(a){
+    h+='<div class="nm" title="'+esc(a.s.name)+'">'+esc(a.s.name)+'</div>';
+    weeks.forEach(function(w){
+      var we=addDays(w,7), kw=iso(w), ke=iso(we);
+      var inW=a.ms.filter(function(m){return m.date>=kw&&m.date<ke&&m.status!=="Hủy"});
+      var st;
+      if(a.startD&&we<=a.startD) st="off";
+      else if(inW.some(function(m){return m.status==="Đã họp"})) st="held";
+      else if(inW.some(function(m){return m.status==="Sắp tới"})&&we>t) st="sched";
+      else if(we<=t) st="miss";
+      else st="";
+      h+='<div class="c '+st+'"></div>';
+    });
+  });
+  h+='</div><div class="rlg2"><span><i style="background:var(--ink)"></i>Đã họp</span><span><i style="border:2px solid var(--ink)"></i>Có lịch</span><span><i style="background:var(--bad-bg);border:1px solid #e3b8b3"></i>Tuần đã qua không có buổi họp</span></div>';
+  return '<section class="sec"><h2>Nhịp họp theo tuần</h2><p class="hint">Mỗi hàng là một học viên, mỗi cột là một tuần. Ô đỏ là tuần bị bỏ lỡ.</p><div class="scrollx">'+h+'</div></section>';
+}
+function secTable(as){
+  var rows=as.slice().sort(function(a,b){return (a.mk>b.mk?-1:a.mk<b.mk?1:0)||(a.s.createdAt||0)-(b.s.createdAt||0)});
+  var h='<section class="sec"><h2>Kiểm tra đầy đủ từng học viên</h2><p class="hint">Mọi học viên đều có một dòng ở đây, kể cả người tạm dừng. Ô đỏ là chỗ còn thiếu.</p><div class="scrollx"><table class="tbl"><thead><tr><th>Học viên</th><th>Bước</th><th>Tình trạng</th><th>Họp gần nhất</th><th>Họp kế tiếp</th><th>Action items</th><th>Liên hệ</th><th>Hồ sơ</th></tr></thead><tbody>';
+  rows.forEach(function(a){
+    var s=a.s, needMeet=a.active&&a.cur<=10;
+    var last=a.lastHeld?fmt(a.lastHeld.date)+' ('+a.gap+' ngày trước)':'<span class="'+(needMeet?'w':'m')+'">Chưa họp</span>';
+    var next=a.nextM?fmt(a.nextM.date)+(a.nextM.time?' '+esc(a.nextM.time):''):'<span class="'+(needMeet?'w':'m')+'">Chưa có lịch</span>';
+    var act=a.lastHeld?(a.lastHeld.actions?'<span class="o">Có</span>':'<span class="w">Chưa ghi</span>'):'<span class="m">Không có</span>';
+    var ct=s.phone||s.email?esc([s.phone,s.email].filter(Boolean).join(" · ")):'<span class="w">Chưa có</span>';
+    var prof=(5-a.missing.length)+'/5'+(a.missing.length?' <span class="w">thiếu '+esc(a.missing.join(", "))+'</span>':'');
+    h+='<tr><td><strong>'+esc(s.name)+'</strong><br><span class="m">'+a.mk+' · '+esc(s.status||"Đang mentor")+'</span></td>'
+      +'<td>'+(a.cur<=10?a.cur+'/10 '+esc(PB[a.cur-1].name):'Hoàn tất')+'</td>'
+      +'<td>'+RL[a.risk]+'</td><td>'+last+'</td><td>'+next+'</td><td>'+act+'</td><td>'+ct+'</td><td>'+prof+'</td></tr>';
+  });
+  return h+'</tbody></table></div></section>';
+}
 function viewTrack(){
   var as=students.map(analyze);
   var active=as.filter(function(a){return a.s.status!=="Dừng"});
+  var live=as.filter(function(a){return a.active});
   var c3=active.filter(function(a){return a.risk===3}).length, c2=active.filter(function(a){return a.risk===2}).length;
   var orders=active.filter(function(a){return a.hasOrder}).length;
-  var nomeet=active.filter(function(a){return a.cur<=10&&a.meetNone}).length;
+  var nomeet=live.filter(function(a){return a.cur<=10&&a.meetNone}).length;
+  var gaps=live.filter(function(a){return a.missing.length}).length;
   var out='<div class="stats">'
    +stat(active.length,"học viên đang mentor","")+stat(c3,"cần can thiệp",c3?"bad":"")+stat(c2,"cần theo dõi",c2?"warn":"")
-   +stat(nomeet,"chưa có lịch họp trong 7 ngày tới",nomeet?"warn":"")+stat(orders,"đã có đơn đầu tiên",orders?"ok":"")+'</div>';
+   +stat(nomeet,"chưa có lịch họp trong 7 ngày tới",nomeet?"warn":"")+stat(gaps,"hồ sơ còn thiếu thông tin",gaps?"warn":"")+stat(orders,"đã có đơn đầu tiên",orders?"ok":"")+'</div>';
   if(!students.length){ return out+'<div class="empty">Chưa có học viên. Vào tab Nhập liệu để thêm học viên đầu tiên.</div>'; }
-  out+='<div class="markets">';
+  out+=secRisk(live.concat(active.filter(function(a){return !a.active})));
+  out+=secAttention(live)+secWeeks();
+  out+='<section class="sec"><h2>Từng học viên</h2><p class="hint">US và Việt Nam tách riêng. Người cần chú ý nhất nằm trên cùng.</p><div class="markets">';
   ["US","VN"].forEach(function(mk){
     var list=active.filter(function(a){return a.mk===mk}).sort(function(x,y){
       var rx=x.cur===11?-1:x.risk, ry=y.cur===11?-1:y.risk; return ry-rx||y.days-x.days;});
     out+='<section class="mk"><h2>'+MK[mk]+'<span>'+list.length+' học viên</span></h2><div class="list">'
      +(list.length?list.map(card).join(""):'<div class="empty">Chưa có học viên '+mk+'.</div>')+'</div></section>';
   });
-  return out+'</div>';
+  out+='</div></section>';
+  out+='<div class="two">'+secDist(live)+secRhythm(live)+'</div>';
+  out+=secTable(as);
+  return out;
 }
 function stat(v,l,c){return '<div class="stat '+c+'"><div class="v">'+v+'</div><div class="l">'+l+'</div></div>'}
 
@@ -334,6 +511,9 @@ function editor(s){
    +'<label class="f">Thị trường<select data-s="'+s.id+'" data-f="market">'+opt("US","US",mk)+opt("VN","Việt Nam",mk)+'</select></label>'
    +fld(s,"pkg","Gói mentor","text")+fld(s,"platform","Sàn mục tiêu","text")+fld(s,"niche","Ngách / sản phẩm","text")
    +fld(s,"start","Ngày bắt đầu","date")
+   +fld(s,"phone","SĐT / Zalo","tel")+fld(s,"email","Email","email")
+   +'<label class="f wide">Mục tiêu của học viên<textarea data-s="'+s.id+'" data-f="goal" placeholder="Ví dụ: có đơn đầu tiên trên TikTok Shop US trong 8 tuần">'+esc(s.goal||"")+'</textarea></label>'
+   +'<label class="f wide">Ghi chú chung<textarea data-s="'+s.id+'" data-f="note" placeholder="Hoàn cảnh, kinh nghiệm, cách học viên thích được hướng dẫn...">'+esc(s.note||"")+'</textarea></label>'
    +'<label class="f">Trạng thái mentor<select data-s="'+s.id+'" data-f="status">'+["Đang mentor","Tạm dừng","Đã có đơn","Dừng"].map(function(x){return opt(x,x,s.status||"Đang mentor")}).join("")+'</select></label>'
    +'<label class="f">Tình trạng hiện tại<select data-s="'+s.id+'" data-f="flag">'+Object.keys(FLAGS).map(function(k){return opt(k,FLAGS[k],s.flag||"ok")}).join("")+'</select></label>'
    +'<label class="f wide">Học viên đang vướng gì<textarea data-s="'+s.id+'" data-f="blocker" placeholder="Ví dụ: chờ Payoneer duyệt hồ sơ, chưa chọn được ngách">'+esc(s.blocker||"")+'</textarea></label>'
@@ -466,8 +646,8 @@ async function exportCsv(kind){
   var dl=await window.claude.use("downloads"); if(!dl){toast("Không tải được ở chế độ xem này");return}
   var rows,name;
   if(kind==="students"){
-    rows=[["Họ tên","Thị trường","Gói","Sàn","Ngách","Ngày bắt đầu","Trạng thái","Tình trạng","Vướng mắc","Mentor sẽ làm"].concat(PB.map(function(p,i){return (i+1)+". "+p.name}))];
-    students.forEach(function(s){rows.push([s.name,s.market,s.pkg,s.platform,s.niche,s.start,s.status,FLAGS[s.flag||"ok"],s.blocker,s.mentorNext].concat(PB.map(function(p,i){return (s.steps||{})[i+1]||""})))});
+    rows=[["Họ tên","Thị trường","Gói","Sàn","Ngách","Ngày bắt đầu","Trạng thái","Tình trạng","Vướng mắc","Mentor sẽ làm","SĐT / Zalo","Email","Mục tiêu","Ghi chú"].concat(PB.map(function(p,i){return (i+1)+". "+p.name}))];
+    students.forEach(function(s){rows.push([s.name,s.market,s.pkg,s.platform,s.niche,s.start,s.status,FLAGS[s.flag||"ok"],s.blocker,s.mentorNext,s.phone,s.email,s.goal,s.note].concat(PB.map(function(p,i){return (s.steps||{})[i+1]||""})))});
     name="mentor-tien-do-"+iso(today())+".csv";
   }else{
     rows=[["Học viên","Ngày","Giờ","Trạng thái","Nội dung","Action items","Link"]];
