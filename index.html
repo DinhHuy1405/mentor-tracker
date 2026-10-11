@@ -274,6 +274,39 @@ label.f{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:50
 .tbl{border:0;border-top:1px solid var(--ink);border-radius:0;background:none}
 .tbl th{background:none;border-bottom:1px solid var(--line);padding:10px 12px 8px 0}
 .tbl td{padding:12px 12px 12px 0}
+
+/* Biểu đồ: dòng thời gian, phễu, tốc độ, so với chuẩn */
+.tl{width:100%;min-width:760px;display:block;overflow:visible}
+.tl text{font-family:var(--font);font-size:12px;fill:var(--muted)}
+.tl .nm{fill:var(--ink);font-weight:600;font-size:13px}
+.tl .wk{fill:var(--soft);font-size:11px}
+.tl .today{fill:var(--ink);font-size:11px;font-weight:600}
+.legend{display:flex;flex-wrap:wrap;gap:4px 18px;font-size:12px;color:var(--muted);margin-top:10px}
+.legend i{display:inline-block;width:12px;height:8px;margin-right:6px;vertical-align:0}
+.legend i.dot{width:9px;height:9px;border-radius:50%}
+.fun{display:grid;grid-template-columns:minmax(0,175px) minmax(0,1fr) 92px;gap:0 12px;align-items:center;padding:6px 0;border-top:1px solid var(--line)}
+.fun:first-of-type{border-top:0}
+.fun .lb{font-size:13px;color:var(--ink)}
+.fun .tr{display:flex;height:10px;background:var(--todo);overflow:hidden}
+.fun .tr i{display:block;height:100%}
+.fun .tr .d{background:var(--ink)}.fun .tr .c{background:var(--line2)}
+.fun .nu{font-size:12px;color:var(--muted);text-align:right;white-space:nowrap}
+.bul{display:grid;grid-template-columns:minmax(0,140px) minmax(0,1fr) 78px;gap:0 12px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
+.bul:first-of-type{border-top:0}
+.bul .lb{font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bul .tr{position:relative;height:10px;background:var(--todo)}
+.bul .tr i{display:block;height:100%;background:var(--f-ok)}
+.bul.r2 .tr i{background:var(--f-warn)}.bul.r3 .tr i{background:var(--f-bad)}
+.bul .tr b{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink)}
+.bul .nu{font-size:12px;color:var(--muted);text-align:right;white-space:nowrap}
+.vel{display:flex;align-items:flex-end;gap:10px;height:120px;border-bottom:1px solid var(--ink);padding-top:6px}
+.vel .g{flex:1;min-width:26px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.vel .bars{display:flex;align-items:flex-end;gap:3px;height:100%;width:100%;justify-content:center}
+.vel .bars i{font-style:normal;display:block;width:44%;max-width:20px;position:relative}
+.vel .bars i.a{background:var(--ink)}.vel .bars i.b{background:var(--surface);box-shadow:inset 0 0 0 1.5px var(--ink)}
+.vel .bars i span{position:absolute;left:50%;transform:translateX(-50%);top:-15px;font-size:11px;font-weight:600;color:var(--ink)}
+.velx{display:flex;gap:10px;margin-top:4px}
+.velx div{flex:1;min-width:26px;text-align:center;font-size:11px;color:var(--soft)}
 [hidden]{display:none!important}
 @media (prefers-reduced-motion:reduce){.toast{transition:none}}
 </style>
@@ -496,16 +529,75 @@ function secWeeks(){
   });
   return '<section class="sec"><h2>Lịch họp 2 tuần</h2><p class="hint">Buổi đã qua ngày mà vẫn ghi "Sắp tới" hiện màu vàng để bạn cập nhật.</p><div class="scrollx">'+out+'</div></section>';
 }
-function secDist(active){
-  var cnt=[],who=[],i; for(i=0;i<=10;i++){cnt[i]=0;who[i]=[]}
-  active.forEach(function(a){cnt[a.cur-1]++;who[a.cur-1].push(a.s.name)});
-  var max=Math.max.apply(null,cnt.concat([1])), h='';
-  for(i=0;i<=10;i++){
-    var lb=i<10?(i+1)+". "+PB[i].name:"Hoàn tất";
-    h+='<div class="dist"><div class="lb">'+esc(lb)+'</div><div class="bar"><i style="width:'+(cnt[i]/max*100)+'%"></i></div><div class="ct">'+cnt[i]+'</div>'
-      +(who[i].length?'<div class="who">'+esc(who[i].join(", "))+'</div>':'')+'</div>';
+function secDist(live){
+  var N=live.length||1, h='';
+  for(var k=1;k<=10;k++){
+    var done=live.filter(function(a){return (a.s.steps||{})[k]}).length;
+    var cur=live.filter(function(a){return a.cur===k}).length;
+    h+='<div class="fun"><div class="lb">'+k+'. '+esc(PB[k-1].name)+'</div><div class="tr" role="img" aria-label="'+done+' xong, '+cur+' đang làm trên '+live.length+'"><i class="d" style="width:'+(done/N*100)+'%"></i><i class="c" style="width:'+(cur/N*100)+'%"></i></div><div class="nu">xong '+done+' · đang '+cur+'</div></div>';
   }
-  return '<section class="sec"><h2>Học viên đang ở bước nào</h2><p class="hint">Mỗi học viên được tính một lần, ở bước hiện tại.</p>'+h+'</section>';
+  return '<section class="sec"><h2>Phễu 10 bước</h2><p class="hint">Màu đậm là số học viên đã xong bước đó, màu nhạt là đang làm. Thấy ngay bước nào đang nghẽn.</p>'+h+'</section>';
+}
+function secBullet(live){
+  if(!live.length) return '';
+  var rows=live.filter(function(a){return a.cur<=10}).sort(function(x,y){return y.risk-x.risk||y.days-x.days});
+  if(!rows.length) return '';
+  var scale=Math.max.apply(null,rows.map(function(a){return Math.max(a.std*1.5,a.days)}));
+  var h=rows.map(function(a){
+    return '<div class="bul r'+a.risk+'"><div class="lb" title="'+esc(a.s.name)+'">'+esc(a.s.name)+'</div><div class="tr"><i style="width:'+(a.days/scale*100)+'%"></i><b style="left:'+(a.std/scale*100)+'%" title="Chuẩn '+a.std+' ngày"></b></div><div class="nu">'+a.days+' / '+a.std+' ngày</div></div>';}).join("");
+  return '<section class="sec"><h2>Ngày ở bước so với chuẩn</h2><p class="hint">Thanh là số ngày đã ở bước hiện tại, vạch đen là mốc chuẩn của bước đó. Vượt vạch là bắt đầu chậm.</p>'+h+'</section>';
+}
+function secVelocity(live){
+  var t=today(), starts=live.map(function(a){return a.startD}).filter(Boolean);
+  if(!starts.length) return '';
+  var first=mondayOf(new Date(Math.min.apply(null,starts))), cur=mondayOf(t), weeks=[];
+  for(var d=new Date(first);d<=cur&&weeks.length<12;d=addDays(d,7)) weeks.push(new Date(d));
+  var A=weeks.map(function(){return 0}), B=A.slice();
+  function idx(ds){var dd=parse(ds); if(!dd) return -1; for(var i=0;i<weeks.length;i++){ if(dd>=weeks[i]&&dd<addDays(weeks[i],7)) return i } return -1}
+  live.forEach(function(a){
+    for(var k=1;k<=10;k++){var i=idx((a.s.steps||{})[k]); if(i>=0) A[i]++}
+    a.ms.forEach(function(m){ if(m.status==="Đã họp"){var j=idx(m.date); if(j>=0) B[j]++} });
+  });
+  var max=Math.max.apply(null,A.concat(B).concat([1]));
+  var bars=weeks.map(function(w,i){return '<div class="g"><div class="bars"><i class="a" style="height:'+(A[i]/max*92)+'px">'+(A[i]?'<span>'+A[i]+'</span>':'')+'</i><i class="b" style="height:'+(B[i]/max*92)+'px">'+(B[i]?'<span>'+B[i]+'</span>':'')+'</i></div></div>'}).join("");
+  var xl=weeks.map(function(w){return '<div>'+pad(w.getDate())+'/'+pad(w.getMonth()+1)+'</div>'}).join("");
+  var totA=A.reduce(function(x,y){return x+y},0);
+  return '<section class="sec"><h2>Tốc độ mỗi tuần</h2><p class="hint">'+(totA?'Số bước hoàn thành và số buổi họp đã diễn ra trong từng tuần.':'Chưa có bước nào hoàn thành. Cột đậm sẽ hiện khi bạn báo học viên xong bước.')+'</p><div class="vel">'+bars+'</div><div class="velx">'+xl+'</div>'
+    +'<div class="legend"><span><i style="background:var(--ink)"></i>Bước hoàn thành</span><span><i style="box-shadow:inset 0 0 0 1.5px var(--ink)"></i>Buổi họp đã diễn ra</span></div></section>';
+}
+function secTimeline(live){
+  var t=today(), rows=live.slice().sort(function(a,b){return (a.s.createdAt||0)-(b.s.createdAt||0)});
+  var starts=rows.map(function(a){return a.startD}).filter(Boolean); if(!starts.length) return '';
+  var d0=new Date(Math.min.apply(null,starts)), d1=addDays(t,14);
+  var span=Math.max(21,diff(d1,d0)), W=1000, LM=160, RM=16, TM=30, RH=46, H=TM+rows.length*RH+10;
+  var X=function(d){return LM+(diff(d,d0)/span)*(W-LM-RM)};
+  var col=function(r){return r>=3?"var(--f-bad)":(r===2?"var(--f-warn)":"var(--f-ok)")};
+  var g='';
+  var wk=mondayOf(d0); if(wk<d0) wk=addDays(wk,7);
+  for(;wk<=d1;wk=addDays(wk,7)){ var x=X(wk); g+='<line x1="'+x+'" x2="'+x+'" y1="'+(TM-6)+'" y2="'+(H-6)+'" style="stroke:var(--line)" /><text class="wk" x="'+(x+3)+'" y="'+(TM-12)+'">'+pad(wk.getDate())+'/'+pad(wk.getMonth()+1)+'</text>'; }
+  rows.forEach(function(a,i){
+    var cy=TM+i*RH+22, nm=a.s.name.length>22?a.s.name.slice(0,21)+"…":a.s.name;
+    g+='<text class="nm" x="0" y="'+(cy+4)+'">'+esc(nm)+'</text><line x1="'+LM+'" x2="'+(W-RM)+'" y1="'+cy+'" y2="'+cy+'" style="stroke:var(--line)" />';
+    var prev=a.startD||t;
+    for(var k=1;k<=10;k++){
+      var dd=parse((a.s.steps||{})[k]); if(!dd) break;
+      var x0=X(prev), x1=X(dd); g+='<rect x="'+x0+'" y="'+(cy-5)+'" width="'+Math.max(3,x1-x0-1.5)+'" height="10" style="fill:var(--ink)"><title>'+k+'. '+esc(PB[k-1].name)+' (xong '+fmt((a.s.steps||{})[k])+')</title></rect>';
+      prev=dd;
+    }
+    if(a.cur<=10){
+      var xs=X(prev), xe=X(t); g+='<rect x="'+xs+'" y="'+(cy-5)+'" width="'+Math.max(3,xe-xs)+'" height="10" style="fill:'+col(a.risk)+'"><title>Bước '+a.cur+': '+esc(PB[a.cur-1].name)+', ngày '+a.days+' / chuẩn '+a.std+'</title></rect>';
+      var xx=X(addDays(prev,a.std)); g+='<line x1="'+xx+'" x2="'+xx+'" y1="'+(cy-11)+'" y2="'+(cy+11)+'" style="stroke:var(--ink);stroke-width:1.5" />';
+    }
+    a.ms.forEach(function(m){
+      var md=parse(m.date); if(!md||m.status==="Hủy"||md<d0||md>d1) return;
+      var held=m.status==="Đã họp";
+      g+='<circle cx="'+X(md)+'" cy="'+(cy-16)+'" r="4.5" style="fill:'+(held?'var(--ink)':'var(--surface)')+';stroke:var(--ink);stroke-width:1.5"><title>'+fmt(m.date)+' · '+esc(m.status)+'</title></circle>';
+    });
+  });
+  var xt=X(t); g+='<line x1="'+xt+'" x2="'+xt+'" y1="'+(TM-6)+'" y2="'+(H-6)+'" style="stroke:var(--ink);stroke-dasharray:3 3" /><text class="today" x="'+(xt+4)+'" y="'+(H)+'">hôm nay</text>';
+  return '<section class="sec"><h2>Dòng thời gian từng học viên</h2><p class="hint">Mỗi hàng là hành trình của một học viên từ ngày bắt đầu đến hôm nay. Vạch đen đứng là mốc chuẩn của bước đang làm.</p>'
+    +'<div class="scrollx"><svg class="tl" viewBox="0 0 '+W+' '+(H+8)+'" role="img" aria-label="Dòng thời gian từng học viên">'+g+'</svg></div>'
+    +'<div class="legend"><span><i style="background:var(--ink)"></i>Bước đã xong</span><span><i style="background:var(--f-ok)"></i>Bước đang làm, đúng hạn</span><span><i style="background:var(--f-warn)"></i>Chậm</span><span><i style="background:var(--f-bad)"></i>Cần can thiệp</span><span><i class="dot" style="background:var(--ink)"></i>Buổi đã họp</span><span><i class="dot" style="box-shadow:inset 0 0 0 1.5px var(--ink)"></i>Buổi có lịch</span></div></section>';
 }
 function secRhythm(active){
   var t=today(), starts=active.map(function(a){return a.startD}).filter(Boolean);
@@ -570,7 +662,9 @@ function viewTrack(){
   });
   out+='</div></section>';
   out+=secWeeks();
+  out+=secTimeline(live);
   out+='<div class="two">'+secDist(live)+secRhythm(live)+'</div>';
+  out+='<div class="two">'+secBullet(live)+secVelocity(live)+'</div>';
   out+=secTable(as);
   return out;
 }
