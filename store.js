@@ -129,12 +129,12 @@
       var box = document.createElement("div");
       box.id = "login";
       box.style.cssText = "position:fixed;inset:0;display:grid;place-items:center;padding:16px;background:var(--bg);z-index:10";
-      box.innerHTML = '<form id="loginform" style="max-width:360px;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:24px;display:flex;flex-direction:column;gap:12px">' +
-        '<h1 style="margin:0;font-size:18px">Mentor Tracker</h1>' +
-        '<p style="margin:0;color:var(--muted)">Nhập email của bạn để nhận link đăng nhập.</p>' +
-        '<label class="f" style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)">Email<input id="loginemail" type="email" required autocomplete="email" style="background:var(--field);border:1px solid var(--line);border-radius:6px;padding:8px 10px;color:var(--ink)"></label>' +
-        '<button class="btn primary" id="loginbtn" type="submit" style="border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);border-radius:6px;padding:8px 12px;cursor:pointer;font-weight:500">Gửi link đăng nhập</button>' +
-        '<p id="loginmsg" role="status" style="margin:0;font-size:13px;color:var(--muted)"></p></form>';
+      box.innerHTML = '<form id="loginform" class="login-card">' +
+        '<h1>Mentor Tracker</h1>' +
+        '<p>Nhập email của bạn để nhận link đăng nhập.</p>' +
+        '<label class="f">Email<input id="loginemail" type="email" required autocomplete="email"></label>' +
+        '<button class="btn primary" id="loginbtn" type="submit">Gửi link đăng nhập</button>' +
+        '<p id="loginmsg" role="status"></p></form>';
       document.body.appendChild(box);
       var form = box.querySelector("#loginform"), msg = box.querySelector("#loginmsg");
       form.addEventListener("submit", async function (e) {
