@@ -475,20 +475,19 @@ function row(a){
   var sub=[s.pkg,s.platform].filter(Boolean).join(" · ");
   var contact=s.phone||s.email?'<div class="ct">'+esc([s.phone,s.email].filter(Boolean).join(" · "))+'</div>':'<div class="ct none">Chưa có thông tin liên hệ</div>';
   var gw=pb?Math.min(a.days/a.std,1.5)/1.5*100:0;
+  var note=a.attn.filter(function(x){return x.sev>=2&&x.t.indexOf("Chưa có lịch họp")!==0}).sort(function(p,q){return q.sev-p.sev}).slice(0,2).map(function(x){return x.t});
   return '<div class="rw r'+a.risk+'">'
    +'<div class="c1"><div class="nm">'+esc(s.name)+'</div>'+(sub?'<div class="sb">'+esc(sub)+'</div>':'')+contact+'</div>'
    +'<div class="c2">'+ruler(a)+'<div class="stp">'+esc(stepTxt)+'</div>'
-     +(a.why.length&&a.risk>=2?'<div class="why r'+a.risk+'">'+esc(a.why.join(" · "))+'</div>':'')+'</div>'
+     +(note.length?'<div class="why r'+(a.attnSev>=3?3:2)+'">'+esc(note.join(" · "))+'</div>':'')+'</div>'
    +'<div class="c3">'+(pb?'<div class="dd"><b>'+a.days+'</b> / '+a.std+' ngày</div><div class="gauge r'+a.risk+'"><i style="width:'+gw+'%"></i></div>':'')+'</div>'
    +'<div class="c4'+(a.meetNone?" none":"")+'">'+esc(a.meet)+'</div>'
    +'<div class="c5"><span class="st r'+a.risk+'">'+RL[a.risk]+'</span></div>'
-   +'<details><summary>Tuần này làm gì, cần support gì</summary><div class="cols">'
+   +'<details><summary>Chi tiết</summary><div class="cols">'
    +(s.goal?'<div class="full"><h4>Mục tiêu</h4><p>'+esc(s.goal)+'</p></div>':'')
    +'<div><h4>Học viên cần làm tuần này</h4><p>'+esc(task)+'</p></div>'
    +'<div><h4>Mentor cần support</h4><p>'+esc(help.join("\n"))+'</p></div>'
    +'<div><h4>Action items buổi họp trước</h4><p>'+esc(prev)+'</p></div>'
-   +'<div><h4>Các buổi họp gần đây</h4><p>'+esc(recent)+'</p></div>'
-   +(pb?'<div><h4>Xong bước này khi</h4><p>'+esc(pb.done)+'</p></div><div><h4>Dấu hiệu cần can thiệp</h4><p>'+esc(pb.risk)+'</p></div>':"")
    +(s.note?'<div class="full"><h4>Ghi chú chung</h4><p>'+esc(s.note)+'</p></div>':'')
    +'<div class="full"><button class="btn sm" data-copy="'+s.id+'">Sao chép tin nhắn giao bài tuần này</button></div>'
    +'</div></details></div>';
@@ -501,15 +500,6 @@ function secRisk(list){
   var n=list.length||1;
   return '<div class="riskbar" role="img" aria-label="Phân bố tình trạng">'+[3,2,1,0].map(function(k){return c[k]?'<i class="r'+k+'" style="width:'+(c[k]/n*100)+'%"></i>':''}).join("")+'</div>'
     +'<div class="rlegend">'+[3,2,1,0].map(function(k){return '<span class="r'+k+'"><b>'+c[k]+'</b> '+RL[k].toLowerCase()+'</span>'}).join("")+'</div>';
-}
-var SEVT={3:"Gấp",2:"Chú ý",1:"Nhắc"};
-function secAttention(active){
-  var items=active.filter(function(a){return a.attn.length}).sort(function(x,y){return y.attnSev-x.attnSev||(x.s.createdAt||0)-(y.s.createdAt||0)});
-  var h='<section class="sec"><h2>Cần xử lý</h2><p class="hint">Mọi việc có thể bị bỏ sót, sắp theo mức khẩn. Mỗi học viên chỉ xuất hiện một lần.</p>';
-  if(!items.length) return h+'<div class="empty">Không có việc tồn đọng. Mọi học viên đều có lịch họp và hồ sơ đầy đủ.</div></section>';
-  return h+'<div class="atl">'+items.map(function(a){
-    return '<div class="ai"><div class="who"><b>'+esc(a.s.name)+'</b><span>'+a.mk+(a.cur<=10?' · bước '+a.cur+'/10':' · hoàn tất')+'</span></div><ul>'
-      +a.attn.slice().sort(function(p,q){return q.sev-p.sev}).map(function(x){return '<li class="s'+x.sev+'"><em>'+SEVT[x.sev]+'</em><span>'+esc(x.t)+'</span></li>'}).join("")+'</ul></div>';}).join("")+'</div></section>';
 }
 function secWeeks(){
   var t=today(), m0=mondayOf(t), names={}; students.forEach(function(s){names[s.id]=s.name});
@@ -537,33 +527,6 @@ function secDist(live){
     h+='<div class="fun"><div class="lb">'+k+'. '+esc(PB[k-1].name)+'</div><div class="tr" role="img" aria-label="'+done+' xong, '+cur+' đang làm trên '+live.length+'"><i class="d" style="width:'+(done/N*100)+'%"></i><i class="c" style="width:'+(cur/N*100)+'%"></i></div><div class="nu">xong '+done+' · đang '+cur+'</div></div>';
   }
   return '<section class="sec"><h2>Phễu 10 bước</h2><p class="hint">Màu đậm là số học viên đã xong bước đó, màu nhạt là đang làm. Thấy ngay bước nào đang nghẽn.</p>'+h+'</section>';
-}
-function secBullet(live){
-  if(!live.length) return '';
-  var rows=live.filter(function(a){return a.cur<=10}).sort(function(x,y){return y.risk-x.risk||y.days-x.days});
-  if(!rows.length) return '';
-  var scale=Math.max.apply(null,rows.map(function(a){return Math.max(a.std*1.5,a.days)}));
-  var h=rows.map(function(a){
-    return '<div class="bul r'+a.risk+'"><div class="lb" title="'+esc(a.s.name)+'">'+esc(a.s.name)+'</div><div class="tr"><i style="width:'+(a.days/scale*100)+'%"></i><b style="left:'+(a.std/scale*100)+'%" title="Chuẩn '+a.std+' ngày"></b></div><div class="nu">'+a.days+' / '+a.std+' ngày</div></div>';}).join("");
-  return '<section class="sec"><h2>Ngày ở bước so với chuẩn</h2><p class="hint">Thanh là số ngày đã ở bước hiện tại, vạch đen là mốc chuẩn của bước đó. Vượt vạch là bắt đầu chậm.</p>'+h+'</section>';
-}
-function secVelocity(live){
-  var t=today(), starts=live.map(function(a){return a.startD}).filter(Boolean);
-  if(!starts.length) return '';
-  var first=mondayOf(new Date(Math.min.apply(null,starts))), cur=mondayOf(t), weeks=[];
-  for(var d=new Date(first);d<=cur&&weeks.length<12;d=addDays(d,7)) weeks.push(new Date(d));
-  var A=weeks.map(function(){return 0}), B=A.slice();
-  function idx(ds){var dd=parse(ds); if(!dd) return -1; for(var i=0;i<weeks.length;i++){ if(dd>=weeks[i]&&dd<addDays(weeks[i],7)) return i } return -1}
-  live.forEach(function(a){
-    for(var k=1;k<=10;k++){var i=idx((a.s.steps||{})[k]); if(i>=0) A[i]++}
-    a.ms.forEach(function(m){ if(m.status==="Đã họp"){var j=idx(m.date); if(j>=0) B[j]++} });
-  });
-  var max=Math.max.apply(null,A.concat(B).concat([1]));
-  var bars=weeks.map(function(w,i){return '<div class="g"><div class="bars"><i class="a" style="height:'+(A[i]/max*92)+'px">'+(A[i]?'<span>'+A[i]+'</span>':'')+'</i><i class="b" style="height:'+(B[i]/max*92)+'px">'+(B[i]?'<span>'+B[i]+'</span>':'')+'</i></div></div>'}).join("");
-  var xl=weeks.map(function(w){return '<div>'+pad(w.getDate())+'/'+pad(w.getMonth()+1)+'</div>'}).join("");
-  var totA=A.reduce(function(x,y){return x+y},0);
-  return '<section class="sec"><h2>Tốc độ mỗi tuần</h2><p class="hint">'+(totA?'Số bước hoàn thành và số buổi họp đã diễn ra trong từng tuần.':'Chưa có bước nào hoàn thành. Cột đậm sẽ hiện khi bạn báo học viên xong bước.')+'</p><div class="vel">'+bars+'</div><div class="velx">'+xl+'</div>'
-    +'<div class="legend"><span><i style="background:var(--ink)"></i>Bước hoàn thành</span><span><i style="box-shadow:inset 0 0 0 1.5px var(--ink)"></i>Buổi họp đã diễn ra</span></div></section>';
 }
 function secTimeline(live){
   var t=today(), rows=live.slice().sort(function(a,b){return (a.s.createdAt||0)-(b.s.createdAt||0)});
@@ -599,60 +562,20 @@ function secTimeline(live){
     +'<div class="scrollx"><svg class="tl" viewBox="0 0 '+W+' '+(H+8)+'" role="img" aria-label="Dòng thời gian từng học viên">'+g+'</svg></div>'
     +'<div class="legend"><span><i style="background:var(--ink)"></i>Bước đã xong</span><span><i style="background:var(--f-ok)"></i>Bước đang làm, đúng hạn</span><span><i style="background:var(--f-warn)"></i>Chậm</span><span><i style="background:var(--f-bad)"></i>Cần can thiệp</span><span><i class="dot" style="background:var(--ink)"></i>Buổi đã họp</span><span><i class="dot" style="box-shadow:inset 0 0 0 1.5px var(--ink)"></i>Buổi có lịch</span></div></section>';
 }
-function secRhythm(active){
-  var t=today(), starts=active.map(function(a){return a.startD}).filter(Boolean);
-  if(!starts.length) return '';
-  var first=mondayOf(new Date(Math.min.apply(null,starts))), last=addDays(mondayOf(t),7), weeks=[];
-  for(var d=new Date(first);d<=last&&weeks.length<12;d=addDays(d,7)) weeks.push(new Date(d));
-  var h='<div class="rg" style="grid-template-columns:150px repeat('+weeks.length+',minmax(30px,1fr))"><div></div>'+weeks.map(function(w){return '<div class="h">'+pad(w.getDate())+'/'+pad(w.getMonth()+1)+'</div>'}).join("");
-  active.slice().sort(function(a,b){return (a.s.createdAt||0)-(b.s.createdAt||0)}).forEach(function(a){
-    h+='<div class="nm" title="'+esc(a.s.name)+'">'+esc(a.s.name)+'</div>';
-    weeks.forEach(function(w){
-      var we=addDays(w,7), kw=iso(w), ke=iso(we);
-      var inW=a.ms.filter(function(m){return m.date>=kw&&m.date<ke&&m.status!=="Hủy"});
-      var st;
-      if(a.startD&&we<=a.startD) st="off";
-      else if(inW.some(function(m){return m.status==="Đã họp"})) st="held";
-      else if(inW.some(function(m){return m.status==="Sắp tới"})&&we>t) st="sched";
-      else if(we<=t) st="miss";
-      else st="";
-      h+='<div class="c '+st+'"></div>';
-    });
-  });
-  h+='</div><div class="rlg2"><span><i style="background:var(--ink)"></i>Đã họp</span><span><i style="border:1.5px solid var(--ink)"></i>Có lịch</span><span><i style="background:var(--bad-bg);border:1px solid #e3b8b3"></i>Tuần đã qua không có buổi họp</span></div>';
-  return '<section class="sec"><h2>Nhịp họp theo tuần</h2><p class="hint">Mỗi hàng một học viên, mỗi cột một tuần. Ô đỏ là tuần bị bỏ lỡ.</p><div class="scrollx">'+h+'</div></section>';
-}
-function secTable(as){
-  var rows=as.slice().sort(function(a,b){return (a.mk>b.mk?-1:a.mk<b.mk?1:0)||(a.s.createdAt||0)-(b.s.createdAt||0)});
-  var h='<section class="sec"><h2>Kiểm tra đầy đủ từng học viên</h2><p class="hint">Mọi học viên đều có một dòng ở đây, kể cả người tạm dừng. Chữ đỏ là chỗ còn thiếu.</p><div class="scrollx"><table class="tbl"><thead><tr><th>Học viên</th><th>Bước</th><th>Tình trạng</th><th>Họp gần nhất</th><th>Họp kế tiếp</th><th>Action items</th><th>Liên hệ</th><th>Hồ sơ</th></tr></thead><tbody>';
-  rows.forEach(function(a){
-    var s=a.s, needMeet=a.active&&a.cur<=10;
-    var last=a.lastHeld?fmt(a.lastHeld.date)+' ('+a.gap+' ngày trước)':'<span class="'+(needMeet?'w':'m')+'">Chưa họp</span>';
-    var next=a.nextM?fmt(a.nextM.date)+(a.nextM.time?' '+esc(a.nextM.time):''):'<span class="'+(needMeet?'w':'m')+'">Chưa có lịch</span>';
-    var act=a.lastHeld?(a.lastHeld.actions?'<span class="o">Có</span>':'<span class="w">Chưa ghi</span>'):'<span class="m">Không có</span>';
-    var ct=s.phone||s.email?esc([s.phone,s.email].filter(Boolean).join(" · ")):'<span class="w">Chưa có</span>';
-    var prof=(5-a.missing.length)+'/5'+(a.missing.length?' <span class="w">thiếu '+esc(a.missing.join(", "))+'</span>':'');
-    h+='<tr><td><strong>'+esc(s.name)+'</strong><br><span class="m">'+a.mk+' · '+esc(s.status||"Đang mentor")+'</span></td>'
-      +'<td>'+(a.cur<=10?a.cur+'/10 '+esc(PB[a.cur-1].name):'Hoàn tất')+'</td>'
-      +'<td>'+RL[a.risk]+'</td><td>'+last+'</td><td>'+next+'</td><td>'+act+'</td><td>'+ct+'</td><td>'+prof+'</td></tr>';
-  });
-  return h+'</tbody></table></div></section>';
-}
 function fig(v,l,c){return '<div class="fig '+(c||"")+'"><b>'+v+'</b><span>'+l+'</span></div>'}
 function viewTrack(){
   var as=students.map(analyze);
   var active=as.filter(function(a){return a.s.status!=="Dừng"});
   var live=as.filter(function(a){return a.active});
-  var c3=active.filter(function(a){return a.risk===3}).length, c2=active.filter(function(a){return a.risk===2}).length;
+  var attn=active.filter(function(a){return a.risk>=2}).length;
   var orders=active.filter(function(a){return a.hasOrder}).length;
   var nomeet=live.filter(function(a){return a.cur<=10&&a.meetNone}).length;
-  var gaps=live.filter(function(a){return a.missing.length}).length;
   var out='<div class="brief">'
-   +fig(active.length,"học viên đang mentor")+fig(c3,"cần can thiệp",c3?"bad":"")+fig(c2,"cần theo dõi",c2?"warn":"")
-   +fig(nomeet,"chưa có lịch họp trong 7 ngày tới",nomeet?"warn":"")+fig(gaps,"hồ sơ còn thiếu thông tin",gaps?"warn":"")+fig(orders,"đã có đơn đầu tiên",orders?"ok":"")+'</div>';
-  if(!students.length){ return out+'<div class="empty">Chưa có học viên. Vào tab Nhập liệu để thêm học viên đầu tiên.</div>'; }
+   +fig(active.length,"học viên đang mentor")+fig(attn,"cần chú ý",attn?"warn":"")
+   +fig(nomeet,"chưa có lịch họp trong 7 ngày tới",nomeet?"warn":"")+fig(orders,"đã có đơn đầu tiên",orders?"ok":"")+'</div>';
+  if(!students.length){ return out+'<div class="empty">Chưa có học viên. Nhắn trong cuộc trò chuyện để thêm học viên.</div>'; }
   out+=secRisk(active);
-  out+=secAttention(live);
+  out+=secTimeline(live)+secDist(live)+secWeeks();
   out+='<section class="sec"><h2>Từng học viên</h2><p class="hint">US và Việt Nam tách riêng. Người cần chú ý nhất nằm trên cùng.</p><div class="ros scrollx"><div class="hd"><div>Học viên</div><div>Tiến độ 10 bước</div><div>Ngày ở bước</div><div>Lịch họp</div><div>Tình trạng</div></div>';
   ["US","VN"].forEach(function(mk){
     var list=active.filter(function(a){return a.mk===mk}).sort(function(x,y){
@@ -660,13 +583,7 @@ function viewTrack(){
     out+='<div class="gt">'+MK[mk]+'<span>'+list.length+' học viên</span></div>'
      +(list.length?list.map(row).join(""):'<div class="empty" style="margin-top:12px">Chưa có học viên '+mk+'.</div>');
   });
-  out+='</div></section>';
-  out+=secWeeks();
-  out+=secTimeline(live);
-  out+='<div class="two">'+secDist(live)+secRhythm(live)+'</div>';
-  out+='<div class="two">'+secBullet(live)+secVelocity(live)+'</div>';
-  out+=secTable(as);
-  return out;
+  return out+'</div></section>';
 }
 function stat(v,l,c){return '<div class="stat '+c+'"><div class="v">'+v+'</div><div class="l">'+l+'</div></div>'}
 
