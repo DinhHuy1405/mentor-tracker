@@ -1,3 +1,8 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Mentor Tracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
@@ -21,7 +26,7 @@
   --ok:#5FC590; --ok-bg:#16301F; --warn:#E3AE50; --warn-bg:#33270F; --bad:#F27E76; --bad-bg:#3A1B19;
   --field:#101820; color-scheme:dark}
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.5;padding-inline:16px;padding-block:0 48px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.5;padding-inline:16px;padding-block:0 48px}
 .wrap{max-width:1180px;margin:0 auto}
 button,input,select,textarea{font:inherit;color:inherit}
 header.bar{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between;padding-block:20px 16px}
@@ -112,6 +117,8 @@ label.f{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--mu
 @media (prefers-reduced-motion:reduce){.toast{transition:none}}
 </style>
 
+</head>
+<body>
 <div class="wrap">
   <header class="bar">
     <div>
@@ -128,6 +135,9 @@ label.f{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--mu
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="store.js"></script>
 <script>
 (function(){
 "use strict";
@@ -469,3 +479,6 @@ function showBanner(msg){var b=$("#banner");b.textContent=msg;b.hidden=false}
 })();
 })();
 </script>
+
+</body>
+</html>
