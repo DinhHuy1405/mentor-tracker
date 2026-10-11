@@ -1,0 +1,4 @@
+seed.local.*
+*.local.js
+*.csv
+.env

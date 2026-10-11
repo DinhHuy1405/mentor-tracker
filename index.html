@@ -1,0 +1,472 @@
+<title>Mentor Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one narrow top bar with two views. Theo dõi = US and Việt Nam side by side, each student one row-card with a 10-step track. Nhập liệu = student list left, editor right. */
+:root{
+  --bg:#F5F6F8; --surface:#FFFFFF; --ink:#16212B; --muted:#5F6B78; --line:#DCE1E7;
+  --accent:#0B5C73; --accent-ink:#FFFFFF; --todo:#E7EBEF;
+  --ok:#1F7A4D; --ok-bg:#E3F1E9; --warn:#9A5F00; --warn-bg:#FBEFD6; --bad:#B3261E; --bad-bg:#FBE3E0;
+  --field:#FFFFFF;
+  --font:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E151B; --surface:#16202A; --ink:#E6EBF0; --muted:#97A3AF; --line:#283541;
+  --accent:#4DB4D1; --accent-ink:#082029; --todo:#222E39;
+  --ok:#5FC590; --ok-bg:#16301F; --warn:#E3AE50; --warn-bg:#33270F; --bad:#F27E76; --bad-bg:#3A1B19;
+  --field:#101820; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E151B; --surface:#16202A; --ink:#E6EBF0; --muted:#97A3AF; --line:#283541;
+  --accent:#4DB4D1; --accent-ink:#082029; --todo:#222E39;
+  --ok:#5FC590; --ok-bg:#16301F; --warn:#E3AE50; --warn-bg:#33270F; --bad:#F27E76; --bad-bg:#3A1B19;
+  --field:#101820; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.5;padding-inline:16px;padding-block:0 48px}
+.wrap{max-width:1180px;margin:0 auto}
+button,input,select,textarea{font:inherit;color:inherit}
+header.bar{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between;padding-block:20px 16px}
+header.bar h1{font-size:18px;font-weight:700;margin:0;letter-spacing:-.01em}
+header.bar .sub{color:var(--muted);font-size:12px}
+nav.tabs{display:flex;gap:4px;background:var(--todo);padding:3px;border-radius:8px}
+nav.tabs button{border:0;background:transparent;padding:6px 16px;border-radius:6px;cursor:pointer;color:var(--muted);font-weight:500}
+nav.tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.12)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.stats{display:flex;flex-wrap:wrap;gap:8px 36px;padding-block:8px 20px;border-bottom:1px solid var(--line);margin-bottom:24px}
+.stat .v{font-size:26px;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}
+.stat .l{font-size:12px;color:var(--muted)}
+.stat.bad .v{color:var(--bad)} .stat.warn .v{color:var(--warn)} .stat.ok .v{color:var(--ok)}
+
+.markets{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:28px;align-items:start}
+.mk h2{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px;display:flex;justify-content:space-between;gap:12px}
+.mk h2 span{font-weight:500;letter-spacing:0;text-transform:none;color:var(--muted)}
+.list{display:flex;flex-direction:column;gap:12px}
+.empty{color:var(--muted);padding:20px;border:1px dashed var(--line);border-radius:8px}
+
+.stu{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}
+.stu .top{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.stu .nm{font-weight:600;font-size:15px}
+.stu .pk{color:var(--muted);font-size:12px;margin-left:8px;font-weight:400}
+.pill{font-size:12px;font-weight:600;padding:2px 10px;border-radius:99px;white-space:nowrap}
+.pill.r1{background:var(--ok-bg);color:var(--ok)} .pill.r2{background:var(--warn-bg);color:var(--warn)}
+.pill.r3{background:var(--bad-bg);color:var(--bad)} .pill.r0{background:var(--todo);color:var(--muted)}
+.track{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;margin:12px 0 8px}
+.seg{height:24px;border-radius:4px;background:var(--todo);color:var(--muted);font-size:11px;font-weight:600;display:grid;place-items:center;font-variant-numeric:tabular-nums}
+.seg.done{background:var(--accent);color:var(--accent-ink)}
+.seg.cur{background:var(--surface);box-shadow:inset 0 0 0 2px currentColor}
+.seg.cur.r1{color:var(--ok)} .seg.cur.r2{color:var(--warn)} .seg.cur.r3{color:var(--bad)}
+.meta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 16px}
+.meta .step{font-weight:500}
+.meta .days{color:var(--muted);font-variant-numeric:tabular-nums}
+.why{margin-top:6px;font-size:13px}.why.r3{color:var(--bad)}.why.r2{color:var(--warn)}
+.meet{margin-top:6px;font-size:13px;color:var(--muted)}.meet.none{color:var(--warn);font-weight:500}
+details{margin-top:10px;border-top:1px solid var(--line);padding-top:8px}
+summary{cursor:pointer;color:var(--accent);font-weight:500;font-size:13px;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::after{content:" +"}
+details[open] summary::after{content:" −"}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:14px 20px;margin-top:10px}
+.cols h4{margin:0 0 3px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.cols p{margin:0;white-space:pre-line;font-size:13px}
+.cols .full{grid-column:1/-1}
+
+/* input view */
+.edit{display:grid;grid-template-columns:260px minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:820px){.edit{grid-template-columns:1fr}}
+.side{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px}
+.side h3{margin:10px 8px 6px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.side h3:first-child{margin-top:2px}
+.pick{display:flex;justify-content:space-between;gap:8px;width:100%;text-align:left;border:0;background:transparent;padding:8px;border-radius:6px;cursor:pointer}
+.pick:hover{background:var(--todo)} .pick[aria-current="true"]{background:var(--accent);color:var(--accent-ink)}
+.pick small{opacity:.75}
+.add{width:100%;margin:4px 0 2px;border:1px dashed var(--line);background:transparent;border-radius:6px;padding:7px;cursor:pointer;color:var(--accent);font-weight:500}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px;min-width:0}
+.panel+.panel{margin-top:16px}
+.panel h3{margin:0 0 12px;font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:12px 16px}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted);min-width:0}
+.f input,.f select,.f textarea,.row input,.row select,.row textarea{background:var(--field);border:1px solid var(--line);border-radius:6px;padding:7px 9px;color:var(--ink);width:100%;min-width:0}
+.f textarea,.row textarea{resize:vertical;min-height:58px}
+.f.wide{grid-column:1/-1}
+.steps{display:flex;flex-direction:column}
+.step-row{display:grid;grid-template-columns:28px minmax(0,1fr) 150px auto;gap:10px;align-items:center;padding:7px 0;border-top:1px solid var(--line)}
+.step-row:first-child{border-top:0}
+.step-row .n{font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+.step-row.done .n{color:var(--accent)}
+.step-row .t small{display:block;color:var(--muted);font-size:12px}
+@media (max-width:560px){.step-row{grid-template-columns:24px minmax(0,1fr);}.step-row input,.step-row .acts{grid-column:2}}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:6px 12px;cursor:pointer;font-weight:500}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.danger{color:var(--bad)} .btn.sm{padding:4px 9px;font-size:12px}
+.acts{display:flex;gap:6px}
+.mrow{border-top:1px solid var(--line);padding:12px 0;display:grid;gap:10px}
+.mrow .head{display:grid;grid-template-columns:150px 110px 150px minmax(0,1fr) auto;gap:8px;align-items:center}
+@media (max-width:700px){.mrow .head{grid-template-columns:1fr 1fr}}
+.row{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
+.note{color:var(--muted);font-size:12px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:99px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.show{opacity:1}
+.banner{background:var(--warn-bg);color:var(--warn);padding:10px 14px;border-radius:8px;margin-bottom:16px}
+.foot{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:24px}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+
+<div class="wrap">
+  <header class="bar">
+    <div>
+      <h1>Mentor Tracker</h1>
+      <div class="sub" id="today"></div>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Chế độ xem">
+      <button role="tab" id="tab-view" aria-selected="true" data-tab="theo-doi">Theo dõi</button>
+      <button role="tab" id="tab-edit" aria-selected="false" data-tab="nhap-lieu">Nhập liệu</button>
+    </nav>
+  </header>
+  <div id="banner" class="banner" hidden></div>
+  <main id="app"></main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+"use strict";
+/* ---------- Playbook (nội dung gợi ý theo từng bước) ---------- */
+var PB=[
+{name:"Chọn ngách & sản phẩm",std:{US:7,VN:7},done:"Chốt 1 ngách và 1 sản phẩm test; có dữ liệu doanh số, đối thủ và biên lợi nhuận dự kiến từ 30% trở lên.",
+ task:{US:"Lọc 20 sản phẩm đang bán tốt trên TikTok Shop US (FastMoss), tính biên lợi nhuận sau phí sàn và vận chuyển, chọn shortlist 3 sản phẩm và gửi trước buổi họp.",VN:"Lọc 20 sản phẩm đang bán tốt trên TikTok Shop / Shopee VN, so giá nhập (1688, chợ sỉ), tính biên lợi nhuận, chọn shortlist 3 sản phẩm và gửi trước buổi họp."},
+ help:{US:"Phản biện dữ liệu shortlist, chỉ cách đọc xu hướng creator và video, chốt 1 sản phẩm test; kiểm tra sản phẩm có bị hạn chế hoặc cấm trên sàn không.",VN:"Phản biện dữ liệu shortlist, chỉ cách đọc xu hướng creator và video, chốt 1 sản phẩm test; kiểm tra sản phẩm có bị hạn chế hoặc cấm trên sàn không."},
+ risk:"Chọn theo cảm tính; sản phẩm cạnh tranh quá cao hoặc biên quá mỏng."},
+{name:"Nguồn hàng / fulfillment",std:{US:14,VN:10},done:"Có nhà cung cấp chốt, đã nhận mẫu đạt chất lượng, tính xong giá vốn về tay khách và thời gian giao.",
+ task:{US:"Xin báo giá ít nhất 3 nhà cung cấp và phương án vận chuyển VN sang US, đặt mẫu, tính landed cost (giá vốn, ship, thuế, phí sàn) và thời gian giao.",VN:"Xin báo giá ít nhất 3 nhà cung cấp (1688, chợ sỉ, nội địa), hỏi MOQ, đặt mẫu, kiểm tra chất lượng, tính giá vốn về kho."},
+ help:{US:"Giới thiệu nhà cung cấp và forwarder, review báo giá và landed cost, cảnh báo rủi ro thời gian giao và hàng bị giữ.",VN:"Review báo giá và mẫu, hướng dẫn nhập hàng TQ, cảnh báo rủi ro chất lượng và thời gian về hàng."},
+ risk:"Nhà cung cấp báo giá rồi im lặng; mẫu kém; landed cost cao hơn dự tính."},
+{name:"Pháp lý & nhận tiền",std:{US:21,VN:7},done:"US: có LLC/EIN và tài khoản nhận tiền hoạt động. VN: có MST, giấy tờ và tài khoản ngân hàng chính chủ cho shop.",
+ task:{US:"Hoàn thiện hồ sơ LLC/EIN, mở tài khoản nhận tiền (Payoneer hoặc ngân hàng); chụp màn hình trạng thái gửi mentor mỗi 2–3 ngày.",VN:"Chuẩn bị CCCD, MST, giấy tờ và tài khoản ngân hàng chính chủ cho shop."},
+ help:{US:"Hướng dẫn từng bước, kiểm tra hồ sơ trước khi nộp, theo dõi các bước phụ thuộc bên thứ ba (hay kẹt nhất) và nhắc đúng lúc.",VN:"Tư vấn hình thức đăng ký phù hợp (cá nhân hoặc hộ kinh doanh); kiểm tra hồ sơ đúng điều kiện hiện hành của sàn."},
+ risk:"Chờ bên thứ ba quá lâu; hồ sơ sai thông tin phải làm lại."},
+{name:"Đăng ký tài khoản sàn",std:{US:5,VN:3},done:"Đã nộp hồ sơ đăng ký gian hàng trên sàn mục tiêu.",
+ task:{US:"Đăng ký gian hàng trên sàn mục tiêu, điền hồ sơ khớp tuyệt đối với giấy tờ, nộp và chụp màn hình xác nhận.",VN:"Đăng ký gian hàng trên sàn mục tiêu, điền hồ sơ khớp tuyệt đối với giấy tờ, nộp và chụp màn hình xác nhận."},
+ help:{US:"Kiểm tra hồ sơ trước khi nộp (sai lệch thông tin là lý do bị từ chối phổ biến), chọn đúng ngành hàng và khu vực.",VN:"Kiểm tra hồ sơ trước khi nộp (sai lệch thông tin là lý do bị từ chối phổ biến), chọn đúng ngành hàng."},
+ risk:"Thông tin không khớp giấy tờ nên bị từ chối."},
+{name:"Xác minh & duyệt shop",std:{US:10,VN:7},done:"Shop được duyệt, vào được Seller Center, đã nối phương thức nhận tiền và vận chuyển.",
+ task:{US:"Theo dõi email và Seller Center mỗi ngày, bổ sung hồ sơ ngay khi sàn yêu cầu; trong lúc chờ, chuẩn bị ảnh, video, mô tả cho listing.",VN:"Theo dõi email và Seller Center mỗi ngày, bổ sung hồ sơ ngay khi sàn yêu cầu; trong lúc chờ, chuẩn bị ảnh, video, mô tả cho listing."},
+ help:{US:"Xử lý khi bị từ chối hoặc yêu cầu bổ sung, soạn phản hồi cùng học viên; giữ nhịp để học viên không bỏ cuộc lúc chờ.",VN:"Xử lý khi bị từ chối hoặc yêu cầu bổ sung, soạn phản hồi cùng học viên; giữ nhịp để học viên không bỏ cuộc lúc chờ."},
+ risk:"Bị từ chối hoặc yêu cầu bổ sung; học viên nản vì chờ lâu."},
+{name:"Listing sản phẩm đầu tiên",std:{US:5,VN:5},done:"Có ít nhất 3 listing đạt chuẩn (tiêu đề, ảnh, giá, vận chuyển) đang hiển thị.",
+ task:{US:"Đăng ít nhất 3 listing: tiêu đề có từ khóa, ảnh chính rõ, video ngắn, giá và vận chuyển đã tính biên lợi nhuận.",VN:"Đăng ít nhất 3 listing: tiêu đề có từ khóa, ảnh chính rõ, video ngắn, giá và vận chuyển đã tính biên lợi nhuận."},
+ help:{US:"Review từng listing (tiêu đề, ảnh chính, giá, thông số, chính sách vận chuyển) bằng checklist trước khi đăng.",VN:"Review từng listing (tiêu đề, ảnh chính, giá, thông số, chính sách vận chuyển) bằng checklist trước khi đăng."},
+ risk:"Listing sơ sài; vi phạm chính sách nên bị gỡ."},
+{name:"Content / Live / Affiliate",std:{US:10,VN:10},done:"Đã đăng ít nhất 10 video hoặc live, hoặc có creator/affiliate nhận mẫu; có số liệu view.",
+ task:{US:"Quay 5–10 video mỗi tuần (hook 3 giây đầu), gửi mẫu và hoa hồng cho creator, lên lịch live thử.",VN:"Quay 5–10 video mỗi tuần (hook 3 giây đầu), gửi mẫu và hoa hồng cho creator, lên lịch live thử."},
+ help:{US:"Góp ý hook và kịch bản từng video; hướng dẫn tìm creator phù hợp bằng FastMoss và mẫu tin nhắn outreach.",VN:"Góp ý hook và kịch bản từng video; hướng dẫn tìm creator phù hợp bằng FastMoss và mẫu tin nhắn outreach."},
+ risk:"Học viên ngại quay, đăng không đều."},
+{name:"Chạy traffic / Ads",std:{US:10,VN:10},done:"Chạy xong vòng test ngân sách nhỏ, có CTR và CVR; đã quyết định dừng hay tăng.",
+ task:{US:"Chạy thử ngân sách nhỏ (ads, GMV Max hoặc đẩy affiliate), ghi CTR, CVR, ROAS mỗi ngày vào báo cáo.",VN:"Chạy thử ngân sách nhỏ (ads hoặc đẩy affiliate), ghi CTR, CVR, ROAS mỗi ngày vào báo cáo."},
+ help:{US:"Đặt ngân sách và ngưỡng dừng lỗ, đọc số liệu cùng học viên, quyết định tối ưu, dừng hay tăng.",VN:"Đặt ngân sách và ngưỡng dừng lỗ, đọc số liệu cùng học viên, quyết định tối ưu, dừng hay tăng."},
+ risk:"Đốt ngân sách không có ngưỡng dừng."},
+{name:"Có đơn đầu tiên",std:{US:14,VN:14},done:"Có đơn hàng thật đầu tiên trên sàn (không phải đơn tự đặt).",
+ task:{US:"Theo dõi đơn: phản hồi khách trong 24 giờ, xác nhận nhà cung cấp và kho sẵn sàng; nếu chưa có đơn, đổi thử 1 biến số (giá, ảnh, video).",VN:"Theo dõi đơn: phản hồi khách trong 24 giờ, xác nhận nhà cung cấp và kho sẵn sàng; nếu chưa có đơn, đổi thử 1 biến số (giá, ảnh, video)."},
+ help:{US:"Chẩn đoán vì sao chưa có đơn (traffic, giá, listing, độ tin cậy shop) và đề ra 1–2 thử nghiệm trong tuần.",VN:"Chẩn đoán vì sao chưa có đơn (traffic, giá, listing, độ tin cậy shop) và đề ra 1–2 thử nghiệm trong tuần."},
+ risk:"Quá 14 ngày sau khi có listing mà chưa có đơn: xem lại sản phẩm, giá, listing."},
+{name:"Giao hàng & đối soát",std:{US:21,VN:10},done:"Đơn giao thành công, đã đối soát tiền về, rút bài học và chốt kết thúc mentor.",
+ task:{US:"Đóng gói và gửi hàng đúng hạn, theo dõi tracking VN sang US, xử lý chăm sóc khách, đối soát doanh thu và phí.",VN:"Đóng gói và gửi hàng đúng hạn, cập nhật tracking, xử lý chăm sóc khách, đối soát doanh thu và phí."},
+ help:{US:"Kiểm tra quy trình giao nhận, xử lý đơn trễ, hải quan, hoàn hàng; tổng kết bài học và chốt kết thúc mentor.",VN:"Kiểm tra quy trình giao nhận, xử lý đơn lỗi, hoàn hàng; tổng kết bài học và chốt kết thúc mentor."},
+ risk:"Đơn trễ, hoàn hàng, đối soát lệch."}
+];
+var FLAGS={ok:"Bình thường",ket:"Đang kẹt",cho:"Chờ bên thứ ba",cham:"Học viên chậm phản hồi"};
+var MSTAT=["Sắp tới","Đã họp","Dời lịch","Hủy","Học viên vắng"];
+var RL={0:"Hoàn tất",1:"Đúng tiến độ",2:"Theo dõi",3:"Cần can thiệp"};
+var MK={US:"Thị trường US",VN:"Thị trường Việt Nam"};
+
+/* ---------- helpers ---------- */
+var pad=function(n){return String(n).padStart(2,"0")};
+var iso=function(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())};
+var parse=function(s){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s||"");return m?new Date(+m[1],+m[2]-1,+m[3]):null};
+var today=function(){var d=new Date();return new Date(d.getFullYear(),d.getMonth(),d.getDate())};
+var diff=function(a,b){return Math.round((a-b)/864e5)};
+var fmt=function(s){var d=parse(s);return d?pad(d.getDate())+"/"+pad(d.getMonth()+1):""};
+var esc=function(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})};
+var $=function(s,r){return (r||document).querySelector(s)};
+
+/* ---------- state ---------- */
+var db=null, students=[], meetings=[], sel=null, tab="theo-doi", pendingRender=false, confirmKey=null;
+var colS=null, colM=null;
+
+function analyze(s){
+  var steps=s.steps||{}, mk=s.market==="US"?"US":"VN", t=today();
+  var cur=11, done=0, n;
+  for(n=1;n<=10;n++){ if(steps[n]) done++; }
+  for(n=1;n<=10;n++){ if(!steps[n]){cur=n;break;} }
+  var since=null, days=0, std=null, ratio=0;
+  if(cur<=10){ since=parse(cur===1?s.start:steps[cur-1])||parse(s.start); days=since?Math.max(0,diff(t,since)):0; std=PB[cur-1].std[mk]; ratio=days/std; }
+  var ms=meetings.filter(function(m){return m.studentId===s.id});
+  var held=ms.filter(function(m){return m.status==="Đã họp"&&parse(m.date)}).sort(function(a,b){return a.date<b.date?1:-1});
+  var lastHeld=held.length?held[0]:null;
+  var startD=parse(s.start);
+  var gap=lastHeld?diff(t,parse(lastHeld.date)):(startD?Math.max(0,diff(t,startD)):0);
+  var risk=1, why=[];
+  if(cur===11){risk=0}
+  else{
+    if(s.flag==="ket"){risk=3; why.push("Đang kẹt"+(s.blocker?": "+s.blocker:""))}
+    if(ratio>1.5){risk=3; why.push("Đã "+days+" ngày ở bước này, chuẩn "+std+" ngày")}
+    else if(ratio>1){risk=Math.max(risk,2); why.push("Hơi chậm: "+days+" ngày, chuẩn "+std+" ngày")}
+    if(s.flag==="cho"||s.flag==="cham"){risk=Math.max(risk,2); why.push(FLAGS[s.flag]+(s.blocker?": "+s.blocker:""))}
+    if(gap>10){risk=Math.min(3,risk+1); why.push(gap+" ngày chưa họp")}
+  }
+  // meeting status
+  var ws=new Date(t); ws.setDate(ws.getDate()-((t.getDay()+6)%7)); var we=new Date(ws); we.setDate(we.getDate()+7);
+  var inWeek=ms.filter(function(m){var d=parse(m.date);return d&&d>=ws&&d<we&&m.status!=="Hủy"});
+  var heldWeek=inWeek.filter(function(m){return m.status==="Đã họp"});
+  var upcoming=ms.filter(function(m){var d=parse(m.date);return d&&d>=t&&(m.status==="Sắp tới")}).sort(function(a,b){return a.date<b.date?-1:1});
+  var meet, meetNone=false;
+  if(heldWeek.length) meet="Đã họp tuần này ("+fmt(heldWeek[0].date)+")";
+  else if(upcoming.length&&parse(upcoming[0].date)<we) meet="Họp "+fmt(upcoming[0].date)+(upcoming[0].time?" lúc "+upcoming[0].time:"");
+  else if(upcoming.length){meet="Họp kế tiếp "+fmt(upcoming[0].date)}
+  else {meet="Chưa có lịch họp tuần này"; meetNone=true}
+  if(heldWeek.length===0&&!meetNone&&upcoming.length&&parse(upcoming[0].date)>=we){meetNone=true; meet="Chưa có lịch họp tuần này (kế tiếp "+fmt(upcoming[0].date)+")"}
+  return {s:s,mk:mk,cur:cur,done:done,days:days,std:std,risk:risk,why:why,meet:meet,meetNone:meetNone,lastHeld:lastHeld,held:held,ms:ms,hasOrder:!!steps[9],heldWeek:heldWeek.length>0};
+}
+
+/* ---------- render: Theo dõi ---------- */
+function card(a){
+  var s=a.s, i, seg="";
+  for(i=1;i<=10;i++){
+    var st=(s.steps||{})[i]?"done":(i===a.cur?"cur r"+a.risk:"");
+    seg+='<div class="seg '+st+'" title="'+i+'. '+esc(PB[i-1].name)+((s.steps||{})[i]?" (xong "+fmt(s.steps[i])+")":"")+'">'+i+'</div>';
+  }
+  var pb=a.cur<=10?PB[a.cur-1]:null;
+  var stepTxt=pb?"Bước "+a.cur+"/10: "+pb.name:"Đã hoàn tất 10 bước";
+  var daysTxt=pb?"ngày "+a.days+" / chuẩn "+a.std:"";
+  var task=pb?pb.task[a.mk]:"Tổng kết, thu thập phản hồi, chốt kết thúc mentor.";
+  var help=[];
+  if(s.flag&&s.flag!=="ok") help.push("Tình trạng: "+FLAGS[s.flag]);
+  if(s.blocker) help.push("Học viên đang vướng: "+s.blocker);
+  if(s.mentorNext) help.push("Mentor sẽ làm: "+s.mentorNext);
+  if(pb) help.push(pb.help[a.mk]);
+  var prev=a.lastHeld&&a.lastHeld.actions?a.lastHeld.actions:"Chưa có";
+  var recent=a.ms.slice().sort(function(x,y){return x.date<y.date?1:-1}).slice(0,3).map(function(m){
+    return fmt(m.date)+" · "+m.status+(m.notes?" · "+m.notes:"");}).join("\n")||"Chưa có buổi họp nào";
+  return '<article class="stu"><div class="top"><div><span class="nm">'+esc(s.name)+'</span><span class="pk">'+esc(s.pkg||"")+'</span></div><span class="pill r'+a.risk+'">'+RL[a.risk]+'</span></div>'
+   +'<div class="track">'+seg+'</div>'
+   +'<div class="meta"><span class="step">'+esc(stepTxt)+'</span><span class="days">'+esc(daysTxt)+'</span></div>'
+   +(a.why.length&&a.risk>=2?'<div class="why r'+a.risk+'">'+esc(a.why.join(" · "))+'</div>':"")
+   +'<div class="meet'+(a.meetNone?" none":"")+'">'+esc(a.meet)+'</div>'
+   +'<details><summary>Tuần này làm gì, cần support gì</summary><div class="cols">'
+   +'<div><h4>Học viên cần làm tuần này</h4><p>'+esc(task)+'</p></div>'
+   +'<div><h4>Mentor cần support</h4><p>'+esc(help.join("\n"))+'</p></div>'
+   +'<div><h4>Action items buổi họp trước</h4><p>'+esc(prev)+'</p></div>'
+   +'<div><h4>Các buổi họp gần đây</h4><p>'+esc(recent)+'</p></div>'
+   +(pb?'<div><h4>Xong bước này khi</h4><p>'+esc(pb.done)+'</p></div><div><h4>Dấu hiệu cần can thiệp</h4><p>'+esc(pb.risk)+'</p></div>':"")
+   +'<div class="full"><button class="btn sm" data-copy="'+s.id+'">Sao chép tin nhắn giao bài tuần này</button></div>'
+   +'</div></details></article>';
+}
+function viewTrack(){
+  var as=students.map(analyze);
+  var active=as.filter(function(a){return a.s.status!=="Dừng"});
+  var c3=active.filter(function(a){return a.risk===3}).length, c2=active.filter(function(a){return a.risk===2}).length;
+  var orders=active.filter(function(a){return a.hasOrder}).length;
+  var nomeet=active.filter(function(a){return a.cur<=10&&a.meetNone}).length;
+  var out='<div class="stats">'
+   +stat(active.length,"học viên đang mentor","")+stat(c3,"cần can thiệp",c3?"bad":"")+stat(c2,"cần theo dõi",c2?"warn":"")
+   +stat(nomeet,"chưa có lịch họp tuần này",nomeet?"warn":"")+stat(orders,"đã có đơn đầu tiên",orders?"ok":"")+'</div>';
+  if(!students.length){ return out+'<div class="empty">Chưa có học viên. Vào tab Nhập liệu để thêm học viên đầu tiên.</div>'; }
+  out+='<div class="markets">';
+  ["US","VN"].forEach(function(mk){
+    var list=active.filter(function(a){return a.mk===mk}).sort(function(x,y){
+      var rx=x.cur===11?-1:x.risk, ry=y.cur===11?-1:y.risk; return ry-rx||y.days-x.days;});
+    out+='<section class="mk"><h2>'+MK[mk]+'<span>'+list.length+' học viên</span></h2><div class="list">'
+     +(list.length?list.map(card).join(""):'<div class="empty">Chưa có học viên '+mk+'.</div>')+'</div></section>';
+  });
+  return out+'</div>';
+}
+function stat(v,l,c){return '<div class="stat '+c+'"><div class="v">'+v+'</div><div class="l">'+l+'</div></div>'}
+
+/* ---------- render: Nhập liệu ---------- */
+function viewEdit(){
+  var sorted=students.slice().sort(function(a,b){return (a.createdAt||0)-(b.createdAt||0)});
+  var side='<aside class="side">';
+  ["US","VN"].forEach(function(mk){
+    side+='<h3>'+MK[mk]+'</h3>';
+    sorted.filter(function(s){return (s.market==="US"?"US":"VN")===mk}).forEach(function(s){
+      var a=analyze(s);
+      side+='<button class="pick" data-pick="'+s.id+'"'+(s.id===sel?' aria-current="true"':"")+'><span>'+esc(s.name)+'</span><small>'+(a.cur<=10?"bước "+a.cur:"xong")+'</small></button>';
+    });
+    side+='<button class="add" data-add="'+mk+'">Thêm học viên '+mk+'</button>';
+  });
+  side+='</aside>';
+  var s=students.filter(function(x){return x.id===sel})[0];
+  var main;
+  if(!s){ main='<div class="panel"><div class="empty">Chọn một học viên bên trái để cập nhật, hoặc thêm học viên mới.</div></div>'; }
+  else main=editor(s);
+  return '<div class="edit">'+side+'<div id="editor">'+main+'</div></div>'+footer();
+}
+function opt(v,l,cur){return '<option value="'+esc(v)+'"'+(String(cur)===String(v)?" selected":"")+'>'+esc(l)+'</option>'}
+function editor(s){
+  var mk=s.market==="US"?"US":"VN", steps=s.steps||{}, a=analyze(s);
+  var h='<div class="panel"><h3>Thông tin và tình trạng hiện tại</h3><div class="grid">'
+   +fld(s,"name","Họ và tên","text")
+   +'<label class="f">Thị trường<select data-s="'+s.id+'" data-f="market">'+opt("US","US",mk)+opt("VN","Việt Nam",mk)+'</select></label>'
+   +fld(s,"pkg","Gói mentor","text")+fld(s,"platform","Sàn mục tiêu","text")+fld(s,"niche","Ngách / sản phẩm","text")
+   +fld(s,"start","Ngày bắt đầu","date")
+   +'<label class="f">Trạng thái mentor<select data-s="'+s.id+'" data-f="status">'+["Đang mentor","Tạm dừng","Đã có đơn","Dừng"].map(function(x){return opt(x,x,s.status||"Đang mentor")}).join("")+'</select></label>'
+   +'<label class="f">Tình trạng hiện tại<select data-s="'+s.id+'" data-f="flag">'+Object.keys(FLAGS).map(function(k){return opt(k,FLAGS[k],s.flag||"ok")}).join("")+'</select></label>'
+   +'<label class="f wide">Học viên đang vướng gì<textarea data-s="'+s.id+'" data-f="blocker" placeholder="Ví dụ: chờ Payoneer duyệt hồ sơ, chưa chọn được ngách">'+esc(s.blocker||"")+'</textarea></label>'
+   +'<label class="f wide">Việc mentor sẽ làm tuần này<textarea data-s="'+s.id+'" data-f="mentorNext" placeholder="Ví dụ: họp riêng 30 phút chốt ngách, gửi mẫu tin nhắn cho nhà cung cấp">'+esc(s.mentorNext||"")+'</textarea></label>'
+   +'</div></div>';
+  h+='<div class="panel"><h3>Các bước (điền ngày hoàn thành; để trống nếu chưa xong)</h3><div class="steps">';
+  for(var i=1;i<=10;i++){
+    var d=steps[i]||"";
+    h+='<div class="step-row'+(d?" done":"")+'"><span class="n">'+i+'</span><div class="t">'+esc(PB[i-1].name)+'<small>Chuẩn '+PB[i-1].std[mk]+' ngày</small></div>'
+     +'<input type="date" value="'+esc(d)+'" data-s="'+s.id+'" data-step="'+i+'" aria-label="Ngày hoàn thành bước '+i+'">'
+     +'<div class="acts"><button class="btn sm" data-stepnow="'+i+'" data-s="'+s.id+'">Hôm nay</button>'+(d?'<button class="btn sm" data-stepclear="'+i+'" data-s="'+s.id+'">Xóa</button>':"")+'</div></div>';
+  }
+  h+='</div></div>';
+  // meetings
+  var ms=a.ms.slice().sort(function(x,y){return x.date<y.date?1:-1});
+  h+='<div class="panel"><h3>Nhật ký meeting</h3>'
+   +'<div class="grid" id="newm">'
+   +'<label class="f">Ngày<input type="date" id="nm-date" value="'+iso(today())+'"></label>'
+   +'<label class="f">Giờ<input type="time" id="nm-time"></label>'
+   +'<label class="f">Trạng thái<select id="nm-status">'+MSTAT.map(function(x){return opt(x,x,"Sắp tới")}).join("")+'</select></label>'
+   +'<label class="f">Link Google Calendar / Meet<input type="url" id="nm-link" placeholder="https://"></label>'
+   +'<label class="f wide">Nội dung đã làm / thảo luận<textarea id="nm-notes"></textarea></label>'
+   +'<label class="f wide">Action items cho học viên<textarea id="nm-actions"></textarea></label>'
+   +'</div><p><button class="btn primary" id="addm" data-s="'+s.id+'">Thêm buổi họp</button></p>';
+  ms.forEach(function(m){
+    h+='<div class="mrow"><div class="head">'
+     +'<input type="date" value="'+esc(m.date||"")+'" data-m="'+m.id+'" data-mf="date" aria-label="Ngày họp">'
+     +'<input type="time" value="'+esc(m.time||"")+'" data-m="'+m.id+'" data-mf="time" aria-label="Giờ họp">'
+     +'<select data-m="'+m.id+'" data-mf="status" aria-label="Trạng thái">'+MSTAT.map(function(x){return opt(x,x,m.status)}).join("")+'</select>'
+     +'<input type="url" value="'+esc(m.link||"")+'" data-m="'+m.id+'" data-mf="link" placeholder="Link event" aria-label="Link event">'
+     +'<button class="btn sm danger" data-delm="'+m.id+'">'+(confirmKey==="m"+m.id?"Bấm lần nữa để xóa":"Xóa")+'</button></div>'
+     +'<div class="row"><textarea data-m="'+m.id+'" data-mf="notes" placeholder="Nội dung đã làm / thảo luận" aria-label="Nội dung">'+esc(m.notes||"")+'</textarea>'
+     +'<textarea data-m="'+m.id+'" data-mf="actions" placeholder="Action items cho học viên" aria-label="Action items">'+esc(m.actions||"")+'</textarea></div></div>';
+  });
+  if(!ms.length) h+='<p class="note">Chưa có buổi họp nào.</p>';
+  h+='</div>';
+  h+='<p><button class="btn danger" data-dels="'+s.id+'">'+(confirmKey==="s"+s.id?"Bấm lần nữa để xóa học viên và toàn bộ buổi họp":"Xóa học viên này")+'</button></p>';
+  return h;
+}
+function fld(s,f,l,type){return '<label class="f">'+l+'<input type="'+type+'" value="'+esc(s[f]||"")+'" data-s="'+s.id+'" data-f="'+f+'"></label>'}
+function footer(){
+  return '<div class="foot"><span class="note">Dữ liệu lưu tự động. Bản sao để lưu vào Google Sheets:</span>'
+   +'<button class="btn sm" id="dl-s">Tải tiến độ (CSV)</button><button class="btn sm" id="dl-m">Tải nhật ký meeting (CSV)</button></div>';
+}
+
+/* ---------- main render ---------- */
+function render(){
+  pendingRender=false;
+  $("#today").textContent="Hôm nay "+pad(today().getDate())+"/"+pad(today().getMonth()+1)+"/"+today().getFullYear();
+  $("#tab-view").setAttribute("aria-selected",tab==="theo-doi");
+  $("#tab-edit").setAttribute("aria-selected",tab==="nhap-lieu");
+  var open=[].map.call(document.querySelectorAll("details[open]"),function(d){return d.dataset.k});
+  $("#app").innerHTML=tab==="theo-doi"?viewTrack():viewEdit();
+}
+function safeRender(){
+  var a=document.activeElement;
+  if(tab==="nhap-lieu"&&a&&a.matches&&a.matches("#editor input,#editor textarea,#editor select")&&a.dataset.dirty==="1"){pendingRender=true;return}
+  // keep opened <details> open across live refreshes
+  var openIdx=[].map.call(document.querySelectorAll("#app details"),function(d){return d.open});
+  render();
+  [].forEach.call(document.querySelectorAll("#app details"),function(d,i){if(openIdx[i])d.open=true});
+}
+
+/* ---------- writes ---------- */
+var toastT=null;
+function toast(msg){var t=$("#toast");t.textContent=msg;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove("show")},1800)}
+function fail(e){toast("Không lưu được"+(e&&e.message?": "+e.message:""))}
+function guard(){if(!db){toast("Chưa kết nối kho dữ liệu");return false}return true}
+async function upd(coll,id,data){if(!guard())return;try{await coll.doc(id).update(data);toast("Đã lưu")}catch(e){fail(e)}}
+
+document.addEventListener("input",function(e){var t=e.target;if(t.dataset&&(t.dataset.f||t.dataset.mf)&&t.tagName!=="SELECT")t.dataset.dirty="1"});
+document.addEventListener("focusout",function(){setTimeout(function(){if(pendingRender)safeRender()},0)});
+document.addEventListener("change",function(e){
+  var t=e.target, d=t.dataset||{};
+  if(d.s&&d.f){t.dataset.dirty="";var v=t.value; if(d.f==="market")v=(v==="US"?"US":"VN"); upd(colS,d.s,(function(o){o[d.f]=v;return o})({}))}
+  else if(d.s&&d.step){t.dataset.dirty="";setStep(d.s,d.step,t.value||null)}
+  else if(d.m&&d.mf){t.dataset.dirty="";upd(colM,d.m,(function(o){o[d.mf]=t.value;return o})({}))}
+});
+function setStep(sid,n,val){
+  var s=students.filter(function(x){return x.id===sid})[0]; if(!s)return;
+  var steps=Object.assign({},s.steps||{}); steps[n]=val;
+  return upd(colS,sid,{steps:steps});
+}
+document.addEventListener("click",async function(e){
+  var t=e.target.closest("button,summary"); if(!t)return; var d=t.dataset||{};
+  if(t.dataset.tab){tab=t.dataset.tab;try{history.replaceState(null,"","#"+tab)}catch(_){ } render();return}
+  if(d.pick){sel=d.pick;confirmKey=null;render();return}
+  if(d.add){
+    if(!guard())return;
+    try{var ref=await colS.add({name:"Học viên mới",market:d.add,pkg:"",platform:"",niche:"",start:iso(today()),status:"Đang mentor",flag:"ok",blocker:"",mentorNext:"",steps:{},createdAt:Date.now()});
+      sel=ref.id;tab="nhap-lieu";render();var f=$('#editor input[data-f="name"]');if(f){f.focus();f.select()}}catch(err){fail(err)}
+    return}
+  if(d.copy){
+    var s0=students.filter(function(x){return x.id===d.copy})[0]; if(!s0)return;
+    var a0=analyze(s0), p0=a0.cur<=10?PB[a0.cur-1]:null, tt=today(), w0=new Date(tt); w0.setDate(w0.getDate()-((tt.getDay()+6)%7)); var w1=new Date(w0); w1.setDate(w1.getDate()+6);
+    var msg="Chào "+s0.name+", việc cho tuần "+pad(w0.getDate())+"/"+pad(w0.getMonth()+1)+" – "+pad(w1.getDate())+"/"+pad(w1.getMonth()+1)+":\n\n"
+      +(p0?"Bước hiện tại: "+a0.cur+"/10, "+p0.name+"\n\nViệc cần làm:\n"+p0.task[a0.mk]+"\n\nXong bước này khi: "+p0.done:"Bạn đã hoàn tất 10 bước. Tuần này mình tổng kết và chốt kết thúc mentor.")
+      +(a0.lastHeld&&a0.lastHeld.actions?"\n\nViệc từ buổi họp trước:\n"+a0.lastHeld.actions:"")
+      +"\n\nLịch họp: "+a0.meet+"\n\nVướng chỗ nào, nhắn mình trước buổi họp nhé.";
+    try{await navigator.clipboard.writeText(msg);toast("Đã sao chép, dán vào Zalo hoặc email")}catch(_){
+      var ta=document.createElement("textarea");ta.value=msg;ta.style.cssText="position:fixed;left:-9999px";document.body.appendChild(ta);ta.select();
+      var ok=false;try{ok=document.execCommand("copy")}catch(__){} document.body.removeChild(ta);toast(ok?"Đã sao chép, dán vào Zalo hoặc email":"Trình duyệt chặn sao chép")}
+    return}
+  if(d.stepnow){setStep(d.s,d.stepnow,iso(today()));return}
+  if(d.stepclear){setStep(d.s,d.stepclear,null);return}
+  if(t.id==="addm"){
+    if(!guard())return;
+    var date=$("#nm-date").value; if(!date){toast("Chọn ngày họp");return}
+    try{await colM.add({studentId:d.s,date:date,time:$("#nm-time").value,status:$("#nm-status").value,link:$("#nm-link").value,notes:$("#nm-notes").value,actions:$("#nm-actions").value,createdAt:Date.now()});toast("Đã thêm buổi họp")}catch(err){fail(err)}
+    return}
+  if(d.delm){
+    if(confirmKey!=="m"+d.delm){confirmKey="m"+d.delm;render();return}
+    confirmKey=null;if(!guard())return;try{await colM.doc(d.delm).delete();toast("Đã xóa")}catch(err){fail(err)}return}
+  if(d.dels){
+    if(confirmKey!=="s"+d.dels){confirmKey="s"+d.dels;render();return}
+    confirmKey=null;if(!guard())return;
+    try{
+      var mine=meetings.filter(function(m){return m.studentId===d.dels});
+      for(var i=0;i<mine.length;i++){await colM.doc(mine[i].id).delete()}
+      await colS.doc(d.dels).delete(); sel=null; toast("Đã xóa học viên");
+    }catch(err){fail(err)}
+    return}
+  if(t.id==="dl-s")exportCsv("students");
+  if(t.id==="dl-m")exportCsv("meetings");
+});
+
+/* ---------- export ---------- */
+function csv(rows){return "﻿"+rows.map(function(r){return r.map(function(c){c=c==null?"":String(c);return /[",\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c}).join(",")}).join("\r\n")}
+async function exportCsv(kind){
+  var dl=await window.claude.use("downloads"); if(!dl){toast("Không tải được ở chế độ xem này");return}
+  var rows,name;
+  if(kind==="students"){
+    rows=[["Họ tên","Thị trường","Gói","Sàn","Ngách","Ngày bắt đầu","Trạng thái","Tình trạng","Vướng mắc","Mentor sẽ làm"].concat(PB.map(function(p,i){return (i+1)+". "+p.name}))];
+    students.forEach(function(s){rows.push([s.name,s.market,s.pkg,s.platform,s.niche,s.start,s.status,FLAGS[s.flag||"ok"],s.blocker,s.mentorNext].concat(PB.map(function(p,i){return (s.steps||{})[i+1]||""})))});
+    name="mentor-tien-do-"+iso(today())+".csv";
+  }else{
+    rows=[["Học viên","Ngày","Giờ","Trạng thái","Nội dung","Action items","Link"]];
+    var nm={};students.forEach(function(s){nm[s.id]=s.name});
+    meetings.slice().sort(function(a,b){return a.date<b.date?-1:1}).forEach(function(m){rows.push([nm[m.studentId]||"",m.date,m.time,m.status,m.notes,m.actions,m.link])});
+    name="mentor-meeting-"+iso(today())+".csv";
+  }
+  try{await dl.save({filename:name,data:csv(rows)})}catch(e){if(e&&e.code!=="declined")toast("Không tải được")}
+}
+
+/* ---------- boot ---------- */
+function showBanner(msg){var b=$("#banner");b.textContent=msg;b.hidden=false}
+(async function(){
+  var h=(location.hash||"").replace("#",""); if(h==="nhap-lieu")tab="nhap-lieu";
+  render();
+  var c=window.claude; if(!c||!c.use){showBanner("Trang này cần mở trong claude.ai để đọc và lưu dữ liệu.");return}
+  try{db=await c.use("db")}catch(_){db=null}
+  if(!db){showBanner("Chưa kết nối được kho dữ liệu. Hãy đăng nhập và mở lại trang.");return}
+  colS=db.collection("students"); colM=db.collection("meetings");
+  colS.onSnapshot(function(q){students=q.docs.map(function(d){var o=Object.assign({},d.data());o.id=d.id;return o});
+    if(sel&&!students.some(function(s){return s.id===sel}))sel=null;
+    if(!sel&&students.length)sel=students.slice().sort(function(a,b){return (a.createdAt||0)-(b.createdAt||0)})[0].id;
+    safeRender()},function(){showBanner("Mất kết nối dữ liệu. Tải lại trang.")});
+  colM.onSnapshot(function(q){meetings=q.docs.map(function(d){var o=Object.assign({},d.data());o.id=d.id;return o});safeRender()},function(){});
+})();
+})();
+</script>
