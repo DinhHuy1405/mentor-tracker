@@ -221,10 +221,9 @@ function analyze(s){
   var upcoming=ms.filter(function(m){var d=parse(m.date);return d&&d>=t&&(m.status==="Sắp tới")}).sort(function(a,b){return a.date<b.date?-1:1});
   var meet, meetNone=false;
   if(heldWeek.length) meet="Đã họp tuần này ("+fmt(heldWeek[0].date)+")";
-  else if(upcoming.length&&parse(upcoming[0].date)<we) meet="Họp "+fmt(upcoming[0].date)+(upcoming[0].time?" lúc "+upcoming[0].time:"");
-  else if(upcoming.length){meet="Họp kế tiếp "+fmt(upcoming[0].date)}
-  else {meet="Chưa có lịch họp tuần này"; meetNone=true}
-  if(heldWeek.length===0&&!meetNone&&upcoming.length&&parse(upcoming[0].date)>=we){meetNone=true; meet="Chưa có lịch họp tuần này (kế tiếp "+fmt(upcoming[0].date)+")"}
+  else if(upcoming.length&&diff(parse(upcoming[0].date),t)<7) meet="Họp "+fmt(upcoming[0].date)+(upcoming[0].time?" lúc "+upcoming[0].time:"");
+  else if(upcoming.length){meetNone=true; meet="Chưa có lịch họp trong 7 ngày tới (kế tiếp "+fmt(upcoming[0].date)+")"}
+  else {meet="Chưa có lịch họp trong 7 ngày tới"; meetNone=true}
   return {s:s,mk:mk,cur:cur,done:done,days:days,std:std,risk:risk,why:why,meet:meet,meetNone:meetNone,lastHeld:lastHeld,held:held,ms:ms,hasOrder:!!steps[9],heldWeek:heldWeek.length>0};
 }
 
@@ -269,7 +268,7 @@ function viewTrack(){
   var nomeet=active.filter(function(a){return a.cur<=10&&a.meetNone}).length;
   var out='<div class="stats">'
    +stat(active.length,"học viên đang mentor","")+stat(c3,"cần can thiệp",c3?"bad":"")+stat(c2,"cần theo dõi",c2?"warn":"")
-   +stat(nomeet,"chưa có lịch họp tuần này",nomeet?"warn":"")+stat(orders,"đã có đơn đầu tiên",orders?"ok":"")+'</div>';
+   +stat(nomeet,"chưa có lịch họp trong 7 ngày tới",nomeet?"warn":"")+stat(orders,"đã có đơn đầu tiên",orders?"ok":"")+'</div>';
   if(!students.length){ return out+'<div class="empty">Chưa có học viên. Vào tab Nhập liệu để thêm học viên đầu tiên.</div>'; }
   out+='<div class="markets">';
   ["US","VN"].forEach(function(mk){
