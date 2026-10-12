@@ -131,20 +131,32 @@
       box.style.cssText = "position:fixed;inset:0;display:grid;place-items:center;padding:16px;background:var(--bg);z-index:10";
       box.innerHTML = '<form id="loginform" class="login-card">' +
         '<h1>Mentor Tracker</h1>' +
-        '<p>Nhập email của bạn để nhận link đăng nhập.</p>' +
-        '<label class="f">Email<input id="loginemail" type="email" required autocomplete="email"></label>' +
-        '<button class="btn primary" id="loginbtn" type="submit">Gửi link đăng nhập</button>' +
+        '<p>Đăng nhập bằng email và mật khẩu.</p>' +
+        '<label class="f">Email<input id="loginemail" type="email" required autocomplete="username"></label>' +
+        '<label class="f">Mật khẩu<input id="loginpw" type="password" autocomplete="current-password"></label>' +
+        '<button class="btn primary" id="loginbtn" type="submit">Đăng nhập</button>' +
+        '<button class="btn" id="linkbtn" type="button">Gửi link đăng nhập qua email</button>' +
         '<p id="loginmsg" role="status"></p></form>';
       document.body.appendChild(box);
       var form = box.querySelector("#loginform"), msg = box.querySelector("#loginmsg");
+      var email = function () { return box.querySelector("#loginemail").value.trim(); };
       form.addEventListener("submit", async function (e) {
         e.preventDefault();
-        var email = box.querySelector("#loginemail").value.trim();
+        var pw = box.querySelector("#loginpw").value;
+        if (!pw) { msg.textContent = "Nhập mật khẩu, hoặc bấm gửi link qua email."; return; }
         box.querySelector("#loginbtn").disabled = true;
-        msg.textContent = "Đang gửi...";
-        var res = await sb.auth.signInWithOtp({ email: email, options: { emailRedirectTo: location.origin + location.pathname } });
+        msg.textContent = "Đang đăng nhập...";
+        var res = await sb.auth.signInWithPassword({ email: email(), password: pw });
         box.querySelector("#loginbtn").disabled = false;
-        msg.textContent = res.error ? "Không gửi được: " + res.error.message : "Đã gửi. Mở email và bấm vào link, trang sẽ tự đăng nhập.";
+        if (res.error) msg.textContent = "Không đăng nhập được: " + res.error.message;
+      });
+      box.querySelector("#linkbtn").addEventListener("click", async function () {
+        if (!email()) { msg.textContent = "Nhập email trước."; return; }
+        this.disabled = true;
+        msg.textContent = "Đang gửi...";
+        var res = await sb.auth.signInWithOtp({ email: email(), options: { emailRedirectTo: location.origin + location.pathname } });
+        this.disabled = false;
+        msg.textContent = res.error ? "Không gửi được: " + res.error.message + (/rate|seconds/i.test(res.error.message) ? " (gửi email bị giới hạn, hãy dùng mật khẩu)" : "") : "Đã gửi. Mở email và bấm vào link, trang sẽ tự đăng nhập.";
       });
       sb.auth.onAuthStateChange(function (ev, session) {
         if (session) { box.remove(); resolve(session); }
