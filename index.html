@@ -426,6 +426,20 @@ label.f{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:50
 .evl li.ass::before{background:var(--f-warn)}.evl li.sub::before{background:var(--done)}.evl li.due::before{background:#fff;box-shadow:inset 0 0 0 2px var(--f-warn)}.evl li.late::before{background:var(--f-bad)}.evl li.note::before{background:#a9c4f7}
 .evl li.e small{display:block;color:var(--soft);font-size:12.5px;white-space:pre-line}
 .evl li.late{color:var(--bad);font-weight:500}.evl li.step{font-weight:600}
+
+.rc{margin:18px 0 8px;max-width:760px}
+.rc h4{margin:0 0 4px!important;font-size:13px;letter-spacing:0!important;text-transform:none!important;color:var(--ink)!important;font-weight:600}
+.rc .rcn{margin:0 0 8px!important;font-size:12.5px!important;color:var(--soft)}
+.rcr{display:grid;grid-template-columns:minmax(0,210px) minmax(0,1fr) 84px;gap:0 10px;align-items:center;padding:4px 0;font-size:13px}
+.rcr .rl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rcr .rt2{height:12px;background:var(--todo)}
+.rcr .rt2 i{display:block;height:100%;background:#8f8c84}
+.rcr.hi .rt2 i{background:var(--f-ok)}.rcr.hi .rl,.rcr.hi .rv{font-weight:600;color:var(--info)}
+.rcr.bad .rt2 i{background:var(--f-bad)}.rcr.bad .rv{color:var(--bad);font-weight:600}
+.rcr .rv{text-align:right;font-weight:500;white-space:nowrap}
+@media (max-width:560px){.rcr{grid-template-columns:minmax(0,120px) minmax(0,1fr) 70px}}
+.rp .body a{color:var(--info)}
+.rp,.rp .body{min-width:0;max-width:100%;overflow-wrap:anywhere}.rp .scrollx{max-width:100%}
 [hidden]{display:none!important}
 @media (prefers-reduced-motion:reduce){.toast{transition:none}}
 </style>
@@ -444,9 +458,9 @@ label.f{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:50
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="config.js?v=3"></script>
+<script src="config.js?v=4"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.js"></script>
-<script src="store.js?v=3"></script>
+<script src="store.js?v=4"></script>
 <script>
 (function(){
 "use strict";
@@ -772,7 +786,12 @@ function viewTrack(){
 }
 
 /* ---------- trang riêng từng học viên ---------- */
-function inl(t){return esc(t).replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>")}
+function inl(t){return esc(t).replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>").replace(/\[([^\]]+)\]\((https:\/\/[^)\s]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>')}
+function chartHtml(c){
+  var items=c.items||[], mx=Math.max.apply(null,items.map(function(i){return +i.value||0}).concat([1]));
+  return '<div class="rc"><h4>'+esc(c.title)+'</h4>'+(c.note?'<p class="rcn">'+esc(c.note)+'</p>':'')+items.map(function(i){
+    return '<div class="rcr'+(i.hi?" hi":"")+(i.bad?" bad":"")+'"><div class="rl">'+esc(i.label)+'</div><div class="rt2"><i style="width:'+Math.max(1,(+i.value||0)/mx*100)+'%"></i></div><div class="rv">'+esc(i.text!=null?i.text:i.value)+'</div></div>'}).join("")+'</div>';
+}
 function mdLite(src){
   var L=String(src||"").split("\n"),o="",i=0;
   while(i<L.length){
@@ -916,7 +935,7 @@ function viewStudent(id){
   if(!rs.length) out+='<div class="empty">Chưa có báo cáo. Nhắn trong cuộc trò chuyện để chạy phân tích sản phẩm cho học viên này.</div>';
   else out+=rs.map(function(r,i){
     return '<details class="rp"'+(i===0?' open':'')+'><summary>'+esc(r.title)+'</summary><div class="meta2">'+fmt(r.date)+(r.source?' · '+esc(r.source):'')+'</div><div class="body">'
-      +(r.summary?'<p><strong>'+inl(r.summary)+'</strong></p>':'')+mdLite(r.body)+'</div></details>';
+      +(r.summary?'<p><strong>'+inl(r.summary)+'</strong></p>':'')+(r.charts||[]).map(chartHtml).join("")+mdLite(r.body)+'</div></details>';
   }).join("");
   out+='</section>';
   // hồ sơ
