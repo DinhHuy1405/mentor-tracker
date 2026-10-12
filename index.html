@@ -458,9 +458,9 @@ label.f{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:50
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="config.js?v=4"></script>
+<script src="config.js?v=5"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.js"></script>
-<script src="store.js?v=4"></script>
+<script src="store.js?v=5"></script>
 <script>
 (function(){
 "use strict";
@@ -930,7 +930,7 @@ function viewStudent(id){
   }).join("");
   out+='</section>';
   // báo cáo
-  var rs=reports.filter(function(r){return r.studentId===s.id}).sort(function(p,q){return (q.date||"")<(p.date||"")?-1:1});
+  var rs=reports.filter(function(r){return r.studentId===s.id}).sort(function(p,q){return (q.date||"")===(p.date||"")?(q.id<p.id?-1:1):((q.date||"")<(p.date||"")?-1:1)});
   out+='<section class="sec"><h2>Báo cáo phân tích</h2>';
   if(!rs.length) out+='<div class="empty">Chưa có báo cáo. Nhắn trong cuộc trò chuyện để chạy phân tích sản phẩm cho học viên này.</div>';
   else out+=rs.map(function(r,i){
