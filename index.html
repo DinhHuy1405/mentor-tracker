@@ -437,7 +437,7 @@ label.f{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:50
 .rcr.hi .rt2 i{background:var(--f-ok)}.rcr.hi .rl,.rcr.hi .rv{font-weight:600;color:var(--info)}
 .rcr.bad .rt2 i{background:var(--f-bad)}.rcr.bad .rv{color:var(--bad);font-weight:600}
 .rcr .rv{text-align:right;font-weight:500;white-space:nowrap}
-@media (max-width:560px){.rcr{grid-template-columns:minmax(0,120px) minmax(0,1fr) 70px}}
+@media (max-width:560px){.rcr{grid-template-columns:minmax(0,104px) minmax(30px,1fr) auto;gap:0 8px}.rcr .rv{font-size:12px}}
 .rp .body a{color:var(--info)}
 .rp,.rp .body{min-width:0;max-width:100%;overflow-wrap:anywhere}.rp .scrollx{max-width:100%}
 
@@ -474,9 +474,9 @@ a:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="config.js?v=6"></script>
+<script src="config.js?v=7"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.js"></script>
-<script src="store.js?v=6"></script>
+<script src="store.js?v=7"></script>
 <script>
 (function(){
 "use strict";
@@ -835,7 +835,7 @@ function mdLite(src){
   while(i<L.length){
     var l=L[i];
     if(/^\s*$/.test(l)){i++;continue}
-    if(/^##\s/.test(l)){o+='<h4>'+inl(l.replace(/^##\s+/,""))+'</h4>';i++;continue}
+    if(/^#{2,3}\s/.test(l)){o+='<h4>'+inl(l.replace(/^#{2,3}\s+/,""))+'</h4>';i++;continue}
     if(/^-\s/.test(l)){var li="";while(i<L.length&&/^-\s/.test(L[i])){li+='<li>'+inl(L[i].replace(/^-\s+/,""))+'</li>';i++}o+='<ul>'+li+'</ul>';continue}
     if(/^\|/.test(l)){
       var rows=[];
@@ -847,7 +847,7 @@ function mdLite(src){
       continue;
     }
     var p=[];
-    while(i<L.length&&!/^\s*$/.test(L[i])&&!/^(##\s|-\s|\|)/.test(L[i])){p.push(L[i]);i++}
+    while(i<L.length&&!/^\s*$/.test(L[i])&&!/^(#{2,3}\s|-\s|\|)/.test(L[i])){p.push(L[i]);i++}
     o+='<p>'+inl(p.join(" "))+'</p>';
   }
   return o;
