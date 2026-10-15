@@ -518,7 +518,11 @@ var PBV=[
 {name:"Chờ hàng về & packing",std:{US:10,VN:10},done:"Hàng đã về, kiểm tra và đóng gói xong.",
  task:{US:"Theo dõi hàng về, kiểm hàng, đóng gói.",VN:"Theo dõi hàng về, kiểm hàng, đóng gói."},
  help:{US:"Hướng dẫn kiểm hàng và đóng gói; xử lý hàng trễ hoặc lỗi.",VN:"Hướng dẫn kiểm hàng và đóng gói; xử lý hàng trễ hoặc lỗi."},
- risk:"Hàng trễ, hàng lỗi, đóng gói sơ sài."}
+ risk:"Hàng trễ, hàng lỗi, đóng gói sơ sài."},
+{name:"Bán hàng & đơn đầu tiên",std:{US:14,VN:14},done:"Có đơn hàng thật đầu tiên trên sàn (không phải đơn tự đặt).",
+ task:{US:"",VN:"Hàng về, đẩy bán: phản hồi khách trong 24 giờ, theo dõi đơn; nếu chưa có đơn, đổi thử 1 biến số (giá, ảnh, video)."},
+ help:{US:"",VN:"Chẩn đoán vì sao chưa có đơn (traffic, giá, listing, độ tin cậy shop) và đề ra 1 đến 2 thử nghiệm trong tuần."},
+ risk:"Quá 14 ngày sau khi có listing mà chưa có đơn: xem lại sản phẩm, giá, listing."}
 ];
 
 var PBU=[
@@ -571,7 +575,8 @@ var SUB={
 2:["Tải dữ liệu từ Kalodata","Tải dữ liệu từ FastMoss","Phân tích bằng AI theo bộ prompt của mentor","Nghiên cứu sản phẩm trên Taobao","Nghiên cứu sản phẩm trên 1688","Tổng hợp bảng dữ liệu sản phẩm","Làm bảng Excel tính giá bán"],
 3:["Chọn sản phẩm","Đặt hàng","Gộp kiện hàng trên 1688"],
 4:["Nhập dữ liệu và thuế thị trường vào sheet tính giá bán","Làm hình ảnh","Setup listing lên store"],
-5:["Hàng về","Kiểm hàng","Packing"]
+5:["Hàng về","Kiểm hàng","Packing"],
+6:["Đẩy bán sản phẩm","Phản hồi khách trong 24 giờ","Có đơn thật đầu tiên"]
 };
 var STORE={
 VN:["Đăng ký tài khoản TikTok Shop, chính chủ, thông tin chính xác","CCCD và giấy tờ chính chủ, khớp thông tin đăng ký (địa chỉ nhập không dấu nếu báo lỗi)","Mã số thuế, hình thức đăng ký (cá nhân hoặc hộ kinh doanh)","Tài khoản ngân hàng chính chủ nhận tiền","Shop được xác minh và duyệt","Kết nối vận chuyển và thông tin thuế trên store"],
@@ -665,7 +670,7 @@ function analyze(s){
     if(!openAss.length) attn.push({sev:2,t:"Chưa có bài nào đang giao"});
   }
   var attnSev=attn.reduce(function(m,x){return Math.max(m,x.sev)},0);
-  return {s:s,mk:mk,pb:pbm,ns:ns,cur:cur,done:done,days:days,std:std,risk:risk,why:why,meet:meet,meetNone:meetNone,lastHeld:lastHeld,held:held,ms:ms,hasOrder:!!s.firstOrder||(mk==="US"&&!!steps[8]),heldWeek:heldWeek.length>0,active:active,openAss:openAss,nextM:nextM,nextIn:nextIn,missing:missing,attn:attn,attnSev:attnSev,gap:gap,startD:startD};
+  return {s:s,mk:mk,pb:pbm,ns:ns,cur:cur,done:done,days:days,std:std,risk:risk,why:why,meet:meet,meetNone:meetNone,lastHeld:lastHeld,held:held,ms:ms,hasOrder:!!s.firstOrder||!!steps[ns],heldWeek:heldWeek.length>0,active:active,openAss:openAss,nextM:nextM,nextIn:nextIn,missing:missing,attn:attn,attnSev:attnSev,gap:gap,startD:startD};
 }
 
 /* ---------- render: Theo dõi ---------- */
