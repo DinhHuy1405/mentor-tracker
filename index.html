@@ -925,7 +925,7 @@ function stepCard(m,a){
     +'<div class="bd">'+(m.st==="cur"?'<p class="dn">Xong bước này khi: '+esc(m.pb.done)+'</p>':'')
     +(ck?'<p class="ckn">Đầu việc: '+m.nd+'/'+m.sub.length+'</p><ul class="ck">'+ck+'</ul>':'')
     +(m.st!=="done"&&m.pb.risk?'<p class="ckn" style="margin-top:10px">Rủi ro hay gặp: '+esc(m.pb.risk)+'</p>':'')
-    +(m.st!=="done"?'<div class="cpy"><button class="btn sm" data-copystep="'+esc(a.s.id)+':'+m.n+'">Sao chép tin nhắn giao bước này</button></div>':'')+'</div></details>';
+    +(m.st!=="done"&&!window.STUDENT_MODE?'<div class="cpy"><button class="btn sm" data-copystep="'+esc(a.s.id)+':'+m.n+'">Sao chép tin nhắn giao bước này</button></div>':'')+'</div></details>';
 }
 function secActivity(a){
   var s=a.s, steps=s.steps||{}, ev=[], t=today(), tk=iso(t);
@@ -962,31 +962,33 @@ function secActivity(a){
 }
 var STABS=[["tien-do","Tiến độ"],["bai-tap","Theo tuần"],["lich-hop","Lịch họp"],["bao-cao","Báo cáo"],["nhat-ky","Nhật ký"]];
 function viewStudent(id,tab){
-  tab=STABS.some(function(x){return x[0]===tab})?tab:"tien-do";
-  var back='<a class="back" href="#/hoc-vien">← Danh sách học viên</a>';
+  var SM=!!window.STUDENT_MODE, TABS=STABS.filter(function(x){return !SM||x[0]!=="nhat-ky"});
+  tab=TABS.some(function(x){return x[0]===tab})?tab:"tien-do";
+  var back=SM?'':'<a class="back" href="#/hoc-vien">← Danh sách học viên</a>';
   var s=students.filter(function(x){return x.id===id})[0];
   if(!s) return back+'<div class="empty">'+(students.length?'Không tìm thấy học viên này.':'Đang tải dữ liệu...')+'</div>';
   var a=analyze(s), pb=a.cur<=a.ns?a.pb[a.cur-1]:null, steps=s.steps||{};
+  if(SM){a.risk=0;a.attn=[]}
   var asn=assignments.filter(function(x){return x.studentId===s.id}).sort(function(p,q){return (q.assignedOn||"")<(p.assignedOn||"")?-1:1});
   var rs=reports.filter(function(r){return r.studentId===s.id}).sort(function(p,q){return (q.date||"")===(p.date||"")?(q.id<p.id?-1:1):((q.date||"")<(p.date||"")?-1:1)});
   var ms=a.ms.slice().sort(function(p,q){return p.date<q.date?1:-1});
   var cnt={"tien-do":"","bai-tap":asn.length,"lich-hop":ms.length,"bao-cao":rs.length,"nhat-ky":""};
   var sub=[s.pkg,s.platform,MK[a.mk]].filter(Boolean).map(function(x){return '<span>'+esc(x)+'</span>'}).join("");
-  var contact=[s.phone,s.email].filter(Boolean);
+  var contact=SM?[]:[s.phone,s.email].filter(Boolean);
   var nm=a.nextM;
   var out=back+'<div class="sp-h"><div><h2>'+esc(s.name)+'</h2><p class="sp-sub">'+sub+(contact.length?'<br>'+esc(contact.join(" · ")):'')+(s.start?'<br>Bắt đầu '+fmt(s.start):'')+'</p></div>'
-    +'<div class="sp-act"><span class="st r'+a.risk+'">'+RL[a.risk]+'</span></div></div>';
+    +(SM?'':'<div class="sp-act"><span class="st r'+a.risk+'">'+RL[a.risk]+'</span></div>')+'</div>';
   out+='<div class="brief">'
     +fig(a.done+"/"+a.ns,"bước hoàn thành"+(pb?", đang ở bước "+a.cur+": "+pb.name:""),a.done?"ok":"")
     +(pb?fig(a.days+" / "+a.std,"ngày ở bước (chuẩn "+a.std+")",a.risk>=3?"bad":(a.risk===2?"warn":"")):fig(a.done,"bước đã xong"))
     +fig(nm?fmt(nm.date)+(nm.time?" "+nm.time:""):"Chưa có","buổi họp kế tiếp",nm?"":"warn")
     +fig(a.openAss.length,"bài đang giao",a.openAss.some(function(x){return x.late})?"bad":"")+'</div>';
-  out+='<nav class="tabs stabs" aria-label="Mục của học viên">'+STABS.map(function(t){
+  out+='<nav class="tabs stabs" aria-label="Mục của học viên">'+TABS.map(function(t){
     return '<a href="#/'+esc(s.id)+'/'+t[0]+'"'+(t[0]===tab?' aria-current="page"':'')+'>'+t[1]+(cnt[t[0]]!==""?' <small>'+cnt[t[0]]+'</small>':'')+'</a>'}).join("")+'</nav>';
 
   if(tab==="tien-do"){
     var al=a.attn.slice().sort(function(p,q){return q.sev-p.sev});
-    if(al.length) out+='<section class="sec"><h2>Cần chú ý</h2><ul class="al">'+al.map(function(x){return '<li class="s'+x.sev+'">'+esc(x.t)+'</li>'}).join("")+'</ul></section>';
+    if(!SM&&al.length) out+='<section class="sec"><h2>Cần chú ý</h2><ul class="al">'+al.map(function(x){return '<li class="s'+x.sev+'">'+esc(x.t)+'</li>'}).join("")+'</ul></section>';
     var model=stepModel(a), totSub=0, doneSub=0;
     model.forEach(function(m){totSub+=m.sub.length;doneSub+=m.nd});
     var stl=STORE[a.mk]||STORE.VN, stk=((s.checks||{}).store)||[], stN=stk.filter(function(i){return i<stl.length}).length;
@@ -994,7 +996,7 @@ function viewStudent(id,tab){
       +stl.map(function(t,i){return '<li class="'+(stk.indexOf(i)>=0?"y":"")+'">'+esc(t)+'</li>'}).join("")+'</ul></section>';
     out+='<section class="sec"><h2>Hành trình '+a.ns+' bước</h2><p class="hint">Mốc chuẩn tính theo thị trường '+esc(a.mk)+'. Đã hoàn thành '+a.done+'/'+a.ns+' bước'+(totSub?', '+doneSub+'/'+totSub+' đầu việc':'')+'. Bấm vào từng bước để xem đầu việc.</p>'
       +'<div class="sp10">'+model.map(function(m){return '<div class="nd '+m.st+(m.st==="cur"?" r"+a.risk:"")+'"><i>'+m.n+'</i><span>'+esc(m.pb.name)+'</span></div>'}).join("")+'</div>'
-      +'<div class="slg"><span><i style="background:var(--done)"></i>Đã xong</span><span><i style="background:var(--f-ok)"></i>Đang làm, đúng hạn</span><span><i style="background:var(--f-warn)"></i>Chậm</span><span><i style="background:var(--f-bad)"></i>Cần can thiệp</span><span><i style="background:var(--todo)"></i>Chưa tới</span></div>'
+      +'<div class="slg"><span><i style="background:var(--done)"></i>Đã xong</span><span><i style="background:var(--f-ok)"></i>Đang làm</span>'+(SM?'':'<span><i style="background:var(--f-warn)"></i>Chậm</span><span><i style="background:var(--f-bad)"></i>Cần can thiệp</span>')+'<span><i style="background:var(--todo)"></i>Chưa tới</span></div>'
       +model.map(function(m){return stepCard(m,a)}).join("")+'</section>';
     var help=[];
     if(s.flag&&s.flag!=="ok") help.push("Tình trạng: "+FLAGS[s.flag]);
@@ -1002,8 +1004,8 @@ function viewStudent(id,tab){
     if(s.mentorNext) help.push("Mentor sẽ làm: "+s.mentorNext);
     if(pb) help.push(pb.help[a.mk]);
     out+='<section class="sec"><h2>Tuần này</h2><div class="spair"><div><h4>Học viên cần làm</h4><p>'+esc(pb?pb.task[a.mk]:"Tổng kết, thu thập phản hồi, chốt kết thúc mentor.")+'</p></div>'
-      +'<div><h4>Mentor cần support</h4><p>'+esc(help.join("\n"))+'</p></div></div></section>';
-    var prof=[["Mục tiêu",s.goal],["Ngách",s.niche],["Đang vướng",s.blocker],["Mentor sẽ làm",s.mentorNext],["Ghi chú",s.note]].filter(function(x){return x[1]});
+      +(SM?'':'<div><h4>Mentor cần support</h4><p>'+esc(help.join("\n"))+'</p></div>')+'</div></section>';
+    var prof=(SM?[["Mục tiêu",s.goal],["Ngách",s.niche]]:[["Mục tiêu",s.goal],["Ngách",s.niche],["Đang vướng",s.blocker],["Mentor sẽ làm",s.mentorNext],["Ghi chú",s.note]]).filter(function(x){return x[1]});
     if(prof.length) out+='<section class="sec"><h2>Hồ sơ</h2><div class="spair">'+prof.map(function(x){return '<div><h4>'+x[0]+'</h4><p>'+esc(x[1])+'</p></div>'}).join("")+'</div></section>';
     return out;
   }
@@ -1044,7 +1046,7 @@ function viewStudent(id,tab){
           +((x.items||[]).length?'<ol>'+x.items.map(function(it){return '<li>'+esc(it)+'</li>'}).join("")+'</ol>':'')
           +(x.note?'<div class="nt">'+esc(x.note)+'</div>':'')+sbh
           +(rv?'<div class="rv2"><h4>Nhận xét và chỉnh sửa của mentor</h4>'+rv+'</div>':'')
-          +(x.status!=="Đạt"&&x.status!=="Hủy"?'<div class="cpy"><button class="btn sm" data-copyass="'+esc(x.id)+'">Sao chép tin nhắn giao bài này</button></div>':'')+'</div>';
+          +(!SM&&x.status!=="Đạt"&&x.status!=="Hủy"?'<div class="cpy"><button class="btn sm" data-copyass="'+esc(x.id)+'">Sao chép tin nhắn giao bài này</button></div>':'')+'</div>';
       });
       if(w.ms.length) out+='<div class="blk"><h4>Buổi họp và take note của mentor</h4>'+w.ms.slice().sort(function(p,q){return p.date<q.date?-1:1}).map(function(m){
         return '<div class="mt '+(m.status==="Đã họp"?'ok':'')+'"><b>'+fmt(m.date)+(m.time?' '+esc(m.time):'')+'</b><span>'+esc(m.status)+'</span>'+(m.notes?'<p>'+esc(m.notes)+'</p>':'')+(m.actions?'<p><strong>Việc tiếp theo:</strong> '+esc(m.actions)+'</p>':'')+'</div>'}).join("")+'</div>';
@@ -1081,6 +1083,12 @@ function render(){
   var t=today();
   $("#today").textContent="Hôm nay "+pad(t.getDate())+"/"+pad(t.getMonth()+1)+"/"+t.getFullYear();
   var m=/^#\/([\w-]+)(?:\/([\w-]+))?$/.exec(location.hash||"");
+  if(window.STUDENT_MODE){
+    var tb=m&&m[1]===window.STUDENT_MODE?m[2]:(m&&MAIN.every(function(x){return x[0]!==m[1]})?null:null);
+    $("#nav").hidden=true; $("#nav").innerHTML="";
+    $("#app").innerHTML=viewStudent(window.STUDENT_MODE,tb);
+    return;
+  }
   var main=!m||MAIN.some(function(x){return x[0]===m[1]});
   $("#nav").innerHTML=main?mainNav(m?m[1]:"tong-quan"):"";
   $("#nav").hidden=!main;

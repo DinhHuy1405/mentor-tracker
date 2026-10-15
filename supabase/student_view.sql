@@ -1,0 +1,4 @@
+-- Học viên đăng nhập bằng email và mật khẩu, chỉ đọc được dữ liệu của chính mình qua hàm này.
+-- Không lộ: cờ rủi ro, ghi chú nội bộ (assignments.note, students.note, blocker, mentorNext), ghi chú buổi họp chưa diễn ra.
+-- Học viên thấy ghi chú bài tập ở trường pubnote.
+-- (Nội dung hàm đã chạy trên Supabase; xem public.student_view())

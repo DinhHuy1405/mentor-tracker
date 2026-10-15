@@ -174,6 +174,33 @@
     host.insertAdjacentElement("afterend", b);
   }
 
+  /* ---------- Học viên: chỉ xem dữ liệu của chính mình qua hàm student_view ---------- */
+  function studentDb(view) {
+    var subs = {}, cur = view;
+    function rowsOf(name) {
+      if (name === "students") return [{ id: cur.student.id, data: cur.student }];
+      return (cur[name] || []).map(function (x) { return { id: x.id, data: x }; });
+    }
+    function emitAll() { Object.keys(subs).forEach(function (n) { subs[n].forEach(function (f) { f(snapOf(rowsOf(n))); }); }); }
+    setInterval(function () {
+      sb.rpc("student_view").then(function (r) { if (r && r.data) { cur = r.data; emitAll(); } });
+    }, 60000);
+    function ro() { return Promise.reject(new Error("Trang này chỉ để xem")); }
+    return {
+      collection: function (name) {
+        return {
+          onSnapshot: function (next) {
+            (subs[name] = subs[name] || []).push(next);
+            setTimeout(function () { next(snapOf(rowsOf(name))); }, 0);
+            return function () { subs[name] = subs[name].filter(function (f) { return f !== next; }); };
+          },
+          doc: function () { return { update: ro, set: ro, delete: ro }; },
+          add: ro
+        };
+      }
+    };
+  }
+
   async function getDb() {
     if (!useSupabase) {
       var b = document.getElementById("banner");
@@ -184,6 +211,10 @@
     var cur = await sb.auth.getSession();
     if (!(cur.data && cur.data.session)) await loginScreen();
     addSignOut();
+    try {
+      var sv = await sb.rpc("student_view");
+      if (sv && sv.data && sv.data.student) { window.STUDENT_MODE = sv.data.student.id; return studentDb(sv.data); }
+    } catch (e) { /* không phải học viên: dùng chế độ mentor */ }
     return supaDb();
   }
 
