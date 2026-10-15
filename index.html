@@ -57,7 +57,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
 .pill.r1{background:var(--ok-bg);color:var(--ok)} .pill.r2{background:var(--warn-bg);color:var(--warn)}
 .pill.r3{background:var(--bad-bg);color:var(--bad)} .pill.r0{background:var(--todo);color:var(--muted)}
-.track{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;margin:14px 0 10px}
+.track{display:grid;grid-template-columns:repeat(9,1fr);gap:3px;margin:14px 0 10px}
 .seg{height:22px;border-radius:4px;background:var(--todo);color:var(--soft);font-size:11px;font-weight:500;display:grid;place-items:center}
 .seg.done{background:var(--accent);color:var(--accent-ink)}
 .seg.cur{background:var(--surface);box-shadow:inset 0 0 0 2px currentColor;font-weight:600}
@@ -223,7 +223,7 @@ label.f{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:50
 .rw .nm{font-weight:600;font-size:15.5px;line-height:1.3}
 .rw .sb{color:var(--muted);font-size:12.5px;margin-top:2px}
 .rw .ct{color:var(--soft);font-size:12.5px;margin-top:2px;overflow-wrap:anywhere}.rw .ct.none{color:var(--warn)}
-.ruler{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;height:10px;margin-top:5px}
+.ruler{display:grid;grid-template-columns:repeat(9,1fr);gap:3px;height:10px;margin-top:5px}
 .ruler i{display:block;background:var(--todo);border-radius:1px}
 .ruler i.d{background:var(--ink)}
 .ruler i.c.r0,.ruler i.c.r1{background:var(--f-ok)}.ruler i.c.r2{background:var(--f-warn)}.ruler i.c.r3{background:var(--f-bad)}
@@ -383,7 +383,7 @@ label.f{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:50
 .pg:first-of-type{border-top:0}
 .pg .lb{font-size:13.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pg .lb a{color:inherit;text-decoration:none}.pg .lb a:hover{text-decoration:underline}
-.seg10{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;height:16px}
+.seg10{display:grid;grid-template-columns:repeat(9,1fr);gap:3px;height:16px}
 .seg10 i{display:block;background:var(--todo);border-radius:2px}
 .seg10 i.d{background:var(--done)}
 .seg10 i.c.r0,.seg10 i.c.r1{background:var(--f-ok)}.seg10 i.c.r2{background:var(--f-warn)}.seg10 i.c.r3{background:var(--f-bad)}
@@ -392,8 +392,8 @@ label.f{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:50
 .bul.r1 .tr i{background:var(--f-ok)}
 .stk{display:flex;height:14px;background:var(--todo);overflow:hidden}
 .stk i{display:block;height:100%}.stk .a{background:var(--done)}.stk .b{background:var(--f-ok)}.stk .c{background:var(--f-bad)}
-/* Trang học viên: stepper 10 bước */
-.sp10{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));margin:6px 0 4px}
+/* Trang học viên: stepper 9 bước */
+.sp10{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));margin:6px 0 4px}
 .sp10 .nd{position:relative;text-align:center;padding:0 2px}
 .sp10 .nd::before{content:"";position:absolute;top:16px;left:-50%;width:100%;height:4px;background:var(--todo);z-index:0}
 .sp10 .nd:first-child::before{display:none}
@@ -521,14 +521,10 @@ var PB=[
  task:{US:"Đăng ít nhất 3 listing: tiêu đề có từ khóa, ảnh chính rõ, video ngắn, giá và vận chuyển đã tính biên lợi nhuận.",VN:"Đăng ít nhất 3 listing: tiêu đề có từ khóa, ảnh chính rõ, video ngắn, giá và vận chuyển đã tính biên lợi nhuận."},
  help:{US:"Review từng listing (tiêu đề, ảnh chính, giá, thông số, chính sách vận chuyển) bằng checklist trước khi đăng.",VN:"Review từng listing (tiêu đề, ảnh chính, giá, thông số, chính sách vận chuyển) bằng checklist trước khi đăng."},
  risk:"Listing sơ sài; vi phạm chính sách nên bị gỡ."},
-{name:"Content / Live / Affiliate",std:{US:10,VN:10},done:"Đã đăng ít nhất 10 video hoặc live, hoặc có creator/affiliate nhận mẫu; có số liệu view.",
- task:{US:"Quay 5–10 video mỗi tuần (hook 3 giây đầu), gửi mẫu và hoa hồng cho creator, lên lịch live thử.",VN:"Quay 5–10 video mỗi tuần (hook 3 giây đầu), gửi mẫu và hoa hồng cho creator, lên lịch live thử."},
- help:{US:"Góp ý hook và kịch bản từng video; hướng dẫn tìm creator phù hợp bằng FastMoss và mẫu tin nhắn outreach.",VN:"Góp ý hook và kịch bản từng video; hướng dẫn tìm creator phù hợp bằng FastMoss và mẫu tin nhắn outreach."},
- risk:"Học viên ngại quay, đăng không đều."},
-{name:"Chạy traffic / Ads",std:{US:10,VN:10},done:"Chạy xong vòng test ngân sách nhỏ, có CTR và CVR; đã quyết định dừng hay tăng.",
- task:{US:"Chạy thử ngân sách nhỏ (ads, GMV Max hoặc đẩy affiliate), ghi CTR, CVR, ROAS mỗi ngày vào báo cáo.",VN:"Chạy thử ngân sách nhỏ (ads hoặc đẩy affiliate), ghi CTR, CVR, ROAS mỗi ngày vào báo cáo."},
- help:{US:"Đặt ngân sách và ngưỡng dừng lỗ, đọc số liệu cùng học viên, quyết định tối ưu, dừng hay tăng.",VN:"Đặt ngân sách và ngưỡng dừng lỗ, đọc số liệu cùng học viên, quyết định tối ưu, dừng hay tăng."},
- risk:"Đốt ngân sách không có ngưỡng dừng."},
+{name:"Marketing",std:{US:14,VN:14},done:"Đã đăng ít nhất 10 video hoặc live, hoặc có creator/affiliate nhận mẫu; đã chạy xong vòng test ngân sách nhỏ, có CTR và CVR và quyết định dừng hay tăng.",
+ task:{US:"Quay 5–10 video mỗi tuần (hook 3 giây đầu), gửi mẫu và hoa hồng cho creator, lên lịch live thử; chạy thử ngân sách nhỏ (ads, GMV Max hoặc đẩy affiliate), ghi CTR, CVR, ROAS mỗi ngày vào báo cáo.",VN:"Quay 5–10 video mỗi tuần (hook 3 giây đầu), gửi mẫu và hoa hồng cho creator, lên lịch live thử; chạy thử ngân sách nhỏ (ads hoặc đẩy affiliate), ghi CTR, CVR, ROAS mỗi ngày vào báo cáo."},
+ help:{US:"Góp ý hook và kịch bản từng video; hướng dẫn tìm creator bằng FastMoss và mẫu outreach; đặt ngân sách và ngưỡng dừng lỗ, đọc số liệu cùng học viên, quyết định tối ưu, dừng hay tăng.",VN:"Góp ý hook và kịch bản từng video; hướng dẫn tìm creator bằng FastMoss và mẫu outreach; đặt ngân sách và ngưỡng dừng lỗ, đọc số liệu cùng học viên, quyết định tối ưu, dừng hay tăng."},
+ risk:"Học viên ngại quay, đăng không đều; đốt ngân sách không có ngưỡng dừng."},
 {name:"Có đơn đầu tiên",std:{US:14,VN:14},done:"Có đơn hàng thật đầu tiên trên sàn (không phải đơn tự đặt).",
  task:{US:"Theo dõi đơn: phản hồi khách trong 24 giờ, xác nhận nhà cung cấp và kho sẵn sàng; nếu chưa có đơn, đổi thử 1 biến số (giá, ảnh, video).",VN:"Theo dõi đơn: phản hồi khách trong 24 giờ, xác nhận nhà cung cấp và kho sẵn sàng; nếu chưa có đơn, đổi thử 1 biến số (giá, ảnh, video)."},
  help:{US:"Chẩn đoán vì sao chưa có đơn (traffic, giá, listing, độ tin cậy shop) và đề ra 1–2 thử nghiệm trong tuần.",VN:"Chẩn đoán vì sao chưa có đơn (traffic, giá, listing, độ tin cậy shop) và đề ra 1–2 thử nghiệm trong tuần."},
@@ -539,6 +535,7 @@ var PB=[
  risk:"Đơn trễ, hoàn hàng, đối soát lệch."}
 ];
 
+var NS=PB.length;
 var SUB={
 1:["Lọc 20 sản phẩm đang bán tốt","Tính biên lợi nhuận sau phí sàn và vận chuyển","Chọn shortlist 3 sản phẩm","Chốt 1 sản phẩm test"],
 2:["Xin báo giá ít nhất 3 nhà cung cấp","Hỏi MOQ và thời gian giao","Đặt và kiểm tra hàng mẫu","Tính giá vốn về tay","Chốt nhà cung cấp"],
@@ -546,10 +543,9 @@ var SUB={
 4:["Điền hồ sơ khớp tuyệt đối với giấy tờ","Nộp hồ sơ đăng ký gian hàng","Chụp màn hình xác nhận đã nộp"],
 5:["Theo dõi email và Seller Center mỗi ngày","Bổ sung hồ sơ khi sàn yêu cầu","Shop được duyệt","Nối phương thức nhận tiền và vận chuyển"],
 6:["Chuẩn bị ảnh và video","Viết tiêu đề có từ khóa và mô tả","Đăng listing 1","Đăng listing 2","Đăng listing 3"],
-7:["Quay 5 video đầu tiên","Đăng đều 5 đến 10 video mỗi tuần","Gửi mẫu cho creator","Lên lịch live thử"],
-8:["Đặt ngân sách và ngưỡng dừng lỗ","Chạy vòng test nhỏ","Ghi CTR, CVR, ROAS mỗi ngày","Quyết định dừng hay tăng"],
-9:["Có đơn thật đầu tiên","Phản hồi khách trong 24 giờ","Xác nhận nhà cung cấp và kho sẵn sàng"],
-10:["Đóng gói và gửi hàng đúng hạn","Cập nhật tracking","Chăm sóc khách","Đối soát tiền về","Tổng kết bài học và chốt kết thúc mentor"]
+7:["Quay 5 video đầu tiên","Đăng đều 5 đến 10 video mỗi tuần","Gửi mẫu cho creator","Lên lịch live thử","Đặt ngân sách và ngưỡng dừng lỗ","Chạy vòng test nhỏ","Ghi CTR, CVR, ROAS mỗi ngày","Quyết định dừng hay tăng"],
+8:["Có đơn thật đầu tiên","Phản hồi khách trong 24 giờ","Xác nhận nhà cung cấp và kho sẵn sàng"],
+9:["Đóng gói và gửi hàng đúng hạn","Cập nhật tracking","Chăm sóc khách","Đối soát tiền về","Tổng kết bài học và chốt kết thúc mentor"]
 };
 function subs(n,mk){var x=SUB[n];return Array.isArray(x)?x:(x&&x[mk]?x[mk]:[])}
 var FLAGS={ok:"Bình thường",ket:"Đang kẹt",cho:"Chờ bên thứ ba",cham:"Học viên chậm phản hồi"};
@@ -574,10 +570,10 @@ var colS=null, colM=null;
 function analyze(s){
   var steps=s.steps||{}, mk=s.market==="US"?"US":"VN", t=today();
   var cur=11, done=0, n;
-  for(n=1;n<=10;n++){ if(steps[n]) done++; }
-  for(n=1;n<=10;n++){ if(!steps[n]){cur=n;break;} }
+  for(n=1;n<=NS;n++){ if(steps[n]) done++; }
+  for(n=1;n<=NS;n++){ if(!steps[n]){cur=n;break;} }
   var since=null, days=0, std=null, ratio=0;
-  if(cur<=10){ since=parse(cur===1?s.start:steps[cur-1])||parse(s.start); days=since?Math.max(0,diff(t,since)):0; std=PB[cur-1].std[mk]; ratio=days/std; }
+  if(cur<=NS){ since=parse(cur===1?s.start:steps[cur-1])||parse(s.start); days=since?Math.max(0,diff(t,since)):0; std=PB[cur-1].std[mk]; ratio=days/std; }
   var ms=meetings.filter(function(m){return m.studentId===s.id});
   var held=ms.filter(function(m){return m.status==="Đã họp"&&parse(m.date)}).sort(function(a,b){return a.date<b.date?1:-1});
   var lastHeld=held.length?held[0]:null;
@@ -612,7 +608,7 @@ function analyze(s){
   if(!s.niche) missing.push("ngách");
   if(!s.goal) missing.push("mục tiêu");
   var attn=[];
-  if(active&&cur<=10){
+  if(active&&cur<=NS){
     if(s.flag==="ket") attn.push({sev:3,t:"Đang kẹt"+(s.blocker?": "+s.blocker:"")});
     else if(s.flag==="cho"||s.flag==="cham") attn.push({sev:2,t:FLAGS[s.flag]+(s.blocker?": "+s.blocker:"")});
     if(ratio>1.5) attn.push({sev:3,t:"Đã "+days+" ngày ở bước "+cur+", chuẩn "+std+" ngày"});
@@ -631,7 +627,7 @@ function analyze(s){
     var at=dd?new Date(dd.getFullYear(),dd.getMonth(),dd.getDate(),tm?+tm[1]:23,tm?+tm[2]:59):null;
     var o=Object.assign({},x); o.at=at; o.late=!!at&&at<now; o.soon=!!at&&!o.late&&(at-now)<=48*36e5; return o;
   }).sort(function(p,q){return (p.at||0)-(q.at||0)});
-  if(active&&cur<=10){
+  if(active&&cur<=NS){
     openAss.forEach(function(x){
       if(x.late) attn.push({sev:3,t:"Bài trễ hạn: "+x.title+" (hạn "+fmt(x.due)+(x.dueTime?" "+x.dueTime:"")+")"});
       else if(x.soon) attn.push({sev:2,t:"Bài sắp đến hạn: "+x.title+" (hạn "+fmt(x.due)+(x.dueTime?" "+x.dueTime:"")+")"});
@@ -639,21 +635,21 @@ function analyze(s){
     if(!openAss.length) attn.push({sev:2,t:"Chưa có bài nào đang giao"});
   }
   var attnSev=attn.reduce(function(m,x){return Math.max(m,x.sev)},0);
-  return {s:s,mk:mk,cur:cur,done:done,days:days,std:std,risk:risk,why:why,meet:meet,meetNone:meetNone,lastHeld:lastHeld,held:held,ms:ms,hasOrder:!!steps[9],heldWeek:heldWeek.length>0,active:active,openAss:openAss,nextM:nextM,nextIn:nextIn,missing:missing,attn:attn,attnSev:attnSev,gap:gap,startD:startD};
+  return {s:s,mk:mk,cur:cur,done:done,days:days,std:std,risk:risk,why:why,meet:meet,meetNone:meetNone,lastHeld:lastHeld,held:held,ms:ms,hasOrder:!!steps[8],heldWeek:heldWeek.length>0,active:active,openAss:openAss,nextM:nextM,nextIn:nextIn,missing:missing,attn:attn,attnSev:attnSev,gap:gap,startD:startD};
 }
 
 /* ---------- render: Theo dõi ---------- */
 function ruler(a){
   var s=a.s,h="",i;
-  for(i=1;i<=10;i++){
+  for(i=1;i<=NS;i++){
     var d=(s.steps||{})[i];
     h+='<i class="'+(d?"d":(i===a.cur?"c r"+a.risk:""))+'" title="'+i+'. '+esc(PB[i-1].name)+(d?" (xong "+fmt(d)+")":"")+'"></i>';
   }
-  return '<div class="ruler" role="img" aria-label="Bước '+Math.min(a.cur,10)+' trên 10">'+h+'</div>';
+  return '<div class="ruler" role="img" aria-label="Bước '+Math.min(a.cur,NS)+' trên '+NS+'">'+h+'</div>';
 }
 function row(a){
-  var s=a.s, pb=a.cur<=10?PB[a.cur-1]:null;
-  var stepTxt=pb?"Bước "+a.cur+"/10 · "+pb.name:"Đã hoàn tất 10 bước";
+  var s=a.s, pb=a.cur<=NS?PB[a.cur-1]:null;
+  var stepTxt=pb?"Bước "+a.cur+"/"+NS+" · "+pb.name:"Đã hoàn tất "+NS+" bước";
   var task=pb?pb.task[a.mk]:"Tổng kết, thu thập phản hồi, chốt kết thúc mentor.";
   var help=[];
   if(s.flag&&s.flag!=="ok") help.push("Tình trạng: "+FLAGS[s.flag]);
@@ -714,12 +710,12 @@ function secWeeks(){
 }
 function secDist(live){
   var N=live.length||1, h='';
-  for(var k=1;k<=10;k++){
+  for(var k=1;k<=NS;k++){
     var done=live.filter(function(a){return (a.s.steps||{})[k]}).length;
     var cur=live.filter(function(a){return a.cur===k}).length;
     h+='<div class="fun"><div class="lb">'+k+'. '+esc(PB[k-1].name)+'</div><div class="tr" role="img" aria-label="'+done+' xong, '+cur+' đang làm trên '+live.length+'"><i class="d" style="width:'+(done/N*100)+'%"></i><i class="c" style="width:'+(cur/N*100)+'%"></i></div><div class="nu">xong '+done+' · đang '+cur+'</div></div>';
   }
-  return '<section class="sec"><h2>Phễu 10 bước</h2><p class="hint">Màu đậm là số học viên đã xong bước đó, màu nhạt là đang làm. Thấy ngay bước nào đang nghẽn.</p>'+h+'</section>';
+  return '<section class="sec"><h2>Phễu '+NS+' bước</h2><p class="hint">Màu đậm là số học viên đã xong bước đó, màu nhạt là đang làm. Thấy ngay bước nào đang nghẽn.</p>'+h+'</section>';
 }
 function secTimeline(live){
   var t=today(), rows=live.slice().sort(function(a,b){return (a.s.createdAt||0)-(b.s.createdAt||0)});
@@ -735,12 +731,12 @@ function secTimeline(live){
     var cy=TM+i*RH+22, nm=a.s.name.length>22?a.s.name.slice(0,21)+"…":a.s.name;
     g+='<text class="nm" x="0" y="'+(cy+4)+'">'+esc(nm)+'</text><line x1="'+LM+'" x2="'+(W-RM)+'" y1="'+cy+'" y2="'+cy+'" style="stroke:var(--line)" />';
     var prev=a.startD||t;
-    for(var k=1;k<=10;k++){
+    for(var k=1;k<=NS;k++){
       var dd=parse((a.s.steps||{})[k]); if(!dd) break;
       var x0=X(prev), x1=X(dd); g+='<rect x="'+x0+'" y="'+(cy-5)+'" width="'+Math.max(3,x1-x0-1.5)+'" height="10" style="fill:var(--done)"><title>'+k+'. '+esc(PB[k-1].name)+' (xong '+fmt((a.s.steps||{})[k])+')</title></rect>';
       prev=dd;
     }
-    if(a.cur<=10){
+    if(a.cur<=NS){
       var xs=X(prev), xe=X(t); g+='<rect x="'+xs+'" y="'+(cy-5)+'" width="'+Math.max(3,xe-xs)+'" height="10" style="fill:'+col(a.risk)+'"><title>Bước '+a.cur+': '+esc(PB[a.cur-1].name)+', ngày '+a.days+' / chuẩn '+a.std+'</title></rect>';
       var xx=X(addDays(prev,a.std)); g+='<line x1="'+xx+'" x2="'+xx+'" y1="'+(cy-11)+'" y2="'+(cy+11)+'" style="stroke:var(--ink);stroke-width:1.5" />';
     }
@@ -759,14 +755,14 @@ function secTimeline(live){
 function secProgress(live){
   var rows=live.slice().sort(function(x,y){return y.done-x.done||x.s.name.localeCompare(y.s.name)});
   var h=rows.map(function(a){
-    var seg="";for(var k=1;k<=10;k++){var d=(a.s.steps||{})[k];seg+='<i class="'+(d?"d":(k===a.cur?"c r"+a.risk:""))+'" title="'+k+'. '+esc(PB[k-1].name)+(d?" (xong "+fmt(d)+")":"")+'"></i>'}
-    return '<div class="pg"><div class="lb"><a href="#/'+esc(a.s.id)+'">'+esc(a.s.name)+'</a></div><div class="seg10">'+seg+'</div><div class="nu">'+a.done+'/10</div></div>';
+    var seg="";for(var k=1;k<=NS;k++){var d=(a.s.steps||{})[k];seg+='<i class="'+(d?"d":(k===a.cur?"c r"+a.risk:""))+'" title="'+k+'. '+esc(PB[k-1].name)+(d?" (xong "+fmt(d)+")":"")+'"></i>'}
+    return '<div class="pg"><div class="lb"><a href="#/'+esc(a.s.id)+'">'+esc(a.s.name)+'</a></div><div class="seg10">'+seg+'</div><div class="nu">'+a.done+'/'+NS+'</div></div>';
   }).join("");
   return '<section class="sec"><h2>Tiến độ từng học viên</h2><p class="hint">Mỗi ô là một bước. Xanh lá là đã xong, xanh dương là đang làm đúng hạn, vàng là chậm, đỏ là cần can thiệp, xám là chưa tới.</p>'+h
    +'<div class="legend"><span><i class="sw-done"></i>Đã xong</span><span><i class="sw-cur"></i>Đang làm, đúng hạn</span><span><i style="background:var(--f-warn)"></i>Chậm</span><span><i style="background:var(--f-bad)"></i>Cần can thiệp</span><span><i style="background:var(--todo)"></i>Chưa tới</span></div></section>';
 }
 function secBullet(live){
-  var rows=live.filter(function(a){return a.cur<=10}).sort(function(x,y){return y.days/y.std-x.days/x.std});
+  var rows=live.filter(function(a){return a.cur<=NS}).sort(function(x,y){return y.days/y.std-x.days/x.std});
   if(!rows.length) return '';
   var h=rows.map(function(a){
     var r=a.days/a.std, rc=r>1.5?"r3":(r>1?"r2":"r1");
@@ -802,7 +798,7 @@ function secAttn(live){
   if(!list.length) return h+'<p class="hint">Không có việc nào gấp.</p></section>';
   return h+'<div class="atl">'+list.map(function(a){
     var it=a.attn.filter(function(x){return x.sev>=2}).sort(function(p,q){return q.sev-p.sev}).slice(0,3);
-    return '<div class="ai"><div class="who"><b><a href="#/'+esc(a.s.id)+'" style="color:inherit">'+esc(a.s.name)+'</a></b><span>'+(a.cur<=10?'Bước '+a.cur+'/10':'Hoàn tất')+'</span></div><ul>'
+    return '<div class="ai"><div class="who"><b><a href="#/'+esc(a.s.id)+'" style="color:inherit">'+esc(a.s.name)+'</a></b><span>'+(a.cur<=NS?'Bước '+a.cur+'/'+NS:'Hoàn tất')+'</span></div><ul>'
       +it.map(function(x){return '<li class="s'+x.sev+'"><em>'+(x.sev>=3?'Gấp':'Lưu ý')+'</em><span>'+esc(x.t)+'</span></li>'}).join("")+'</ul></div>';
   }).join("")+'</div></section>';
 }
@@ -813,7 +809,7 @@ function viewTrack(tab){
   var live=as.filter(function(a){return a.active});
   var attn=active.filter(function(a){return a.risk>=2}).length;
   var orders=active.filter(function(a){return a.hasOrder}).length;
-  var nomeet=live.filter(function(a){return a.cur<=10&&a.meetNone}).length;
+  var nomeet=live.filter(function(a){return a.cur<=NS&&a.meetNone}).length;
   var late=live.reduce(function(n,a){return n+a.openAss.filter(function(x){return x.late}).length},0);
   if(!students.length) return '<div class="empty">Chưa có học viên. Nhắn trong cuộc trò chuyện để thêm học viên.</div>';
   var out='';
@@ -870,7 +866,7 @@ function mdLite(src){
 
 function stepModel(a){
   var s=a.s, steps=s.steps||{}, mk=a.mk, prev=parse(s.start), out=[];
-  for(var n=1;n<=10;n++){
+  for(var n=1;n<=NS;n++){
     var d=parse(steps[n]), pb=PB[n-1], std=pb.std[mk], sub=subs(n,mk), ck=((s.checks||{})[n])||[];
     var st=d?"done":(n===a.cur?"cur":"todo"), days=null;
     if(d&&prev) days=Math.max(0,diff(d,prev)); else if(st==="cur") days=a.days;
@@ -892,7 +888,7 @@ function stepCard(m,a){
 }
 function secActivity(a){
   var s=a.s, steps=s.steps||{}, ev=[], t=today(), tk=iso(t);
-  for(var n=1;n<=10;n++) if(steps[n]) ev.push({d:steps[n],k:"step",g:"step",t:"Hoàn thành bước "+n+": "+PB[n-1].name});
+  for(var n=1;n<=NS;n++) if(steps[n]) ev.push({d:steps[n],k:"step",g:"step",t:"Hoàn thành bước "+n+": "+PB[n-1].name});
   a.ms.forEach(function(m){
     if(m.status==="Hủy") return;
     ev.push({d:m.date,k:m.status==="Đã họp"?"held":(m.status==="Sắp tới"?"meet":"oth"),g:"meet",t:"Họp 1:1"+(m.time?" lúc "+m.time:"")+" ("+m.status+")",x:m.actions?"Action items: "+m.actions:""});
@@ -929,7 +925,7 @@ function viewStudent(id,tab){
   var back='<a class="back" href="#/hoc-vien">← Danh sách học viên</a>';
   var s=students.filter(function(x){return x.id===id})[0];
   if(!s) return back+'<div class="empty">'+(students.length?'Không tìm thấy học viên này.':'Đang tải dữ liệu...')+'</div>';
-  var a=analyze(s), pb=a.cur<=10?PB[a.cur-1]:null, steps=s.steps||{};
+  var a=analyze(s), pb=a.cur<=NS?PB[a.cur-1]:null, steps=s.steps||{};
   var asn=assignments.filter(function(x){return x.studentId===s.id}).sort(function(p,q){return (q.assignedOn||"")<(p.assignedOn||"")?-1:1});
   var rs=reports.filter(function(r){return r.studentId===s.id}).sort(function(p,q){return (q.date||"")===(p.date||"")?(q.id<p.id?-1:1):((q.date||"")<(p.date||"")?-1:1)});
   var ms=a.ms.slice().sort(function(p,q){return p.date<q.date?1:-1});
@@ -940,7 +936,7 @@ function viewStudent(id,tab){
   var out=back+'<div class="sp-h"><div><h2>'+esc(s.name)+'</h2><p class="sp-sub">'+sub+(contact.length?'<br>'+esc(contact.join(" · ")):'')+(s.start?'<br>Bắt đầu '+fmt(s.start):'')+'</p></div>'
     +'<div class="sp-act"><span class="st r'+a.risk+'">'+RL[a.risk]+'</span><button class="btn primary sm" data-copy="'+esc(s.id)+'">Sao chép tin nhắn giao bài</button></div></div>';
   out+='<div class="brief">'
-    +fig(a.done+"/10","bước hoàn thành"+(pb?", đang ở bước "+a.cur+": "+pb.name:""),a.done?"ok":"")
+    +fig(a.done+"/"+NS,"bước hoàn thành"+(pb?", đang ở bước "+a.cur+": "+pb.name:""),a.done?"ok":"")
     +(pb?fig(a.days+" / "+a.std,"ngày ở bước (chuẩn "+a.std+")",a.risk>=3?"bad":(a.risk===2?"warn":"")):fig(a.done,"bước đã xong"))
     +fig(nm?fmt(nm.date)+(nm.time?" "+nm.time:""):"Chưa có","buổi họp kế tiếp",nm?"":"warn")
     +fig(a.openAss.length,"bài đang giao",a.openAss.some(function(x){return x.late})?"bad":"")+'</div>';
@@ -952,7 +948,7 @@ function viewStudent(id,tab){
     if(al.length) out+='<section class="sec"><h2>Cần chú ý</h2><ul class="al">'+al.map(function(x){return '<li class="s'+x.sev+'">'+esc(x.t)+'</li>'}).join("")+'</ul></section>';
     var model=stepModel(a), totSub=0, doneSub=0;
     model.forEach(function(m){totSub+=m.sub.length;doneSub+=m.nd});
-    out+='<section class="sec"><h2>Hành trình 10 bước</h2><p class="hint">Mốc chuẩn tính theo thị trường '+esc(a.mk)+'. Đã hoàn thành '+a.done+'/10 bước'+(totSub?', '+doneSub+'/'+totSub+' đầu việc':'')+'. Bấm vào từng bước để xem đầu việc.</p>'
+    out+='<section class="sec"><h2>Hành trình '+NS+' bước</h2><p class="hint">Mốc chuẩn tính theo thị trường '+esc(a.mk)+'. Đã hoàn thành '+a.done+'/'+NS+' bước'+(totSub?', '+doneSub+'/'+totSub+' đầu việc':'')+'. Bấm vào từng bước để xem đầu việc.</p>'
       +'<div class="sp10">'+model.map(function(m){return '<div class="nd '+m.st+(m.st==="cur"?" r"+a.risk:"")+'"><i>'+m.n+'</i><span>'+esc(m.pb.name)+'</span></div>'}).join("")+'</div>'
       +'<div class="slg"><span><i style="background:var(--done)"></i>Đã xong</span><span><i style="background:var(--f-ok)"></i>Đang làm, đúng hạn</span><span><i style="background:var(--f-warn)"></i>Chậm</span><span><i style="background:var(--f-bad)"></i>Cần can thiệp</span><span><i style="background:var(--todo)"></i>Chưa tới</span></div>'
       +model.map(function(m){return stepCard(m,a)}).join("")+'</section>';
@@ -1060,9 +1056,9 @@ document.addEventListener("click",async function(e){
   var t=e.target.closest("button"); if(!t)return; var d=t.dataset||{};
   if(d.copy){
     var s0=students.filter(function(x){return x.id===d.copy})[0]; if(!s0)return;
-    var a0=analyze(s0), p0=a0.cur<=10?PB[a0.cur-1]:null, tt=today(), w0=new Date(tt); w0.setDate(w0.getDate()-((tt.getDay()+6)%7)); var w1=new Date(w0); w1.setDate(w1.getDate()+6);
+    var a0=analyze(s0), p0=a0.cur<=NS?PB[a0.cur-1]:null, tt=today(), w0=new Date(tt); w0.setDate(w0.getDate()-((tt.getDay()+6)%7)); var w1=new Date(w0); w1.setDate(w1.getDate()+6);
     var msg="Chào "+s0.name+", việc cho tuần "+pad(w0.getDate())+"/"+pad(w0.getMonth()+1)+" – "+pad(w1.getDate())+"/"+pad(w1.getMonth()+1)+":\n\n"
-      +(p0?"Bước hiện tại: "+a0.cur+"/10, "+p0.name+"\n\nViệc cần làm:\n"+p0.task[a0.mk]+"\n\nXong bước này khi: "+p0.done:"Bạn đã hoàn tất 10 bước. Tuần này mình tổng kết và chốt kết thúc mentor.")
+      +(p0?"Bước hiện tại: "+a0.cur+"/"+NS+", "+p0.name+"\n\nViệc cần làm:\n"+p0.task[a0.mk]+"\n\nXong bước này khi: "+p0.done:"Bạn đã hoàn tất "+NS+" bước. Tuần này mình tổng kết và chốt kết thúc mentor.")
       +(a0.openAss.length?"\n\nBài đang giao:\n"+a0.openAss.map(function(x){return x.title+" (hạn "+fmt(x.due)+(x.dueTime?" "+x.dueTime:"")+")\n"+(x.items||[]).map(function(it,i){return (i+1)+". "+it}).join("\n")}).join("\n\n"):"")
       +(a0.lastHeld&&a0.lastHeld.actions?"\n\nViệc từ buổi họp trước:\n"+a0.lastHeld.actions:"")
       +"\n\nLịch họp: "+a0.meet+"\n\nVướng chỗ nào, nhắn mình trước buổi họp nhé.";
