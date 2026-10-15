@@ -351,6 +351,7 @@ label.f{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:50
 .blk{margin:10px 0;padding-top:8px;border-top:1px dashed var(--line)}.blk h4{margin:0 0 6px;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--soft);font-weight:600}
 .blk p{margin:3px 0;font-size:13.5px}.blk.sbm a{color:var(--info)}
 .cpy{margin-top:10px}
+.stc{background:#fff;border:1px solid var(--line);padding:10px 14px}
 .mt{padding:6px 0 6px 10px;border-left:3px solid var(--line);margin-bottom:6px;font-size:13.5px}.mt.ok{border-left-color:var(--done)}.mt b{margin-right:10px}.mt span{font-size:12px;color:var(--muted)}.mt.ok span{color:var(--done);font-weight:600}
 .mm{padding:12px 0;border-top:1px solid var(--line);display:grid;grid-template-columns:150px minmax(0,1fr);gap:4px 20px;font-size:13.5px}
 .mm:first-of-type{border-top:0;padding-top:0}
@@ -498,55 +499,39 @@ a:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 "use strict";
 /* ---------- Playbook (nội dung gợi ý theo từng bước) ---------- */
 var PB=[
-{name:"Chọn ngách & sản phẩm",std:{US:7,VN:7},done:"Chốt 1 ngách và 1 sản phẩm test; có dữ liệu doanh số, đối thủ và biên lợi nhuận dự kiến từ 30% trở lên.",
- task:{US:"Lọc 20 sản phẩm đang bán tốt trên TikTok Shop US (FastMoss), tính biên lợi nhuận sau phí sàn và vận chuyển, chọn shortlist 3 sản phẩm và gửi trước buổi họp.",VN:"Lọc 20 sản phẩm đang bán tốt trên TikTok Shop / Shopee VN, so giá nhập (1688, chợ sỉ), tính biên lợi nhuận, chọn shortlist 3 sản phẩm và gửi trước buổi họp."},
- help:{US:"Phản biện dữ liệu shortlist, chỉ cách đọc xu hướng creator và video, chốt 1 sản phẩm test; kiểm tra sản phẩm có bị hạn chế hoặc cấm trên sàn không.",VN:"Phản biện dữ liệu shortlist, chỉ cách đọc xu hướng creator và video, chốt 1 sản phẩm test; kiểm tra sản phẩm có bị hạn chế hoặc cấm trên sàn không."},
- risk:"Chọn theo cảm tính; sản phẩm cạnh tranh quá cao hoặc biên quá mỏng."},
-{name:"Nguồn hàng / fulfillment",std:{US:14,VN:10},done:"Có nhà cung cấp chốt, đã nhận mẫu đạt chất lượng, tính xong giá vốn về tay khách và thời gian giao.",
- task:{US:"Xin báo giá ít nhất 3 nhà cung cấp và phương án vận chuyển VN sang US, đặt mẫu, tính landed cost (giá vốn, ship, thuế, phí sàn) và thời gian giao.",VN:"Xin báo giá ít nhất 3 nhà cung cấp (1688, chợ sỉ, nội địa), hỏi MOQ, đặt mẫu, kiểm tra chất lượng, tính giá vốn về kho."},
- help:{US:"Giới thiệu nhà cung cấp và forwarder, review báo giá và landed cost, cảnh báo rủi ro thời gian giao và hàng bị giữ.",VN:"Review báo giá và mẫu, hướng dẫn nhập hàng TQ, cảnh báo rủi ro chất lượng và thời gian về hàng."},
- risk:"Nhà cung cấp báo giá rồi im lặng; mẫu kém; landed cost cao hơn dự tính."},
-{name:"Pháp lý & nhận tiền",std:{US:21,VN:7},done:"US: có LLC/EIN và tài khoản nhận tiền hoạt động. VN: có MST, giấy tờ và tài khoản ngân hàng chính chủ cho shop.",
- task:{US:"Hoàn thiện hồ sơ LLC/EIN, mở tài khoản nhận tiền (Payoneer hoặc ngân hàng); chụp màn hình trạng thái gửi mentor mỗi 2–3 ngày.",VN:"Chuẩn bị CCCD, MST, giấy tờ và tài khoản ngân hàng chính chủ cho shop."},
- help:{US:"Hướng dẫn từng bước, kiểm tra hồ sơ trước khi nộp, theo dõi các bước phụ thuộc bên thứ ba (hay kẹt nhất) và nhắc đúng lúc.",VN:"Tư vấn hình thức đăng ký phù hợp (cá nhân hoặc hộ kinh doanh); kiểm tra hồ sơ đúng điều kiện hiện hành của sàn."},
- risk:"Chờ bên thứ ba quá lâu; hồ sơ sai thông tin phải làm lại."},
-{name:"Đăng ký tài khoản sàn",std:{US:5,VN:3},done:"Đã nộp hồ sơ đăng ký gian hàng trên sàn mục tiêu.",
- task:{US:"Đăng ký gian hàng trên sàn mục tiêu, điền hồ sơ khớp tuyệt đối với giấy tờ, nộp và chụp màn hình xác nhận.",VN:"Đăng ký gian hàng trên sàn mục tiêu, điền hồ sơ khớp tuyệt đối với giấy tờ, nộp và chụp màn hình xác nhận."},
- help:{US:"Kiểm tra hồ sơ trước khi nộp (sai lệch thông tin là lý do bị từ chối phổ biến), chọn đúng ngành hàng và khu vực.",VN:"Kiểm tra hồ sơ trước khi nộp (sai lệch thông tin là lý do bị từ chối phổ biến), chọn đúng ngành hàng."},
- risk:"Thông tin không khớp giấy tờ nên bị từ chối."},
-{name:"Xác minh & duyệt shop",std:{US:10,VN:7},done:"Shop được duyệt, vào được Seller Center, đã nối phương thức nhận tiền và vận chuyển.",
- task:{US:"Theo dõi email và Seller Center mỗi ngày, bổ sung hồ sơ ngay khi sàn yêu cầu; trong lúc chờ, chuẩn bị ảnh, video, mô tả cho listing.",VN:"Theo dõi email và Seller Center mỗi ngày, bổ sung hồ sơ ngay khi sàn yêu cầu; trong lúc chờ, chuẩn bị ảnh, video, mô tả cho listing."},
- help:{US:"Xử lý khi bị từ chối hoặc yêu cầu bổ sung, soạn phản hồi cùng học viên; giữ nhịp để học viên không bỏ cuộc lúc chờ.",VN:"Xử lý khi bị từ chối hoặc yêu cầu bổ sung, soạn phản hồi cùng học viên; giữ nhịp để học viên không bỏ cuộc lúc chờ."},
- risk:"Bị từ chối hoặc yêu cầu bổ sung; học viên nản vì chờ lâu."},
-{name:"Listing sản phẩm đầu tiên",std:{US:5,VN:5},done:"Có ít nhất 3 listing đạt chuẩn (tiêu đề, ảnh, giá, vận chuyển) đang hiển thị.",
- task:{US:"Đăng ít nhất 3 listing: tiêu đề có từ khóa, ảnh chính rõ, video ngắn, giá và vận chuyển đã tính biên lợi nhuận.",VN:"Đăng ít nhất 3 listing: tiêu đề có từ khóa, ảnh chính rõ, video ngắn, giá và vận chuyển đã tính biên lợi nhuận."},
- help:{US:"Review từng listing (tiêu đề, ảnh chính, giá, thông số, chính sách vận chuyển) bằng checklist trước khi đăng.",VN:"Review từng listing (tiêu đề, ảnh chính, giá, thông số, chính sách vận chuyển) bằng checklist trước khi đăng."},
- risk:"Listing sơ sài; vi phạm chính sách nên bị gỡ."},
-{name:"Marketing",std:{US:14,VN:14},done:"Đã đăng ít nhất 10 video hoặc live, hoặc có creator/affiliate nhận mẫu; đã chạy xong vòng test ngân sách nhỏ, có CTR và CVR và quyết định dừng hay tăng.",
- task:{US:"Quay 5–10 video mỗi tuần (hook 3 giây đầu), gửi mẫu và hoa hồng cho creator, lên lịch live thử; chạy thử ngân sách nhỏ (ads, GMV Max hoặc đẩy affiliate), ghi CTR, CVR, ROAS mỗi ngày vào báo cáo.",VN:"Quay 5–10 video mỗi tuần (hook 3 giây đầu), gửi mẫu và hoa hồng cho creator, lên lịch live thử; chạy thử ngân sách nhỏ (ads hoặc đẩy affiliate), ghi CTR, CVR, ROAS mỗi ngày vào báo cáo."},
- help:{US:"Góp ý hook và kịch bản từng video; hướng dẫn tìm creator bằng FastMoss và mẫu outreach; đặt ngân sách và ngưỡng dừng lỗ, đọc số liệu cùng học viên, quyết định tối ưu, dừng hay tăng.",VN:"Góp ý hook và kịch bản từng video; hướng dẫn tìm creator bằng FastMoss và mẫu outreach; đặt ngân sách và ngưỡng dừng lỗ, đọc số liệu cùng học viên, quyết định tối ưu, dừng hay tăng."},
- risk:"Học viên ngại quay, đăng không đều; đốt ngân sách không có ngưỡng dừng."},
-{name:"Có đơn đầu tiên",std:{US:14,VN:14},done:"Có đơn hàng thật đầu tiên trên sàn (không phải đơn tự đặt).",
- task:{US:"Theo dõi đơn: phản hồi khách trong 24 giờ, xác nhận nhà cung cấp và kho sẵn sàng; nếu chưa có đơn, đổi thử 1 biến số (giá, ảnh, video).",VN:"Theo dõi đơn: phản hồi khách trong 24 giờ, xác nhận nhà cung cấp và kho sẵn sàng; nếu chưa có đơn, đổi thử 1 biến số (giá, ảnh, video)."},
- help:{US:"Chẩn đoán vì sao chưa có đơn (traffic, giá, listing, độ tin cậy shop) và đề ra 1–2 thử nghiệm trong tuần.",VN:"Chẩn đoán vì sao chưa có đơn (traffic, giá, listing, độ tin cậy shop) và đề ra 1–2 thử nghiệm trong tuần."},
- risk:"Quá 14 ngày sau khi có listing mà chưa có đơn: xem lại sản phẩm, giá, listing."},
-{name:"Giao hàng & đối soát",std:{US:21,VN:10},done:"Đơn giao thành công, đã đối soát tiền về, rút bài học và chốt kết thúc mentor.",
- task:{US:"Đóng gói và gửi hàng đúng hạn, theo dõi tracking VN sang US, xử lý chăm sóc khách, đối soát doanh thu và phí.",VN:"Đóng gói và gửi hàng đúng hạn, cập nhật tracking, xử lý chăm sóc khách, đối soát doanh thu và phí."},
- help:{US:"Kiểm tra quy trình giao nhận, xử lý đơn trễ, hải quan, hoàn hàng; tổng kết bài học và chốt kết thúc mentor.",VN:"Kiểm tra quy trình giao nhận, xử lý đơn lỗi, hoàn hàng; tổng kết bài học và chốt kết thúc mentor."},
- risk:"Đơn trễ, hoàn hàng, đối soát lệch."}
+{name:"Bắt keyword ngách & đăng ký TikTok Shop",std:{US:7,VN:7},done:"Chốt được ngách từ keyword và thông tin mentor cung cấp; đã đăng ký tài khoản TikTok Shop (giấy tờ kiểm ở mục Setup store).",
+ task:{US:"Học cách bắt keyword ngách, tổng hợp thông tin mentor gửi trong tin nhắn thành một ngách, đăng ký tài khoản TikTok Shop chính chủ.",VN:"Học cách bắt keyword ngách, tổng hợp thông tin mentor gửi trong tin nhắn thành một ngách, đăng ký tài khoản TikTok Shop chính chủ."},
+ help:{US:"Hướng dẫn bắt keyword (Instagram Reels, Shopee, TikTok), phản biện ngách, kiểm tra hồ sơ setup store trong buổi họp.",VN:"Hướng dẫn bắt keyword (Instagram Reels, Shopee, TikTok), phản biện ngách, kiểm tra hồ sơ setup store trong buổi họp."},
+ risk:"Ngách quá rộng; thông tin đăng ký sai hoặc không chính chủ."},
+{name:"Phân tích dữ liệu & nghiên cứu nguồn hàng",std:{US:10,VN:10},done:"Có bảng dữ liệu sản phẩm và bảng Excel tính giá bán, dựa trên dữ liệu thị trường thật và giá nhập từ Trung Quốc.",
+ task:{US:"Tải toàn bộ dữ liệu liên quan từ Kalodata và FastMoss, dùng AI phân tích theo bộ prompt của mentor, nghiên cứu sản phẩm trên Taobao, 1688, tổng hợp thành bảng dữ liệu sản phẩm và bảng Excel tính giá bán.",VN:"Tải toàn bộ dữ liệu liên quan từ Kalodata và FastMoss, dùng AI phân tích theo bộ prompt của mentor, nghiên cứu sản phẩm trên Taobao, 1688, tổng hợp thành bảng dữ liệu sản phẩm và bảng Excel tính giá bán."},
+ help:{US:"Cung cấp bộ prompt, phản biện kết quả phân tích, xem bảng dữ liệu sản phẩm và bảng tính giá.",VN:"Cung cấp bộ prompt, phản biện kết quả phân tích, xem bảng dữ liệu sản phẩm và bảng tính giá."},
+ risk:"Phân tích theo cảm tính; thiếu dữ liệu thị trường thật; giá nhập chưa tính đủ chi phí."},
+{name:"Chọn sản phẩm & đặt hàng",std:{US:14,VN:10},done:"Đã chọn sản phẩm, đặt hàng và gộp kiện trên 1688.",
+ task:{US:"Chọn sản phẩm sau phân tích, bắt đầu đặt hàng, gộp kiện hàng trên 1688.",VN:"Chọn sản phẩm sau phân tích, bắt đầu đặt hàng, gộp kiện hàng trên 1688."},
+ help:{US:"Chốt sản phẩm cùng học viên, hướng dẫn đặt và gộp kiện trên 1688, cảnh báo rủi ro chất lượng và thời gian giao.",VN:"Chốt sản phẩm cùng học viên, hướng dẫn đặt và gộp kiện trên 1688, cảnh báo rủi ro chất lượng và thời gian giao."},
+ risk:"Đặt hàng khi chưa tính giá bán; chọn nhà cung cấp kém."},
+{name:"Setup listing lên store",std:{US:7,VN:7},done:"Listing đã lên store, giá bán tính từ sheet với dữ liệu và thuế thị trường, có hình ảnh.",
+ task:{US:"Dựa vào dữ liệu và thông tin thuế trên thị trường nhập vào sheet tính giá bán, làm hình ảnh, đăng listing lên store.",VN:"Dựa vào dữ liệu và thông tin thuế trên thị trường nhập vào sheet tính giá bán, làm hình ảnh, đăng listing lên store."},
+ help:{US:"Kiểm tra sheet tính giá và listing trước khi đăng, góp ý hình ảnh.",VN:"Kiểm tra sheet tính giá và listing trước khi đăng, góp ý hình ảnh."},
+ risk:"Giá bán không tính đủ thuế và phí; hình ảnh kém."},
+{name:"Chờ hàng về & packing",std:{US:10,VN:10},done:"Hàng đã về, kiểm tra và đóng gói xong.",
+ task:{US:"Theo dõi hàng về, kiểm hàng, đóng gói.",VN:"Theo dõi hàng về, kiểm hàng, đóng gói."},
+ help:{US:"Hướng dẫn kiểm hàng và đóng gói; xử lý hàng trễ hoặc lỗi.",VN:"Hướng dẫn kiểm hàng và đóng gói; xử lý hàng trễ hoặc lỗi."},
+ risk:"Hàng trễ, hàng lỗi, đóng gói sơ sài."}
 ];
 
 var NS=PB.length;
 var SUB={
-1:["Lọc 20 sản phẩm đang bán tốt","Tính biên lợi nhuận sau phí sàn và vận chuyển","Chọn shortlist 3 sản phẩm","Chốt 1 sản phẩm test"],
-2:["Xin báo giá ít nhất 3 nhà cung cấp","Hỏi MOQ và thời gian giao","Đặt và kiểm tra hàng mẫu","Tính giá vốn về tay","Chốt nhà cung cấp"],
-3:{US:["Nộp hồ sơ LLC","Có EIN","Mở tài khoản nhận tiền (Payoneer hoặc ngân hàng)","Chụp màn hình trạng thái gửi mentor"],VN:["Chuẩn bị CCCD, MST","Chốt hình thức đăng ký (cá nhân hoặc hộ kinh doanh)","Có tài khoản ngân hàng chính chủ cho shop"]},
-4:["Điền hồ sơ khớp tuyệt đối với giấy tờ","Nộp hồ sơ đăng ký gian hàng","Chụp màn hình xác nhận đã nộp"],
-5:["Theo dõi email và Seller Center mỗi ngày","Bổ sung hồ sơ khi sàn yêu cầu","Shop được duyệt","Nối phương thức nhận tiền và vận chuyển"],
-6:["Chuẩn bị ảnh và video","Viết tiêu đề có từ khóa và mô tả","Đăng listing 1","Đăng listing 2","Đăng listing 3"],
-7:["Quay 5 video đầu tiên","Đăng đều 5 đến 10 video mỗi tuần","Gửi mẫu cho creator","Lên lịch live thử","Đặt ngân sách và ngưỡng dừng lỗ","Chạy vòng test nhỏ","Ghi CTR, CVR, ROAS mỗi ngày","Quyết định dừng hay tăng"],
-8:["Có đơn thật đầu tiên","Phản hồi khách trong 24 giờ","Xác nhận nhà cung cấp và kho sẵn sàng"],
-9:["Đóng gói và gửi hàng đúng hạn","Cập nhật tracking","Chăm sóc khách","Đối soát tiền về","Tổng kết bài học và chốt kết thúc mentor"]
+1:["Học cách bắt keyword ngách","Tổng hợp thông tin mentor cung cấp thành ngách","Đăng ký tài khoản TikTok Shop (kiểm giấy tờ ở mục Setup store)"],
+2:["Tải dữ liệu từ Kalodata","Tải dữ liệu từ FastMoss","Phân tích bằng AI theo bộ prompt của mentor","Nghiên cứu sản phẩm trên Taobao","Nghiên cứu sản phẩm trên 1688","Tổng hợp bảng dữ liệu sản phẩm","Làm bảng Excel tính giá bán"],
+3:["Chọn sản phẩm","Đặt hàng","Gộp kiện hàng trên 1688"],
+4:["Nhập dữ liệu và thuế thị trường vào sheet tính giá bán","Làm hình ảnh","Setup listing lên store"],
+5:["Hàng về","Kiểm hàng","Packing"]
+};
+var STORE={
+VN:["Đăng ký tài khoản TikTok Shop, chính chủ, thông tin chính xác","CCCD và giấy tờ chính chủ, khớp thông tin đăng ký (địa chỉ nhập không dấu nếu báo lỗi)","Mã số thuế, hình thức đăng ký (cá nhân hoặc hộ kinh doanh)","Tài khoản ngân hàng chính chủ nhận tiền","Shop được xác minh và duyệt","Kết nối vận chuyển và thông tin thuế trên store"],
+US:["Đăng ký tài khoản TikTok Shop, chính chủ, thông tin chính xác","Giấy tờ chính chủ, khớp thông tin đăng ký","LLC và EIN","Tài khoản nhận tiền (Payoneer hoặc ngân hàng)","Shop được xác minh và duyệt","Kết nối vận chuyển và thông tin thuế trên store"]
 };
 function subs(n,mk){var x=SUB[n];return Array.isArray(x)?x:(x&&x[mk]?x[mk]:[])}
 var FLAGS={ok:"Bình thường",ket:"Đang kẹt",cho:"Chờ bên thứ ba",cham:"Học viên chậm phản hồi"};
@@ -636,7 +621,7 @@ function analyze(s){
     if(!openAss.length) attn.push({sev:2,t:"Chưa có bài nào đang giao"});
   }
   var attnSev=attn.reduce(function(m,x){return Math.max(m,x.sev)},0);
-  return {s:s,mk:mk,cur:cur,done:done,days:days,std:std,risk:risk,why:why,meet:meet,meetNone:meetNone,lastHeld:lastHeld,held:held,ms:ms,hasOrder:!!steps[8],heldWeek:heldWeek.length>0,active:active,openAss:openAss,nextM:nextM,nextIn:nextIn,missing:missing,attn:attn,attnSev:attnSev,gap:gap,startD:startD};
+  return {s:s,mk:mk,cur:cur,done:done,days:days,std:std,risk:risk,why:why,meet:meet,meetNone:meetNone,lastHeld:lastHeld,held:held,ms:ms,hasOrder:!!s.firstOrder,heldWeek:heldWeek.length>0,active:active,openAss:openAss,nextM:nextM,nextIn:nextIn,missing:missing,attn:attn,attnSev:attnSev,gap:gap,startD:startD};
 }
 
 /* ---------- render: Theo dõi ---------- */
@@ -950,6 +935,9 @@ function viewStudent(id,tab){
     if(al.length) out+='<section class="sec"><h2>Cần chú ý</h2><ul class="al">'+al.map(function(x){return '<li class="s'+x.sev+'">'+esc(x.t)+'</li>'}).join("")+'</ul></section>';
     var model=stepModel(a), totSub=0, doneSub=0;
     model.forEach(function(m){totSub+=m.sub.length;doneSub+=m.nd});
+    var stl=STORE[a.mk]||STORE.VN, stk=((s.checks||{}).store)||[], stN=stk.filter(function(i){return i<stl.length}).length;
+    out+='<section class="sec"><h2>Setup store: giấy tờ và pháp lí</h2><p class="hint">Mọi giấy tờ, pháp lí gom về một chỗ. Mentor kiểm từng mục trong buổi họp, mục nào đạt hiện màu xanh. Đã kiểm '+stN+'/'+stl.length+'.</p><ul class="ck stc">'
+      +stl.map(function(t,i){return '<li class="'+(stk.indexOf(i)>=0?"y":"")+'">'+esc(t)+'</li>'}).join("")+'</ul></section>';
     out+='<section class="sec"><h2>Hành trình '+NS+' bước</h2><p class="hint">Mốc chuẩn tính theo thị trường '+esc(a.mk)+'. Đã hoàn thành '+a.done+'/'+NS+' bước'+(totSub?', '+doneSub+'/'+totSub+' đầu việc':'')+'. Bấm vào từng bước để xem đầu việc.</p>'
       +'<div class="sp10">'+model.map(function(m){return '<div class="nd '+m.st+(m.st==="cur"?" r"+a.risk:"")+'"><i>'+m.n+'</i><span>'+esc(m.pb.name)+'</span></div>'}).join("")+'</div>'
       +'<div class="slg"><span><i style="background:var(--done)"></i>Đã xong</span><span><i style="background:var(--f-ok)"></i>Đang làm, đúng hạn</span><span><i style="background:var(--f-warn)"></i>Chậm</span><span><i style="background:var(--f-bad)"></i>Cần can thiệp</span><span><i style="background:var(--todo)"></i>Chưa tới</span></div>'
