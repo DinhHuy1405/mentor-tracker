@@ -863,7 +863,7 @@ function viewTrack(tab){
     return secWeeks();
   }
   if(tab==="hoc-vien"){
-    out+='<section class="sec"><h2>Từng học viên</h2><p class="hint">US và Việt Nam tách riêng. Người cần chú ý nhất nằm trên cùng. Bấm tên để mở trang riêng.</p><div class="ros scrollx"><div class="hd"><div>Học viên</div><div>Tiến độ 10 bước</div><div>Ngày ở bước</div><div>Lịch họp</div><div>Tình trạng</div></div>';
+    out+='<section class="sec"><h2>Từng học viên</h2><p class="hint">US và Việt Nam tách riêng. Người cần chú ý nhất nằm trên cùng. Bấm tên để mở trang riêng.</p><div class="ros scrollx"><div class="hd"><div>Học viên</div><div>Tiến độ</div><div>Ngày ở bước</div><div>Lịch họp</div><div>Tình trạng</div></div>';
     ["US","VN"].forEach(function(mk){
       var list=active.filter(function(a){return a.mk===mk}).sort(function(x,y){
         var rx=x.cur===11?-1:x.risk, ry=y.cur===11?-1:y.risk; return ry-rx||y.days-x.days;});
