@@ -336,6 +336,10 @@ label.f{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:50
 .as .t b{font-size:15px}.as .t span{font-size:12.5px;color:var(--muted)}.as .t span.late{color:var(--bad);font-weight:600}.as .t span.ok{color:var(--ok);font-weight:600}
 .as ol{margin:8px 0 0;padding-left:20px;display:grid;gap:3px;font-size:14px}
 .as .nt{margin-top:6px;font-size:13px;color:var(--muted)}
+.as .rv2{margin-top:10px;padding:8px 0 8px 12px;border-left:3px solid var(--info);background:#fff}
+.as .rv2 h4{color:var(--info)}
+.as .rv2 .ri{font-size:13.5px;margin-top:4px}.as .rv2 .ri em{font-style:normal;color:var(--soft);font-size:12px;margin-right:6px}
+.as-grp{margin:18px 0 6px;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--soft);font-weight:600}.as-grp:first-of-type{margin-top:0}
 .mm{padding:12px 0;border-top:1px solid var(--line);display:grid;grid-template-columns:150px minmax(0,1fr);gap:4px 20px;font-size:13.5px}
 .mm:first-of-type{border-top:0;padding-top:0}
 .mm .d b{display:block;font-weight:600}.mm .d span{color:var(--soft);font-size:12.5px}
@@ -956,14 +960,21 @@ function viewStudent(id,tab){
     var now=new Date();
     out+='<section class="sec"><h2>Bài tập</h2>';
     if(!asn.length) out+='<div class="empty">Chưa giao bài nào.</div>';
-    else out+=asn.map(function(x){
-      var openA=x.status!=="Đã nộp"&&x.status!=="Hủy", late=false;
-      if(openA){var dd=parse(x.due),tm=/^(\d{1,2}):(\d{2})$/.exec(x.dueTime||"");late=!!dd&&new Date(dd.getFullYear(),dd.getMonth(),dd.getDate(),tm?+tm[1]:23,tm?+tm[2]:59)<now}
-      var stl=x.status==="Đã nộp"?'<span class="ok">Đã nộp</span>':(late?'<span class="late">Quá hạn</span>':'<span>'+esc(x.status||"Đang làm")+'</span>');
-      return '<div class="as"><div class="t"><b>'+esc(x.title)+'</b><span>'+(x.assignedOn?'Giao '+fmt(x.assignedOn):'')+(x.due?' · hạn '+fmt(x.due)+(x.dueTime?' '+esc(x.dueTime):''):'')+'</span>'+stl+'</div>'
-        +((x.items||[]).length?'<ol>'+x.items.map(function(it){return '<li>'+esc(it)+'</li>'}).join("")+'</ol>':'')
-        +(x.note?'<div class="nt">'+esc(x.note)+'</div>':'')+'</div>';
-    }).join("");
+    else {
+      var card=function(x){
+        var openA=x.status!=="Đã nộp"&&x.status!=="Hủy", late=false;
+        if(openA){var dd=parse(x.due),tm=/^(\d{1,2}):(\d{2})$/.exec(x.dueTime||"");late=!!dd&&new Date(dd.getFullYear(),dd.getMonth(),dd.getDate(),tm?+tm[1]:23,tm?+tm[2]:59)<now}
+        var stl=x.status==="Đã nộp"?'<span class="ok">Đã nộp</span>':(late?'<span class="late">Quá hạn</span>':'<span>'+esc(x.status||"Đang làm")+'</span>');
+        var rv=(x.reviews||[]).map(function(r){return '<div class="ri"><em>'+fmt(r.date)+'</em>'+esc(r.text)+'</div>'}).join("");
+        return '<div class="as"><div class="t"><b>'+esc(x.title)+'</b><span>'+(x.assignedOn?'Giao '+fmt(x.assignedOn):'')+(x.due?' · hạn '+fmt(x.due)+(x.dueTime?' '+esc(x.dueTime):''):'')+'</span>'+stl+'</div>'
+          +((x.items||[]).length?'<ol>'+x.items.map(function(it){return '<li>'+esc(it)+'</li>'}).join("")+'</ol>':'')
+          +(x.note?'<div class="nt">'+esc(x.note)+'</div>':'')
+          +(rv?'<div class="rv2"><h4>Nhận xét và chỉnh sửa của mentor</h4>'+rv+'</div>':'')+'</div>';
+      };
+      var openL=asn.filter(function(x){return x.status!=="Đã nộp"&&x.status!=="Hủy"}), doneL=asn.filter(function(x){return x.status==="Đã nộp"||x.status==="Hủy"});
+      if(openL.length) out+='<div class="as-grp">Đang làm ('+openL.length+')</div>'+openL.map(card).join("");
+      if(doneL.length) out+='<div class="as-grp">Đã nộp ('+doneL.length+')</div>'+doneL.map(card).join("");
+    }
     return out+'</section>';
   }
   if(tab==="lich-hop"){
