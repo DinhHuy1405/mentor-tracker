@@ -498,7 +498,7 @@ a:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 (function(){
 "use strict";
 /* ---------- Playbook (nội dung gợi ý theo từng bước) ---------- */
-var PB=[
+var PBV=[
 {name:"Bắt keyword ngách & đăng ký TikTok Shop",std:{US:7,VN:7},done:"Chốt được ngách từ keyword và thông tin mentor cung cấp; đã đăng ký tài khoản TikTok Shop (giấy tờ kiểm ở mục Setup store).",
  task:{US:"Học cách bắt keyword ngách, tổng hợp thông tin mentor gửi trong tin nhắn thành một ngách, đăng ký tài khoản TikTok Shop chính chủ.",VN:"Học cách bắt keyword ngách, tổng hợp thông tin mentor gửi trong tin nhắn thành một ngách, đăng ký tài khoản TikTok Shop chính chủ."},
  help:{US:"Hướng dẫn bắt keyword (Instagram Reels, Shopee, TikTok), phản biện ngách, kiểm tra hồ sơ setup store trong buổi họp.",VN:"Hướng dẫn bắt keyword (Instagram Reels, Shopee, TikTok), phản biện ngách, kiểm tra hồ sơ setup store trong buổi họp."},
@@ -521,7 +521,46 @@ var PB=[
  risk:"Hàng trễ, hàng lỗi, đóng gói sơ sài."}
 ];
 
-var NS=PB.length;
+var PBU=[
+{name:"Phân tích: keyword sản phẩm & dữ liệu Kalodata US",std:{US:10,VN:10},done:"Chốt được keyword và sản phẩm dựa trên dữ liệu thị trường US từ Kalodata.",
+ task:{US:"Bắt keyword sản phẩm, sau đó phân tích dữ liệu thị trường US bằng Kalodata.",VN:""},
+ help:{US:"Hướng dẫn bắt keyword, phản biện dữ liệu Kalodata US, chốt sản phẩm.",VN:""},
+ risk:"Chọn theo cảm tính, thiếu dữ liệu thị trường US."},
+{name:"Tìm nhà cung cấp & mẫu mã tại Việt Nam",std:{US:14,VN:14},done:"Đã chốt nhà cung cấp, sản phẩm và mẫu mã tại Việt Nam.",
+ task:{US:"Tìm các nhà cung cấp tại Việt Nam, tìm sản phẩm và mẫu mã tại Việt Nam.",VN:""},
+ help:{US:"Review nhà cung cấp và mẫu mã, cảnh báo rủi ro chất lượng.",VN:""},
+ risk:"Nhà cung cấp báo giá rồi im lặng; mẫu mã không phù hợp thị trường US."},
+{name:"Nhập hàng, packing mẫu mã & dán barcode",std:{US:14,VN:14},done:"Hàng đã nhập về, đóng packing mẫu mã và dán barcode xong.",
+ task:{US:"Nhập hàng về, đóng packing mẫu mã, dán barcode.",VN:""},
+ help:{US:"Kiểm tra packing và barcode theo yêu cầu fulfillment.",VN:""},
+ risk:"Packing hoặc barcode sai quy cách nên bị trả lại."},
+{name:"Đăng ký LLC & giấy tờ",std:{US:21,VN:21},done:"Đã đăng ký LLC và hoàn tất giấy tờ.",
+ task:{US:"Đăng ký đơn vị LLC và hoàn thiện giấy tờ.",VN:""},
+ help:{US:"Hướng dẫn từng bước, kiểm tra hồ sơ trước khi nộp, nhắc các bước phụ thuộc bên thứ ba.",VN:""},
+ risk:"Chờ bên thứ ba quá lâu; hồ sơ sai thông tin phải làm lại."},
+{name:"Đăng ký đơn vị fulfillment",std:{US:7,VN:7},done:"Đã đăng ký với đơn vị fulfillment để nhận hàng gửi sang.",
+ task:{US:"Đăng ký với đơn vị fulfillment để gửi hàng sang; hỏi rõ các khoản phí và khâu có thể cắt giảm.",VN:""},
+ help:{US:"Giới thiệu đơn vị fulfillment, deal phí cùng học viên.",VN:""},
+ risk:"Phí fulfillment cao hơn dự tính."},
+{name:"Liên kết đơn vị logistics",std:{US:10,VN:10},done:"Đã liên kết đơn vị logistics để gửi hàng sang US.",
+ task:{US:"Liên kết với đơn vị logistics để gửi hàng sang US.",VN:""},
+ help:{US:"Review báo giá và thời gian vận chuyển, cảnh báo rủi ro hải quan.",VN:""},
+ risk:"Hàng đến trễ hoặc bị giữ."},
+{name:"Đăng ký tài khoản & list sản phẩm",std:{US:10,VN:10},done:"Đã đăng ký tài khoản và list sản phẩm lên trong lúc hàng đang đi qua US.",
+ task:{US:"Đăng ký tài khoản bán hàng, list sản phẩm lên trong quá trình hàng đi qua US.",VN:""},
+ help:{US:"Kiểm tra hồ sơ trước khi nộp, góp ý listing và hình ảnh.",VN:""},
+ risk:"Thông tin không khớp giấy tờ nên bị từ chối."}
+];
+var PBM={VN:PBV,US:PBU};
+var SUBU={
+1:["Bắt keyword sản phẩm","Phân tích dữ liệu thị trường US bằng Kalodata"],
+2:["Tìm nhà cung cấp tại Việt Nam","Tìm sản phẩm tại Việt Nam","Chọn mẫu mã"],
+3:["Nhập hàng về","Đóng packing mẫu mã","Dán barcode"],
+4:["Đăng ký đơn vị LLC","Hoàn thiện giấy tờ"],
+5:["Đăng ký với đơn vị fulfillment","Hỏi rõ phí và khâu có thể cắt giảm"],
+6:["Liên kết với đơn vị logistics","Gửi hàng sang US"],
+7:["Đăng ký tài khoản","List sản phẩm lên trong lúc hàng đi qua US"]
+};
 var SUB={
 1:["Học cách bắt keyword ngách","Tổng hợp thông tin mentor cung cấp thành ngách","Đăng ký tài khoản TikTok Shop (kiểm giấy tờ ở mục Setup store)"],
 2:["Tải dữ liệu từ Kalodata","Tải dữ liệu từ FastMoss","Phân tích bằng AI theo bộ prompt của mentor","Nghiên cứu sản phẩm trên Taobao","Nghiên cứu sản phẩm trên 1688","Tổng hợp bảng dữ liệu sản phẩm","Làm bảng Excel tính giá bán"],
@@ -531,9 +570,9 @@ var SUB={
 };
 var STORE={
 VN:["Đăng ký tài khoản TikTok Shop, chính chủ, thông tin chính xác","CCCD và giấy tờ chính chủ, khớp thông tin đăng ký (địa chỉ nhập không dấu nếu báo lỗi)","Mã số thuế, hình thức đăng ký (cá nhân hoặc hộ kinh doanh)","Tài khoản ngân hàng chính chủ nhận tiền","Shop được xác minh và duyệt","Kết nối vận chuyển và thông tin thuế trên store"],
-US:["Đăng ký tài khoản TikTok Shop, chính chủ, thông tin chính xác","Giấy tờ chính chủ, khớp thông tin đăng ký","LLC và EIN","Tài khoản nhận tiền (Payoneer hoặc ngân hàng)","Shop được xác minh và duyệt","Kết nối vận chuyển và thông tin thuế trên store"]
+US:["Đăng ký đơn vị LLC","Giấy tờ chính chủ, khớp thông tin đăng ký","EIN","Tài khoản nhận tiền (Payoneer hoặc ngân hàng)","Đăng ký tài khoản bán hàng TikTok Shop, thông tin chính xác","Shop được xác minh và duyệt","Liên kết logistics và thông tin thuế trên store"]
 };
-function subs(n,mk){var x=SUB[n];return Array.isArray(x)?x:(x&&x[mk]?x[mk]:[])}
+function subs(n,mk){var x=(mk==="US"?SUBU:SUB)[n];return Array.isArray(x)?x:(x&&x[mk]?x[mk]:[])}
 var FLAGS={ok:"Bình thường",ket:"Đang kẹt",cho:"Chờ bên thứ ba",cham:"Học viên chậm phản hồi"};
 var MSTAT=["Sắp tới","Đã họp","Dời lịch","Hủy","Học viên vắng"];
 var RL={0:"Hoàn tất",1:"Đúng tiến độ",2:"Theo dõi",3:"Cần can thiệp"};
@@ -555,11 +594,11 @@ var colS=null, colM=null;
 
 function analyze(s){
   var steps=s.steps||{}, mk=s.market==="US"?"US":"VN", t=today();
-  var cur=11, done=0, n;
-  for(n=1;n<=NS;n++){ if(steps[n]) done++; }
-  for(n=1;n<=NS;n++){ if(!steps[n]){cur=n;break;} }
+  var pbm=PBM[mk], ns=pbm.length, cur=ns+1, done=0, n;
+  for(n=1;n<=ns;n++){ if(steps[n]) done++; }
+  for(n=1;n<=ns;n++){ if(!steps[n]){cur=n;break;} }
   var since=null, days=0, std=null, ratio=0;
-  if(cur<=NS){ since=parse(cur===1?s.start:steps[cur-1])||parse(s.start); days=since?Math.max(0,diff(t,since)):0; std=PB[cur-1].std[mk]; ratio=days/std; }
+  if(cur<=ns){ since=parse(cur===1?s.start:steps[cur-1])||parse(s.start); days=since?Math.max(0,diff(t,since)):0; std=pbm[cur-1].std[mk]; ratio=days/std; }
   var ms=meetings.filter(function(m){return m.studentId===s.id});
   var held=ms.filter(function(m){return m.status==="Đã họp"&&parse(m.date)}).sort(function(a,b){return a.date<b.date?1:-1});
   var lastHeld=held.length?held[0]:null;
@@ -594,7 +633,7 @@ function analyze(s){
   if(!s.niche) missing.push("ngách");
   if(!s.goal) missing.push("mục tiêu");
   var attn=[];
-  if(active&&cur<=NS){
+  if(active&&cur<=ns){
     if(s.flag==="ket") attn.push({sev:3,t:"Đang kẹt"+(s.blocker?": "+s.blocker:"")});
     else if(s.flag==="cho"||s.flag==="cham") attn.push({sev:2,t:FLAGS[s.flag]+(s.blocker?": "+s.blocker:"")});
     if(ratio>1.5) attn.push({sev:3,t:"Đã "+days+" ngày ở bước "+cur+", chuẩn "+std+" ngày"});
@@ -613,7 +652,7 @@ function analyze(s){
     var at=dd?new Date(dd.getFullYear(),dd.getMonth(),dd.getDate(),tm?+tm[1]:23,tm?+tm[2]:59):null;
     var o=Object.assign({},x); o.at=at; o.late=!!at&&at<now; o.soon=!!at&&!o.late&&(at-now)<=48*36e5; return o;
   }).sort(function(p,q){return (p.at||0)-(q.at||0)});
-  if(active&&cur<=NS){
+  if(active&&cur<=ns){
     openAss.forEach(function(x){
       if(x.late) attn.push({sev:3,t:"Bài trễ hạn: "+x.title+" (hạn "+fmt(x.due)+(x.dueTime?" "+x.dueTime:"")+")"});
       else if(x.soon) attn.push({sev:2,t:"Bài sắp đến hạn: "+x.title+" (hạn "+fmt(x.due)+(x.dueTime?" "+x.dueTime:"")+")"});
@@ -621,21 +660,21 @@ function analyze(s){
     if(!openAss.length) attn.push({sev:2,t:"Chưa có bài nào đang giao"});
   }
   var attnSev=attn.reduce(function(m,x){return Math.max(m,x.sev)},0);
-  return {s:s,mk:mk,cur:cur,done:done,days:days,std:std,risk:risk,why:why,meet:meet,meetNone:meetNone,lastHeld:lastHeld,held:held,ms:ms,hasOrder:!!s.firstOrder,heldWeek:heldWeek.length>0,active:active,openAss:openAss,nextM:nextM,nextIn:nextIn,missing:missing,attn:attn,attnSev:attnSev,gap:gap,startD:startD};
+  return {s:s,mk:mk,pb:pbm,ns:ns,cur:cur,done:done,days:days,std:std,risk:risk,why:why,meet:meet,meetNone:meetNone,lastHeld:lastHeld,held:held,ms:ms,hasOrder:!!s.firstOrder,heldWeek:heldWeek.length>0,active:active,openAss:openAss,nextM:nextM,nextIn:nextIn,missing:missing,attn:attn,attnSev:attnSev,gap:gap,startD:startD};
 }
 
 /* ---------- render: Theo dõi ---------- */
 function ruler(a){
   var s=a.s,h="",i;
-  for(i=1;i<=NS;i++){
+  for(i=1;i<=a.ns;i++){
     var d=(s.steps||{})[i];
-    h+='<i class="'+(d?"d":(i===a.cur?"c r"+a.risk:""))+'" title="'+i+'. '+esc(PB[i-1].name)+(d?" (xong "+fmt(d)+")":"")+'"></i>';
+    h+='<i class="'+(d?"d":(i===a.cur?"c r"+a.risk:""))+'" title="'+i+'. '+esc(a.pb[i-1].name)+(d?" (xong "+fmt(d)+")":"")+'"></i>';
   }
-  return '<div class="ruler" role="img" aria-label="Bước '+Math.min(a.cur,NS)+' trên '+NS+'">'+h+'</div>';
+  return '<div class="ruler" role="img" aria-label="Bước '+Math.min(a.cur,a.ns)+' trên '+a.ns+'">'+h+'</div>';
 }
 function row(a){
-  var s=a.s, pb=a.cur<=NS?PB[a.cur-1]:null;
-  var stepTxt=pb?"Bước "+a.cur+"/"+NS+" · "+pb.name:"Đã hoàn tất "+NS+" bước";
+  var s=a.s, pb=a.cur<=a.ns?a.pb[a.cur-1]:null;
+  var stepTxt=pb?"Bước "+a.cur+"/"+a.ns+" · "+pb.name:"Đã hoàn tất "+a.ns+" bước";
   var task=pb?pb.task[a.mk]:"Tổng kết, thu thập phản hồi, chốt kết thúc mentor.";
   var help=[];
   if(s.flag&&s.flag!=="ok") help.push("Tình trạng: "+FLAGS[s.flag]);
@@ -694,14 +733,19 @@ function secWeeks(){
   });
   return '<section class="sec"><h2>Lịch họp 2 tuần</h2><p class="hint">Buổi đã qua ngày mà vẫn ghi "Sắp tới" hiện màu vàng để bạn cập nhật.</p><div class="scrollx">'+out+'</div></section>';
 }
-function secDist(live){
-  var N=live.length||1, h='';
-  for(var k=1;k<=NS;k++){
-    var done=live.filter(function(a){return (a.s.steps||{})[k]}).length;
-    var cur=live.filter(function(a){return a.cur===k}).length;
-    h+='<div class="fun"><div class="lb">'+k+'. '+esc(PB[k-1].name)+'</div><div class="tr" role="img" aria-label="'+done+' xong, '+cur+' đang làm trên '+live.length+'"><i class="d" style="width:'+(done/N*100)+'%"></i><i class="c" style="width:'+(cur/N*100)+'%"></i></div><div class="nu">xong '+done+' · đang '+cur+'</div></div>';
-  }
-  return '<section class="sec"><h2>Phễu '+NS+' bước</h2><p class="hint">Màu đậm là số học viên đã xong bước đó, màu nhạt là đang làm. Thấy ngay bước nào đang nghẽn.</p>'+h+'</section>';
+function secDist(all){
+  var out='';
+  [["VN","Việt Nam"],["US","US"]].forEach(function(m){
+    var live=all.filter(function(a){return a.mk===m[0]}); if(!live.length) return;
+    var pb=PBM[m[0]], N=live.length, h='';
+    for(var k=1;k<=pb.length;k++){
+      var done=live.filter(function(a){return (a.s.steps||{})[k]}).length;
+      var cur=live.filter(function(a){return a.cur===k}).length;
+      h+='<div class="fun"><div class="lb">'+k+'. '+esc(pb[k-1].name)+'</div><div class="tr" role="img" aria-label="'+done+' xong, '+cur+' đang làm trên '+N+'"><i class="d" style="width:'+(done/N*100)+'%"></i><i class="c" style="width:'+(cur/N*100)+'%"></i></div><div class="nu">xong '+done+' · đang '+cur+'</div></div>';
+    }
+    out+='<section class="sec"><h2>Phễu '+pb.length+' bước, '+m[1]+'</h2><p class="hint">Màu đậm là số học viên đã xong bước đó, màu nhạt là đang làm. Thấy ngay bước nào đang nghẽn.</p>'+h+'</section>';
+  });
+  return out;
 }
 function secTimeline(live){
   var t=today(), rows=live.slice().sort(function(a,b){return (a.s.createdAt||0)-(b.s.createdAt||0)});
@@ -717,13 +761,13 @@ function secTimeline(live){
     var cy=TM+i*RH+22, nm=a.s.name.length>22?a.s.name.slice(0,21)+"…":a.s.name;
     g+='<text class="nm" x="0" y="'+(cy+4)+'">'+esc(nm)+'</text><line x1="'+LM+'" x2="'+(W-RM)+'" y1="'+cy+'" y2="'+cy+'" style="stroke:var(--line)" />';
     var prev=a.startD||t;
-    for(var k=1;k<=NS;k++){
+    for(var k=1;k<=a.ns;k++){
       var dd=parse((a.s.steps||{})[k]); if(!dd) break;
-      var x0=X(prev), x1=X(dd); g+='<rect x="'+x0+'" y="'+(cy-5)+'" width="'+Math.max(3,x1-x0-1.5)+'" height="10" style="fill:var(--done)"><title>'+k+'. '+esc(PB[k-1].name)+' (xong '+fmt((a.s.steps||{})[k])+')</title></rect>';
+      var x0=X(prev), x1=X(dd); g+='<rect x="'+x0+'" y="'+(cy-5)+'" width="'+Math.max(3,x1-x0-1.5)+'" height="10" style="fill:var(--done)"><title>'+k+'. '+esc(a.pb[k-1].name)+' (xong '+fmt((a.s.steps||{})[k])+')</title></rect>';
       prev=dd;
     }
-    if(a.cur<=NS){
-      var xs=X(prev), xe=X(t); g+='<rect x="'+xs+'" y="'+(cy-5)+'" width="'+Math.max(3,xe-xs)+'" height="10" style="fill:'+col(a.risk)+'"><title>Bước '+a.cur+': '+esc(PB[a.cur-1].name)+', ngày '+a.days+' / chuẩn '+a.std+'</title></rect>';
+    if(a.cur<=a.ns){
+      var xs=X(prev), xe=X(t); g+='<rect x="'+xs+'" y="'+(cy-5)+'" width="'+Math.max(3,xe-xs)+'" height="10" style="fill:'+col(a.risk)+'"><title>Bước '+a.cur+': '+esc(a.pb[a.cur-1].name)+', ngày '+a.days+' / chuẩn '+a.std+'</title></rect>';
       var xx=X(addDays(prev,a.std)); g+='<line x1="'+xx+'" x2="'+xx+'" y1="'+(cy-11)+'" y2="'+(cy+11)+'" style="stroke:var(--ink);stroke-width:1.5" />';
     }
     a.ms.forEach(function(m){
@@ -741,14 +785,14 @@ function secTimeline(live){
 function secProgress(live){
   var rows=live.slice().sort(function(x,y){return y.done-x.done||x.s.name.localeCompare(y.s.name)});
   var h=rows.map(function(a){
-    var seg="";for(var k=1;k<=NS;k++){var d=(a.s.steps||{})[k];seg+='<i class="'+(d?"d":(k===a.cur?"c r"+a.risk:""))+'" title="'+k+'. '+esc(PB[k-1].name)+(d?" (xong "+fmt(d)+")":"")+'"></i>'}
-    return '<div class="pg"><div class="lb"><a href="#/'+esc(a.s.id)+'">'+esc(a.s.name)+'</a></div><div class="seg10">'+seg+'</div><div class="nu">'+a.done+'/'+NS+'</div></div>';
+    var seg="";for(var k=1;k<=a.ns;k++){var d=(a.s.steps||{})[k];seg+='<i class="'+(d?"d":(k===a.cur?"c r"+a.risk:""))+'" title="'+k+'. '+esc(a.pb[k-1].name)+(d?" (xong "+fmt(d)+")":"")+'"></i>'}
+    return '<div class="pg"><div class="lb"><a href="#/'+esc(a.s.id)+'">'+esc(a.s.name)+'</a></div><div class="seg10">'+seg+'</div><div class="nu">'+a.done+'/'+a.ns+'</div></div>';
   }).join("");
   return '<section class="sec"><h2>Tiến độ từng học viên</h2><p class="hint">Mỗi ô là một bước. Xanh lá là đã xong, xanh dương là đang làm đúng hạn, vàng là chậm, đỏ là cần can thiệp, xám là chưa tới.</p>'+h
    +'<div class="legend"><span><i class="sw-done"></i>Đã xong</span><span><i class="sw-cur"></i>Đang làm, đúng hạn</span><span><i style="background:var(--f-warn)"></i>Chậm</span><span><i style="background:var(--f-bad)"></i>Cần can thiệp</span><span><i style="background:var(--todo)"></i>Chưa tới</span></div></section>';
 }
 function secBullet(live){
-  var rows=live.filter(function(a){return a.cur<=NS}).sort(function(x,y){return y.days/y.std-x.days/x.std});
+  var rows=live.filter(function(a){return a.cur<=a.ns}).sort(function(x,y){return y.days/y.std-x.days/x.std});
   if(!rows.length) return '';
   var h=rows.map(function(a){
     var r=a.days/a.std, rc=r>1.5?"r3":(r>1?"r2":"r1");
@@ -784,7 +828,7 @@ function secAttn(live){
   if(!list.length) return h+'<p class="hint">Không có việc nào gấp.</p></section>';
   return h+'<div class="atl">'+list.map(function(a){
     var it=a.attn.filter(function(x){return x.sev>=2}).sort(function(p,q){return q.sev-p.sev}).slice(0,3);
-    return '<div class="ai"><div class="who"><b><a href="#/'+esc(a.s.id)+'" style="color:inherit">'+esc(a.s.name)+'</a></b><span>'+(a.cur<=NS?'Bước '+a.cur+'/'+NS:'Hoàn tất')+'</span></div><ul>'
+    return '<div class="ai"><div class="who"><b><a href="#/'+esc(a.s.id)+'" style="color:inherit">'+esc(a.s.name)+'</a></b><span>'+(a.cur<=a.ns?'Bước '+a.cur+'/'+a.ns:'Hoàn tất')+'</span></div><ul>'
       +it.map(function(x){return '<li class="s'+x.sev+'"><em>'+(x.sev>=3?'Gấp':'Lưu ý')+'</em><span>'+esc(x.t)+'</span></li>'}).join("")+'</ul></div>';
   }).join("")+'</div></section>';
 }
@@ -795,7 +839,7 @@ function viewTrack(tab){
   var live=as.filter(function(a){return a.active});
   var attn=active.filter(function(a){return a.risk>=2}).length;
   var orders=active.filter(function(a){return a.hasOrder}).length;
-  var nomeet=live.filter(function(a){return a.cur<=NS&&a.meetNone}).length;
+  var nomeet=live.filter(function(a){return a.cur<=a.ns&&a.meetNone}).length;
   var late=live.reduce(function(n,a){return n+a.openAss.filter(function(x){return x.late}).length},0);
   if(!students.length) return '<div class="empty">Chưa có học viên. Nhắn trong cuộc trò chuyện để thêm học viên.</div>';
   var out='';
@@ -852,8 +896,8 @@ function mdLite(src){
 
 function stepModel(a){
   var s=a.s, steps=s.steps||{}, mk=a.mk, prev=parse(s.start), out=[];
-  for(var n=1;n<=NS;n++){
-    var d=parse(steps[n]), pb=PB[n-1], std=pb.std[mk], sub=subs(n,mk), ck=((s.checks||{})[n])||[];
+  for(var n=1;n<=a.ns;n++){
+    var d=parse(steps[n]), pb=a.pb[n-1], std=pb.std[mk], sub=subs(n,mk), ck=((s.checks||{})[n])||[];
     var st=d?"done":(n===a.cur?"cur":"todo"), days=null;
     if(d&&prev) days=Math.max(0,diff(d,prev)); else if(st==="cur") days=a.days;
     var nd=st==="done"?sub.length:ck.filter(function(i){return i>=0&&i<sub.length}).length;
@@ -875,7 +919,7 @@ function stepCard(m,a){
 }
 function secActivity(a){
   var s=a.s, steps=s.steps||{}, ev=[], t=today(), tk=iso(t);
-  for(var n=1;n<=NS;n++) if(steps[n]) ev.push({d:steps[n],k:"step",g:"step",t:"Hoàn thành bước "+n+": "+PB[n-1].name});
+  for(var n=1;n<=a.ns;n++) if(steps[n]) ev.push({d:steps[n],k:"step",g:"step",t:"Hoàn thành bước "+n+": "+a.pb[n-1].name});
   a.ms.forEach(function(m){
     if(m.status==="Hủy") return;
     ev.push({d:m.date,k:m.status==="Đã họp"?"held":(m.status==="Sắp tới"?"meet":"oth"),g:"meet",t:"Họp 1:1"+(m.time?" lúc "+m.time:"")+" ("+m.status+")",x:m.actions?"Action items: "+m.actions:""});
@@ -912,7 +956,7 @@ function viewStudent(id,tab){
   var back='<a class="back" href="#/hoc-vien">← Danh sách học viên</a>';
   var s=students.filter(function(x){return x.id===id})[0];
   if(!s) return back+'<div class="empty">'+(students.length?'Không tìm thấy học viên này.':'Đang tải dữ liệu...')+'</div>';
-  var a=analyze(s), pb=a.cur<=NS?PB[a.cur-1]:null, steps=s.steps||{};
+  var a=analyze(s), pb=a.cur<=a.ns?a.pb[a.cur-1]:null, steps=s.steps||{};
   var asn=assignments.filter(function(x){return x.studentId===s.id}).sort(function(p,q){return (q.assignedOn||"")<(p.assignedOn||"")?-1:1});
   var rs=reports.filter(function(r){return r.studentId===s.id}).sort(function(p,q){return (q.date||"")===(p.date||"")?(q.id<p.id?-1:1):((q.date||"")<(p.date||"")?-1:1)});
   var ms=a.ms.slice().sort(function(p,q){return p.date<q.date?1:-1});
@@ -923,7 +967,7 @@ function viewStudent(id,tab){
   var out=back+'<div class="sp-h"><div><h2>'+esc(s.name)+'</h2><p class="sp-sub">'+sub+(contact.length?'<br>'+esc(contact.join(" · ")):'')+(s.start?'<br>Bắt đầu '+fmt(s.start):'')+'</p></div>'
     +'<div class="sp-act"><span class="st r'+a.risk+'">'+RL[a.risk]+'</span></div></div>';
   out+='<div class="brief">'
-    +fig(a.done+"/"+NS,"bước hoàn thành"+(pb?", đang ở bước "+a.cur+": "+pb.name:""),a.done?"ok":"")
+    +fig(a.done+"/"+a.ns,"bước hoàn thành"+(pb?", đang ở bước "+a.cur+": "+pb.name:""),a.done?"ok":"")
     +(pb?fig(a.days+" / "+a.std,"ngày ở bước (chuẩn "+a.std+")",a.risk>=3?"bad":(a.risk===2?"warn":"")):fig(a.done,"bước đã xong"))
     +fig(nm?fmt(nm.date)+(nm.time?" "+nm.time:""):"Chưa có","buổi họp kế tiếp",nm?"":"warn")
     +fig(a.openAss.length,"bài đang giao",a.openAss.some(function(x){return x.late})?"bad":"")+'</div>';
@@ -938,7 +982,7 @@ function viewStudent(id,tab){
     var stl=STORE[a.mk]||STORE.VN, stk=((s.checks||{}).store)||[], stN=stk.filter(function(i){return i<stl.length}).length;
     out+='<section class="sec"><h2>Setup store: giấy tờ và pháp lí</h2><p class="hint">Mọi giấy tờ, pháp lí gom về một chỗ. Mentor kiểm từng mục trong buổi họp, mục nào đạt hiện màu xanh. Đã kiểm '+stN+'/'+stl.length+'.</p><ul class="ck stc">'
       +stl.map(function(t,i){return '<li class="'+(stk.indexOf(i)>=0?"y":"")+'">'+esc(t)+'</li>'}).join("")+'</ul></section>';
-    out+='<section class="sec"><h2>Hành trình '+NS+' bước</h2><p class="hint">Mốc chuẩn tính theo thị trường '+esc(a.mk)+'. Đã hoàn thành '+a.done+'/'+NS+' bước'+(totSub?', '+doneSub+'/'+totSub+' đầu việc':'')+'. Bấm vào từng bước để xem đầu việc.</p>'
+    out+='<section class="sec"><h2>Hành trình '+a.ns+' bước</h2><p class="hint">Mốc chuẩn tính theo thị trường '+esc(a.mk)+'. Đã hoàn thành '+a.done+'/'+a.ns+' bước'+(totSub?', '+doneSub+'/'+totSub+' đầu việc':'')+'. Bấm vào từng bước để xem đầu việc.</p>'
       +'<div class="sp10">'+model.map(function(m){return '<div class="nd '+m.st+(m.st==="cur"?" r"+a.risk:"")+'"><i>'+m.n+'</i><span>'+esc(m.pb.name)+'</span></div>'}).join("")+'</div>'
       +'<div class="slg"><span><i style="background:var(--done)"></i>Đã xong</span><span><i style="background:var(--f-ok)"></i>Đang làm, đúng hạn</span><span><i style="background:var(--f-warn)"></i>Chậm</span><span><i style="background:var(--f-bad)"></i>Cần can thiệp</span><span><i style="background:var(--todo)"></i>Chưa tới</span></div>'
       +model.map(function(m){return stepCard(m,a)}).join("")+'</section>';
@@ -1051,9 +1095,9 @@ async function copyMsg(msg){
 document.addEventListener("click",async function(e){
   var t=e.target.closest("button"); if(!t)return; var d=t.dataset||{};
   if(d.copystep){
-    var pr=d.copystep.split(":"), s1=students.filter(function(x){return x.id===pr[0]})[0], n1=+pr[1]; if(!s1||!PB[n1-1])return;
-    var a1=analyze(s1), p1=PB[n1-1], sb=subs(n1,a1.mk);
-    return copyMsg("Chào "+s1.name+", việc cho bước "+n1+"/"+NS+": "+p1.name+"\n\nViệc cần làm:\n"+p1.task[a1.mk]
+    var pr=d.copystep.split(":"), s1=students.filter(function(x){return x.id===pr[0]})[0], n1=+pr[1]; if(!s1)return;
+    var a1=analyze(s1), p1=a1.pb[n1-1]; if(!p1)return; var sb=subs(n1,a1.mk);
+    return copyMsg("Chào "+s1.name+", việc cho bước "+n1+"/"+a1.ns+": "+p1.name+"\n\nViệc cần làm:\n"+p1.task[a1.mk]
       +(sb.length?"\n\nĐầu việc:\n"+sb.map(function(it,i){return (i+1)+". "+it}).join("\n"):"")
       +"\n\nXong bước này khi: "+p1.done+"\n\nLịch họp: "+a1.meet+"\n\nVướng chỗ nào, nhắn mình trước buổi họp nhé.");
   }
@@ -1065,9 +1109,9 @@ document.addEventListener("click",async function(e){
   }
   if(d.copy){
     var s0=students.filter(function(x){return x.id===d.copy})[0]; if(!s0)return;
-    var a0=analyze(s0), p0=a0.cur<=NS?PB[a0.cur-1]:null, tt=today(), w0=new Date(tt); w0.setDate(w0.getDate()-((tt.getDay()+6)%7)); var w1=new Date(w0); w1.setDate(w1.getDate()+6);
+    var a0=analyze(s0), p0=a0.cur<=a0.ns?a0.pb[a0.cur-1]:null, tt=today(), w0=new Date(tt); w0.setDate(w0.getDate()-((tt.getDay()+6)%7)); var w1=new Date(w0); w1.setDate(w1.getDate()+6);
     var msg="Chào "+s0.name+", việc cho tuần "+pad(w0.getDate())+"/"+pad(w0.getMonth()+1)+" – "+pad(w1.getDate())+"/"+pad(w1.getMonth()+1)+":\n\n"
-      +(p0?"Bước hiện tại: "+a0.cur+"/"+NS+", "+p0.name+"\n\nViệc cần làm:\n"+p0.task[a0.mk]+"\n\nXong bước này khi: "+p0.done:"Bạn đã hoàn tất "+NS+" bước. Tuần này mình tổng kết và chốt kết thúc mentor.")
+      +(p0?"Bước hiện tại: "+a0.cur+"/"+a0.ns+", "+p0.name+"\n\nViệc cần làm:\n"+p0.task[a0.mk]+"\n\nXong bước này khi: "+p0.done:"Bạn đã hoàn tất "+a0.ns+" bước. Tuần này mình tổng kết và chốt kết thúc mentor.")
       +(a0.openAss.length?"\n\nBài đang giao:\n"+a0.openAss.map(function(x){return x.title+" (hạn "+fmt(x.due)+(x.dueTime?" "+x.dueTime:"")+")\n"+(x.items||[]).map(function(it,i){return (i+1)+". "+it}).join("\n")}).join("\n\n"):"")
       +(a0.lastHeld&&a0.lastHeld.actions?"\n\nViệc từ buổi họp trước:\n"+a0.lastHeld.actions:"")
       +"\n\nLịch họp: "+a0.meet+"\n\nVướng chỗ nào, nhắn mình trước buổi họp nhé.";
