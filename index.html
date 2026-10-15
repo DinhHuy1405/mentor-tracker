@@ -350,6 +350,7 @@ label.f{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:50
 .pill.ok{color:#fff;background:var(--done);border-color:var(--done)}.pill.sub{color:var(--info);border-color:var(--f-ok)}.pill.fix{color:var(--warn);border-color:var(--f-warn)}.pill.late{color:var(--bad);border-color:var(--f-bad)}
 .blk{margin:10px 0;padding-top:8px;border-top:1px dashed var(--line)}.blk h4{margin:0 0 6px;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--soft);font-weight:600}
 .blk p{margin:3px 0;font-size:13.5px}.blk.sbm a{color:var(--info)}
+.cpy{margin-top:10px}
 .mt{padding:6px 0 6px 10px;border-left:3px solid var(--line);margin-bottom:6px;font-size:13.5px}.mt.ok{border-left-color:var(--done)}.mt b{margin-right:10px}.mt span{font-size:12px;color:var(--muted)}.mt.ok span{color:var(--done);font-weight:600}
 .mm{padding:12px 0;border-top:1px solid var(--line);display:grid;grid-template-columns:150px minmax(0,1fr);gap:4px 20px;font-size:13.5px}
 .mm:first-of-type{border-top:0;padding-top:0}
@@ -884,7 +885,8 @@ function stepCard(m,a){
   return '<details class="sc '+m.st+(m.st==="cur"?" r"+a.risk:"")+'"'+(m.st==="cur"?" open":"")+'><summary><span class="n">'+m.n+'</span><span class="nm2"><b>'+esc(m.pb.name)+'</b></span><span class="chip">'+esc(chip)+'</span>'+bar+'</summary>'
     +'<div class="bd">'+(m.st==="cur"?'<p class="dn">Xong bước này khi: '+esc(m.pb.done)+'</p>':'')
     +(ck?'<p class="ckn">Đầu việc: '+m.nd+'/'+m.sub.length+'</p><ul class="ck">'+ck+'</ul>':'')
-    +(m.st!=="done"&&m.pb.risk?'<p class="ckn" style="margin-top:10px">Rủi ro hay gặp: '+esc(m.pb.risk)+'</p>':'')+'</div></details>';
+    +(m.st!=="done"&&m.pb.risk?'<p class="ckn" style="margin-top:10px">Rủi ro hay gặp: '+esc(m.pb.risk)+'</p>':'')
+    +(m.st!=="done"?'<div class="cpy"><button class="btn sm" data-copystep="'+esc(a.s.id)+':'+m.n+'">Sao chép tin nhắn giao bước này</button></div>':'')+'</div></details>';
 }
 function secActivity(a){
   var s=a.s, steps=s.steps||{}, ev=[], t=today(), tk=iso(t);
@@ -934,7 +936,7 @@ function viewStudent(id,tab){
   var contact=[s.phone,s.email].filter(Boolean);
   var nm=a.nextM;
   var out=back+'<div class="sp-h"><div><h2>'+esc(s.name)+'</h2><p class="sp-sub">'+sub+(contact.length?'<br>'+esc(contact.join(" · ")):'')+(s.start?'<br>Bắt đầu '+fmt(s.start):'')+'</p></div>'
-    +'<div class="sp-act"><span class="st r'+a.risk+'">'+RL[a.risk]+'</span><button class="btn primary sm" data-copy="'+esc(s.id)+'">Sao chép tin nhắn giao bài</button></div></div>';
+    +'<div class="sp-act"><span class="st r'+a.risk+'">'+RL[a.risk]+'</span></div></div>';
   out+='<div class="brief">'
     +fig(a.done+"/"+NS,"bước hoàn thành"+(pb?", đang ở bước "+a.cur+": "+pb.name:""),a.done?"ok":"")
     +(pb?fig(a.days+" / "+a.std,"ngày ở bước (chuẩn "+a.std+")",a.risk>=3?"bad":(a.risk===2?"warn":"")):fig(a.done,"bước đã xong"))
@@ -999,7 +1001,8 @@ function viewStudent(id,tab){
         out+='<div class="as s-'+z[0]+'"><div class="t"><b>'+esc(x.title)+'</b><span>'+(x.assignedOn?'Giao '+fmt(x.assignedOn):'')+(x.due?' · hạn '+fmt(x.due)+(x.dueTime?' '+esc(x.dueTime):''):'')+'</span><span class="pill '+z[0]+'">'+esc(z[1])+'</span></div>'
           +((x.items||[]).length?'<ol>'+x.items.map(function(it){return '<li>'+esc(it)+'</li>'}).join("")+'</ol>':'')
           +(x.note?'<div class="nt">'+esc(x.note)+'</div>':'')+sbh
-          +(rv?'<div class="rv2"><h4>Nhận xét và chỉnh sửa của mentor</h4>'+rv+'</div>':'')+'</div>';
+          +(rv?'<div class="rv2"><h4>Nhận xét và chỉnh sửa của mentor</h4>'+rv+'</div>':'')
+          +(x.status!=="Đạt"&&x.status!=="Hủy"?'<div class="cpy"><button class="btn sm" data-copyass="'+esc(x.id)+'">Sao chép tin nhắn giao bài này</button></div>':'')+'</div>';
       });
       if(w.ms.length) out+='<div class="blk"><h4>Buổi họp và take note của mentor</h4>'+w.ms.slice().sort(function(p,q){return p.date<q.date?-1:1}).map(function(m){
         return '<div class="mt '+(m.status==="Đã họp"?'ok':'')+'"><b>'+fmt(m.date)+(m.time?' '+esc(m.time):'')+'</b><span>'+esc(m.status)+'</span>'+(m.notes?'<p>'+esc(m.notes)+'</p>':'')+(m.actions?'<p><strong>Việc tiếp theo:</strong> '+esc(m.actions)+'</p>':'')+'</div>'}).join("")+'</div>';
@@ -1052,8 +1055,26 @@ function safeRender(){
 var toastT=null;
 function toast(msg){var t=$("#toast");t.textContent=msg;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove("show")},1800)}
 
+async function copyMsg(msg){
+  try{await navigator.clipboard.writeText(msg);toast("Đã sao chép, dán vào Zalo hoặc email")}catch(_){
+    var ta=document.createElement("textarea");ta.value=msg;ta.style.cssText="position:fixed;left:-9999px";document.body.appendChild(ta);ta.select();
+    var ok=false;try{ok=document.execCommand("copy")}catch(__){} document.body.removeChild(ta);toast(ok?"Đã sao chép, dán vào Zalo hoặc email":"Trình duyệt chặn sao chép")}
+}
 document.addEventListener("click",async function(e){
   var t=e.target.closest("button"); if(!t)return; var d=t.dataset||{};
+  if(d.copystep){
+    var pr=d.copystep.split(":"), s1=students.filter(function(x){return x.id===pr[0]})[0], n1=+pr[1]; if(!s1||!PB[n1-1])return;
+    var a1=analyze(s1), p1=PB[n1-1], sb=subs(n1,a1.mk);
+    return copyMsg("Chào "+s1.name+", việc cho bước "+n1+"/"+NS+": "+p1.name+"\n\nViệc cần làm:\n"+p1.task[a1.mk]
+      +(sb.length?"\n\nĐầu việc:\n"+sb.map(function(it,i){return (i+1)+". "+it}).join("\n"):"")
+      +"\n\nXong bước này khi: "+p1.done+"\n\nLịch họp: "+a1.meet+"\n\nVướng chỗ nào, nhắn mình trước buổi họp nhé.");
+  }
+  if(d.copyass){
+    var x2=assignments.filter(function(x){return x.id===d.copyass})[0]; if(!x2)return;
+    var s2=students.filter(function(x){return x.id===x2.studentId})[0]||{name:""};
+    return copyMsg("Chào "+s2.name+", bài tập: "+x2.title+(x2.due?" (hạn "+fmt(x2.due)+(x2.dueTime?" "+x2.dueTime:"")+")":"")+"\n\n"
+      +(x2.items||[]).map(function(it,i){return (i+1)+". "+it}).join("\n")+"\n\nVướng chỗ nào, nhắn mình trước buổi họp nhé.");
+  }
   if(d.copy){
     var s0=students.filter(function(x){return x.id===d.copy})[0]; if(!s0)return;
     var a0=analyze(s0), p0=a0.cur<=NS?PB[a0.cur-1]:null, tt=today(), w0=new Date(tt); w0.setDate(w0.getDate()-((tt.getDay()+6)%7)); var w1=new Date(w0); w1.setDate(w1.getDate()+6);
@@ -1062,9 +1083,7 @@ document.addEventListener("click",async function(e){
       +(a0.openAss.length?"\n\nBài đang giao:\n"+a0.openAss.map(function(x){return x.title+" (hạn "+fmt(x.due)+(x.dueTime?" "+x.dueTime:"")+")\n"+(x.items||[]).map(function(it,i){return (i+1)+". "+it}).join("\n")}).join("\n\n"):"")
       +(a0.lastHeld&&a0.lastHeld.actions?"\n\nViệc từ buổi họp trước:\n"+a0.lastHeld.actions:"")
       +"\n\nLịch họp: "+a0.meet+"\n\nVướng chỗ nào, nhắn mình trước buổi họp nhé.";
-    try{await navigator.clipboard.writeText(msg);toast("Đã sao chép, dán vào Zalo hoặc email")}catch(_){
-      var ta=document.createElement("textarea");ta.value=msg;ta.style.cssText="position:fixed;left:-9999px";document.body.appendChild(ta);ta.select();
-      var ok=false;try{ok=document.execCommand("copy")}catch(__){} document.body.removeChild(ta);toast(ok?"Đã sao chép, dán vào Zalo hoặc email":"Trình duyệt chặn sao chép")}
+    copyMsg(msg);
   }
 });
 
