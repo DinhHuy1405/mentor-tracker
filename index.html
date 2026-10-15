@@ -549,7 +549,11 @@ var PBU=[
 {name:"Đăng ký tài khoản & list sản phẩm",std:{US:10,VN:10},done:"Đã đăng ký tài khoản và list sản phẩm lên trong lúc hàng đang đi qua US.",
  task:{US:"Đăng ký tài khoản bán hàng, list sản phẩm lên trong quá trình hàng đi qua US.",VN:""},
  help:{US:"Kiểm tra hồ sơ trước khi nộp, góp ý listing và hình ảnh.",VN:""},
- risk:"Thông tin không khớp giấy tờ nên bị từ chối."}
+ risk:"Thông tin không khớp giấy tờ nên bị từ chối."},
+{name:"Bán hàng & đơn đầu tiên",std:{US:14,VN:14},done:"Có đơn hàng thật đầu tiên trên sàn (không phải đơn tự đặt).",
+ task:{US:"Hàng về kho, đẩy bán: phản hồi khách trong 24 giờ, theo dõi đơn; nếu chưa có đơn, đổi thử 1 biến số (giá, ảnh, video).",VN:""},
+ help:{US:"Chẩn đoán vì sao chưa có đơn (traffic, giá, listing, độ tin cậy shop) và đề ra 1 đến 2 thử nghiệm trong tuần.",VN:""},
+ risk:"Quá 14 ngày sau khi có listing mà chưa có đơn: xem lại sản phẩm, giá, listing."}
 ];
 var PBM={VN:PBV,US:PBU};
 var SUBU={
@@ -559,7 +563,8 @@ var SUBU={
 4:["Đăng ký đơn vị LLC","Hoàn thiện giấy tờ"],
 5:["Đăng ký với đơn vị fulfillment","Hỏi rõ phí và khâu có thể cắt giảm"],
 6:["Liên kết với đơn vị logistics","Gửi hàng sang US"],
-7:["Đăng ký tài khoản","List sản phẩm lên trong lúc hàng đi qua US"]
+7:["Đăng ký tài khoản","List sản phẩm lên trong lúc hàng đi qua US"],
+8:["Đẩy bán sản phẩm","Phản hồi khách trong 24 giờ","Có đơn thật đầu tiên"]
 };
 var SUB={
 1:["Học cách bắt keyword ngách","Tổng hợp thông tin mentor cung cấp thành ngách","Đăng ký tài khoản TikTok Shop (kiểm giấy tờ ở mục Setup store)"],
@@ -660,7 +665,7 @@ function analyze(s){
     if(!openAss.length) attn.push({sev:2,t:"Chưa có bài nào đang giao"});
   }
   var attnSev=attn.reduce(function(m,x){return Math.max(m,x.sev)},0);
-  return {s:s,mk:mk,pb:pbm,ns:ns,cur:cur,done:done,days:days,std:std,risk:risk,why:why,meet:meet,meetNone:meetNone,lastHeld:lastHeld,held:held,ms:ms,hasOrder:!!s.firstOrder,heldWeek:heldWeek.length>0,active:active,openAss:openAss,nextM:nextM,nextIn:nextIn,missing:missing,attn:attn,attnSev:attnSev,gap:gap,startD:startD};
+  return {s:s,mk:mk,pb:pbm,ns:ns,cur:cur,done:done,days:days,std:std,risk:risk,why:why,meet:meet,meetNone:meetNone,lastHeld:lastHeld,held:held,ms:ms,hasOrder:!!s.firstOrder||(mk==="US"&&!!steps[8]),heldWeek:heldWeek.length>0,active:active,openAss:openAss,nextM:nextM,nextIn:nextIn,missing:missing,attn:attn,attnSev:attnSev,gap:gap,startD:startD};
 }
 
 /* ---------- render: Theo dõi ---------- */
