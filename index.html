@@ -416,6 +416,8 @@ label.f{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:50
 .sc.done{border-left-color:var(--ok)}.sc.cur{border-left-color:var(--f-ok);background:#fff}.sc.cur.r2{border-left-color:var(--f-warn)}.sc.cur.r3{border-left-color:var(--f-bad)}
 .sc>summary{display:grid;grid-template-columns:30px minmax(0,1.4fr) minmax(0,1fr) minmax(0,1.1fr);gap:4px 14px;align-items:center;padding:12px 10px 12px 0;font-size:15px;font-weight:500}
 .sc>summary::after,.sc[open]>summary::after{content:none}
+.sc.sm>summary{grid-template-columns:30px minmax(0,1.6fr) minmax(0,1fr)}.sp10 .nd[data-step]{cursor:pointer}
+.sc .bd .dn{margin:6px 0}
 .sc .n{font-family:var(--serif);font-weight:800;font-size:18px;color:var(--soft)}.sc.done .n{color:var(--ok)}.sc.cur .n{color:var(--info)}
 .sc .nm2 b{font-weight:600}
 .sc .chip{font-size:13px;font-weight:600;padding:2px 9px;border-radius:99px;background:var(--todo);color:var(--muted);justify-self:start;white-space:nowrap}
@@ -922,8 +924,8 @@ function stepCard(m,a){
   var chip=m.st==="done"?"Hoàn thành "+fmt(m.raw):(m.st==="cur"?(a.risk>=3?"Cần can thiệp":(a.risk===2?"Đang làm, chậm":"Đang làm")):"Chưa tới");
   var bar=m.days!=null?'<div class="dbar '+(m.st==="done"?"d":"")+'"><div class="t"><div class="'+rc+'" style="height:100%"><i style="width:'+(Math.min(r,1.5)/1.5*100)+'%"></i></div><b></b></div><span>'+m.days+'/'+m.std+' ngày</span></div>':'<div class="dbar"><span>Chuẩn '+m.std+' ngày</span></div>';
   var ck=m.sub.map(function(t,i){var y=m.st==="done"||m.ck.indexOf(i)>=0;return '<li class="'+(y?"y":"")+'">'+esc(t)+'</li>'}).join("");
-  return '<details class="sc '+m.st+(m.st==="cur"?" r"+a.risk:"")+'"'+(m.st==="cur"?" open":"")+'><summary><span class="n">'+m.n+'</span><span class="nm2"><b>'+esc(m.pb.name)+'</b></span><span class="chip">'+esc(chip)+'</span>'+bar+'</summary>'
-    +'<div class="bd">'+(m.st==="cur"?'<p class="dn">Xong bước này khi: '+esc(m.pb.done)+'</p>':'')
+  return '<details class="sc '+m.st+(m.st==="cur"?" r"+a.risk:"")+'" id="stp-'+m.n+'"'+(m.st==="cur"?" open":"")+'><summary><span class="n">'+m.n+'</span><span class="nm2"><b>'+esc(m.pb.name)+'</b></span><span class="chip">'+esc(chip)+'</span>'+bar+'</summary>'
+    +'<div class="bd"><p class="dn">Việc cần làm: '+esc(m.pb.task[a.mk])+'</p>'+(m.st==="cur"?'<p class="dn">Xong bước này khi: '+esc(m.pb.done)+'</p>':'')
     +(ck?'<p class="ckn">Đầu việc: '+m.nd+'/'+m.sub.length+'</p><ul class="ck">'+ck+'</ul>':'')
     +(m.st!=="done"&&m.pb.risk?'<p class="ckn" style="margin-top:10px">Rủi ro hay gặp: '+esc(m.pb.risk)+'</p>':'')
     +(m.st!=="done"&&!window.STUDENT_MODE?'<div class="cpy"><button class="btn sm" data-copystep="'+esc(a.s.id)+':'+m.n+'">Sao chép tin nhắn giao bước này</button></div>':'')+'</div></details>';
@@ -1007,12 +1009,18 @@ function viewStudent(id,tab){
     var al=a.attn.slice().sort(function(p,q){return q.sev-p.sev});
     if(a.s.focus) al.unshift({sev:3,t:a.s.focus.charAt(0).toUpperCase()+a.s.focus.slice(1)});
     if(SM){
-      var mdl=stepModel(a), curM=mdl.filter(function(m){return m.st==="cur"})[0];
+      var mdl=stepModel(a);
       var stl0=STORE[a.mk]||STORE.VN, stk0=((s.checks||{}).store)||[];
-      out+='<section class="sec"><h2>Tiến độ của bạn</h2><p class="hint">Đã xong '+a.done+'/'+a.ns+' bước.</p>'
-        +'<div class="sp10">'+mdl.map(function(m){return '<div class="nd '+m.st+'"><i>'+m.n+'</i><span>'+esc(m.pb.name)+'</span></div>'}).join("")+'</div>'
-        +(curM&&curM.sub.length?'<h3 class="gr">Bước đang làm: '+esc(curM.pb.name)+'</h3><ul class="ck">'+curM.sub.map(function(t,i){return '<li class="'+(curM.ck.indexOf(i)>=0?'y':'')+'">'+esc(t)+'</li>'}).join("")+'</ul>':'')+'</section>';
-      if(stk0.length||true) out+='<section class="sec"><h2>Giấy tờ lập cửa hàng</h2><ul class="ck stc">'+stl0.map(function(t,i){return '<li class="'+(stk0.indexOf(i)>=0?'y':'')+'">'+esc(t)+'</li>'}).join("")+'</ul></section>';
+      out+='<section class="sec"><h2>Các bước của bạn</h2><p class="hint">Đã xong '+a.done+'/'+a.ns+' bước. Bấm vào từng bước để xem trước việc cần làm.</p>'
+        +'<div class="sp10" style="grid-template-columns:repeat('+mdl.length+',minmax(0,1fr))">'+mdl.map(function(m){return '<div class="nd '+m.st+'" data-step="'+m.n+'" role="button" tabindex="0"><i>'+m.n+'</i><span>'+esc(m.pb.name)+'</span></div>'}).join("")+'</div>'
+        +mdl.map(function(m){
+          var chip=m.st==="done"?"Đã xong"+(m.raw?" "+fmt(m.raw):""):(m.st==="cur"?"Đang làm":"Sắp tới");
+          return '<details class="sc sm '+m.st+'" id="stp-'+m.n+'"'+(m.st==="cur"?' open':'')+'><summary><span class="n">'+m.n+'</span><span class="nm2"><b>'+esc(m.pb.name)+'</b></span><span class="chip">'+chip+'</span></summary>'
+            +'<div class="bd"><p class="dn"><b>Việc cần làm:</b> '+esc(m.pb.task[a.mk])+'</p>'
+            +(m.sub.length?'<ul class="ck">'+m.sub.map(function(t,i){return '<li class="'+((m.st==="done"||m.ck.indexOf(i)>=0)?'y':'')+'">'+esc(t)+'</li>'}).join("")+'</ul>':'')
+            +'<p class="dn" style="margin-top:10px"><b>Xong bước này khi:</b> '+esc(m.pb.done)+'</p></div></details>';
+        }).join("")+'</section>';
+      out+='<section class="sec"><h2>Giấy tờ lập cửa hàng</h2><ul class="ck stc">'+stl0.map(function(t,i){return '<li class="'+(stk0.indexOf(i)>=0?'y':'')+'">'+esc(t)+'</li>'}).join("")+'</ul></section>';
       return out;
     }
     var al2=al.filter(function(x){return x.sev>=2&&!/^(Chưa có lịch họp|Chưa có bài nào|Chưa họp lần nào)/.test(x.t)});
@@ -1023,7 +1031,7 @@ function viewStudent(id,tab){
     out+='<section class="sec"><h2>Giấy tờ lập cửa hàng</h2><p class="hint">Mọi giấy tờ và pháp lí gom về một chỗ, kiểm từng mục trong buổi họp. Mục nào đạt hiện màu xanh. Đã đạt '+stN+'/'+stl.length+'.</p><ul class="ck stc">'
       +stl.map(function(t,i){return '<li class="'+(stk.indexOf(i)>=0?"y":"")+'">'+esc(t)+'</li>'}).join("")+'</ul></section>';
     out+='<section class="sec"><h2>Hành trình '+a.ns+' bước</h2><p class="hint">Mốc chuẩn tính theo thị trường '+esc(a.mk)+'. Đã hoàn thành '+a.done+'/'+a.ns+' bước'+(totSub?', '+doneSub+'/'+totSub+' đầu việc':'')+'. Bấm vào từng bước để xem đầu việc.</p>'
-      +'<div class="sp10">'+model.map(function(m){return '<div class="nd '+m.st+(m.st==="cur"?" r"+a.risk:"")+'"><i>'+m.n+'</i><span>'+esc(m.pb.name)+'</span></div>'}).join("")+'</div>'
+      +'<div class="sp10" style="grid-template-columns:repeat('+model.length+',minmax(0,1fr))">'+model.map(function(m){return '<div class="nd '+m.st+(m.st==="cur"?" r"+a.risk:"")+'" data-step="'+m.n+'" role="button" tabindex="0"><i>'+m.n+'</i><span>'+esc(m.pb.name)+'</span></div>'}).join("")+'</div>'
       +'<div class="slg"><span><i style="background:var(--done)"></i>Đã xong</span><span><i style="background:var(--ink)"></i>Đang làm</span>'+(SM?'':'<span><i style="background:var(--bad)"></i>Chậm so với chuẩn</span>')+'<span><i style="background:var(--todo)"></i>Chưa tới</span></div>'
       +model.map(function(m){return stepCard(m,a)}).join("")+'</section>';
     var help=[];
@@ -1152,7 +1160,14 @@ async function copyMsg(msg){
     var ta=document.createElement("textarea");ta.value=msg;ta.style.cssText="position:fixed;left:-9999px";document.body.appendChild(ta);ta.select();
     var ok=false;try{ok=document.execCommand("copy")}catch(__){} document.body.removeChild(ta);toast(ok?"Đã sao chép, dán vào Zalo hoặc email":"Trình duyệt chặn sao chép")}
 }
+function openStep(e){
+  var nd=e.target.closest&&e.target.closest(".nd[data-step]"); if(!nd) return false;
+  var d=document.getElementById("stp-"+nd.dataset.step); if(!d) return true;
+  d.open=true; d.scrollIntoView({behavior:"smooth",block:"center"}); return true;
+}
+document.addEventListener("keydown",function(e){if((e.key==="Enter"||e.key===" ")&&openStep(e))e.preventDefault()});
 document.addEventListener("click",async function(e){
+  if(openStep(e)) return;
   var t=e.target.closest("button"); if(!t)return; var d=t.dataset||{};
   if(d.copyacct){
     var s3=students.filter(function(x){return x.id===d.copyacct})[0]; if(!s3||!s3.account)return;
