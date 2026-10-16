@@ -523,6 +523,11 @@ a{color:inherit}
 .focus .sub{display:block;margin-top:2px;color:var(--muted);font-size:15px}
 .focus .none{margin:0;color:var(--muted)}
 .focus .fm{margin-top:14px;padding-top:10px;border-top:1px solid var(--line);font-size:15px}
+.mtd{border-top:1px solid var(--line);padding:0}
+.mtd>summary{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;padding:12px 4px 12px 0;cursor:pointer;font-size:15.5px}
+.mtd>summary b{font-weight:600}.mtd>summary .s{margin-left:auto;font-size:14px;color:var(--muted)}.mtd.ok>summary .s{color:var(--done);font-weight:600}
+.mtd .ln{font-size:15px}.mtd .ln span{display:block;color:var(--soft);font-size:13.5px;margin-bottom:2px}.mtd .ln.rv{padding-left:12px;border-left:2px solid var(--ink)}
+.mtd .bd{padding:0 0 14px}.mtd .bd .ln{margin-top:8px}.mtd .none{color:var(--muted);margin:6px 0 0}
 .todo2{list-style:none;margin:0;padding:0}.todo2 li{padding:6px 0 6px 12px;border-left:3px solid var(--bad)}.todo2 li+li{margin-top:6px}
 /* Theo tuần: mỗi tuần một đoạn, không khung lồng */
 .wk2{margin:0 0 34px}
@@ -963,9 +968,21 @@ function secActivity(a){
   return '<section class="sec"><h2>Hoạt động và nhật ký hằng ngày</h2><p class="hint">Mọi việc đã diễn ra với học viên này theo từng ngày: bước hoàn thành, buổi họp, bài tập và ghi chú. Biểu đồ đếm số hoạt động 8 tuần gần nhất.</p>'+chart
     +'<ul class="evl">'+(up.length?group(up):'')+(past.length?group(past):'<li class="e"><div class="note">Chưa có hoạt động nào.</div></li>')+'</ul></section>';
 }
+function mtgItem(m,open){
+  var okHttp=function(u){return /^https:\/\//.test(u||"")};
+  var all=(okHttp(m.link)?[{title:"Link họp (Google Meet)",url:m.link}]:[]).concat((m.links||[]).filter(function(l){return okHttp(l.url)}));
+  var d=parse(m.date);
+  var has=m.notes||m.edits||m.actions||all.length;
+  return '<details class="mtd'+(m.status==="Đã họp"?' ok':'')+'"'+(open?' open':'')+'><summary><b>'+(d?DOW[d.getDay()]+' ':'')+fmt(m.date)+(m.time?', '+esc(m.time):'')+'</b><span class="s">'+esc(m.status)+'</span></summary><div class="bd">'
+    +(m.notes?'<div class="ln"><span>Ghi chú buổi họp</span>'+inl(m.notes)+'</div>':'')
+    +(m.edits?'<div class="ln rv"><span>Mentor sửa và nhận xét</span>'+inl(m.edits)+'</div>':'')
+    +(m.actions?'<div class="ln"><span>Việc tiếp theo</span>'+inl(m.actions)+'</div>':'')
+    +(all.length?'<div class="ln"><span>Link</span>'+all.map(function(l){return '<a href="'+esc(l.url)+'" target="_blank" rel="noopener">'+esc(l.title||"Mở link")+'</a>'}).join(" · ")+'</div>':'')
+    +(has?'':'<p class="none">Chưa có ghi chú cho buổi họp này.</p>')+'</div></details>';
+}
 var STABS=[["tien-do","Tiến độ"],["bai-tap","Theo tuần"],["lich-hop","Lịch họp"],["bao-cao","Báo cáo"],["nhat-ky","Nhật ký"]];
 function viewStudent(id,tab){
-  var SM=!!window.STUDENT_MODE, TABS=STABS.filter(function(x){return !SM||(x[0]!=="nhat-ky"&&x[0]!=="lich-hop")});
+  var SM=!!window.STUDENT_MODE, TABS=STABS.filter(function(x){return !SM||x[0]!=="nhat-ky"});
   tab=TABS.some(function(x){return x[0]===tab})?tab:"tien-do";
   var back=SM?'':'<a class="back" href="#/hoc-vien">← Danh sách học viên</a>';
   var s=students.filter(function(x){return x.id===id})[0];
@@ -1083,22 +1100,16 @@ function viewStudent(id,tab){
           +(x.reviews||[]).map(function(r){return '<div class="ln rv"><span>Nhận xét '+fmt(r.date)+'</span>'+esc(r.text)+'</div>'}).join("")
           +(!SM&&x.status!=="Đạt"&&x.status!=="Hủy"?'<button class="btn sm" data-copyass="'+esc(x.id)+'">Sao chép tin nhắn giao bài này</button>':'')+'</div>';
       });
-      w.ms.slice().sort(function(p,q){return p.date<q.date?-1:1}).forEach(function(m){
-        out+='<div class="mtg'+(m.status==="Đã họp"?' ok':'')+'"><b>Họp '+fmt(m.date)+(m.time?' '+esc(m.time):'')+'</b><span class="s">'+esc(m.status)+'</span>'+(m.notes?'<p>'+esc(m.notes)+'</p>':'')+(m.actions?'<p><span style="color:var(--soft)">Việc tiếp theo:</span> '+esc(m.actions)+'</p>':'')+'</div>';
-      });
+      w.ms.slice().sort(function(p,q){return p.date<q.date?-1:1}).forEach(function(m){out+=mtgItem(m,false)});
       w.rs.forEach(function(r){out+='<div class="mtg"><b>Báo cáo '+fmt(r.date)+'</b><span class="s">'+esc(r.title)+' (tab Báo cáo)</span></div>'});
       out+='</div>';
     });
     return out+'</section>';
   }
   if(tab==="lich-hop"){
-    out+='<section class="sec"><h2>Lịch họp</h2>';
+    out+='<section class="sec"><h2>Các buổi họp</h2><p class="hint">Bấm vào từng buổi để xem ghi chú, phần mentor sửa, việc tiếp theo và các link.</p>';
     if(!ms.length) out+='<div class="empty">Chưa có buổi họp nào.</div>';
-    else out+=ms.map(function(m){
-      var link=/^https:\/\//.test(m.link||"")?'<p><a href="'+esc(m.link)+'" target="_blank" rel="noopener">Link họp</a></p>':'';
-      return '<div class="mm"><div class="d"><b>'+fmt(m.date)+(m.time?' '+esc(m.time):'')+'</b><span>'+esc(m.status)+'</span></div><div>'
-        +(m.notes?'<p>'+esc(m.notes)+'</p>':'')+(m.actions?'<p><strong>Action items:</strong> '+esc(m.actions)+'</p>':'')+link+'</div></div>';
-    }).join("");
+    else out+=ms.filter(function(m){return m.status!=="Hủy"}).map(function(m,i){return mtgItem(m,i===0)}).join("");
     return out+'</section>';
   }
   if(tab==="bao-cao"){
@@ -1124,7 +1135,7 @@ function render(){
     var st0=students.filter(function(x){return x.id===id0})[0];
     students=[{id:st0.id,name:st0.name,market:st0.market,pkg:st0.pkg,niche:st0.niche,goal:st0.goal,start:st0.start,steps:st0.steps||{},checks:st0.checks||{},status:st0.status,firstOrder:st0.firstOrder}];
     assignments=keep[1].filter(function(x){return x.studentId===id0}).map(function(x){return {id:x.id,studentId:id0,title:x.title,items:x.items,assignedOn:x.assignedOn,due:x.due,dueTime:x.dueTime,status:x.status,note:x.pubnote,submission:x.submission,reviews:x.reviews}});
-    meetings=keep[2].filter(function(x){return x.studentId===id0&&x.status!=="Hủy"}).map(function(x){var h=x.status==="Đã họp";return {id:x.id,studentId:id0,date:x.date,time:x.time,status:x.status,link:x.link,notes:h?x.notes:null,actions:h?x.actions:null}});
+    meetings=keep[2].filter(function(x){return x.studentId===id0&&x.status!=="Hủy"}).map(function(x){var h=x.status==="Đã họp";return {id:x.id,studentId:id0,date:x.date,time:x.time,status:x.status,link:x.link,notes:h?x.notes:null,edits:h?x.edits:null,actions:h?x.actions:null,links:h?x.links:null}});
     reports=keep[3].filter(function(x){return x.studentId===id0}).map(function(x){return {id:x.id,studentId:id0,date:x.date,title:x.title,source:x.source,summary:x.summary,charts:x.charts,body:x.body}});
     window.STUDENT_MODE=id0; window.PREVIEW=true;
     var html;
