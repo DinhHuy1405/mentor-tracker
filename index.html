@@ -788,6 +788,7 @@ function secToday(live){
   var t=today(), now=new Date(), urgent=[], t3=addDays(t,3);
   live.forEach(function(a){
     a.openAss.forEach(function(x){ if(x.late){var n=Math.max(1,Math.ceil((now-x.at)/864e5)); urgent.push(who(a)+': bài "'+esc(x.title)+'" quá hạn '+n+' ngày');} });
+    if(a.s.focus) urgent.unshift(who(a)+': '+esc(a.s.focus));
     if(a.s.flag==="ket") urgent.push(who(a)+': đang kẹt'+(a.s.blocker?', '+esc(a.s.blocker):''));
     assignments.filter(function(x){return x.studentId===a.s.id&&x.status==="Đã nộp"&&!(x.reviews&&x.reviews.length)}).forEach(function(x){
       urgent.push(who(a)+': đã nộp "'+esc(x.title)+'", chờ nhận xét');});
@@ -812,6 +813,7 @@ function secToday(live){
   return out+'</section>';
 }
 function todoOf(a){
+  if(a.s.focus) return {t:a.s.focus.charAt(0).toUpperCase()+a.s.focus.slice(1),red:true};
   var it=a.attn.filter(function(x){return x.sev>=2&&x.t.indexOf("Chưa có lịch họp")!==0&&x.t.indexOf("Chưa có bài nào")!==0&&x.t.indexOf("Chưa họp lần nào")!==0}).sort(function(p,q){return q.sev-p.sev});
   if(it.length) return {t:it[0].t,red:it[0].sev>=3};
   if(a.openAss.length) return {t:'Bài: '+a.openAss[0].title+(a.openAss[0].due?', hạn '+fmt(a.openAss[0].due):''),red:false};
@@ -848,7 +850,7 @@ function viewTrack(tab){
   var openN=live.reduce(function(n,a){return n+a.openAss.length},0);
   var noMeetN=live.filter(function(a){return a.cur<=a.ns&&a.meetNone}).length;
   var comingN=meetings.filter(function(m){var d=parse(m.date);return d&&d>=t0&&d<=t3&&m.status==="Sắp tới"}).length;
-  var slowN=live.filter(function(a){return a.cur<=a.ns&&a.risk>=3}).length;
+  var slowN=live.filter(function(a){return a.cur<=a.ns&&(a.risk>=3||a.s.focus)}).length;
   var orders=active.filter(function(a){return a.hasOrder}).length;
   var strip='<div class="brief">'
     +fig(live.length,"học viên đang mentor ("+cnt.VN+" Việt Nam, "+cnt.US+" US)")
@@ -978,6 +980,7 @@ function viewStudent(id,tab){
 
   if(tab==="tien-do"){
     var al=a.attn.slice().sort(function(p,q){return q.sev-p.sev});
+    if(a.s.focus) al.unshift({sev:3,t:a.s.focus.charAt(0).toUpperCase()+a.s.focus.slice(1)});
     var al2=al.filter(function(x){return x.sev>=2&&!/^(Chưa có lịch họp|Chưa có bài nào|Chưa họp lần nào)/.test(x.t)});
     if(!SM&&al2.length) out+='<section class="sec"><h2>Việc cần làm</h2><ul class="todo2">'+al2.map(function(x){return '<li>'+esc(x.t)+'</li>'}).join("")+'</ul></section>';
     var model=stepModel(a), totSub=0, doneSub=0;
