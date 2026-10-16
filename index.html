@@ -506,6 +506,7 @@ a{color:inherit}
 .acct2 .lbl{color:var(--soft)}.acct2 .mono{font-family:ui-monospace,Menlo,Consolas,monospace}.acct2 .btn{margin-left:auto}
 .sc .chip{background:none!important;border:0!important;padding:0!important;color:var(--muted)!important;font-weight:500}.sc.done .chip{color:var(--done)!important;font-weight:600}.sc.cur .chip{color:var(--ink)!important;font-weight:600}
 .ruler i.c.r2{background:var(--ink)}.fun .tr i.c{background:#b9b6ac}
+.fig.warn b{color:var(--ink)!important}
 .todo2{list-style:none;margin:0;padding:0}.todo2 li{padding:6px 0 6px 12px;border-left:3px solid var(--bad)}.todo2 li+li{margin-top:6px}
 /* Theo tuần: mỗi tuần một đoạn, không khung lồng */
 .wk2{margin:0 0 34px}
@@ -798,7 +799,7 @@ function secToday(live){
   var stale=live.filter(function(a){return a.ms.some(function(m){var d=parse(m.date);return d&&d<t&&m.status==="Sắp tới"})});
   var noAcct=students.filter(function(x){return (x.status||"Đang mentor")==="Đang mentor"&&!(x.account&&x.account.password)});
   var cnt={US:0,VN:0}; live.forEach(function(a){cnt[a.mk]++});
-  var out='<section class="sec"><h2>Hôm nay, '+DOW[t.getDay()]+' '+pad(t.getDate())+'/'+pad(t.getMonth()+1)+'</h2><p class="lead">'+live.length+' học viên đang mentor: '+cnt.VN+' Việt Nam, '+cnt.US+' US.</p>';
+  var out='<section class="sec"><h2>Hôm nay, '+DOW[t.getDay()]+' '+pad(t.getDate())+'/'+pad(t.getMonth()+1)+'</h2>';
   out+='<h3 class="gr'+(urgent.length?' red':'')+'">Cần xử lý</h3>'+(urgent.length?'<ul class="tl2 red">'+urgent.map(function(h){return '<li>'+h+'</li>'}).join("")+'</ul>':'<p class="hint">Không có việc gấp.</p>');
   out+='<h3 class="gr">Họp trong 3 ngày tới</h3>'+(coming.length?'<ul class="tl2 mtl">'+coming.map(function(m){var d=parse(m.date),a=nm[m.studentId];
     return '<li><span class="tm">'+DOW[d.getDay()]+' '+pad(d.getDate())+'/'+pad(d.getMonth()+1)+(m.time?', '+esc(m.time):'')+'</span><b>'+(a?'<a href="#/'+esc(a.id)+'">'+esc(a.name)+'</a>':'Không rõ')+'</b></li>'}).join("")+'</ul>':'<p class="hint">Chưa có buổi họp nào trong 3 ngày tới.</p>');
@@ -841,7 +842,22 @@ function viewTrack(tab){
     });
     return out+'</section>';
   }
-  return secToday(live);
+  var t0=today(), t3=addDays(t0,3);
+  var cnt={VN:0,US:0}; live.forEach(function(a){cnt[a.mk]++});
+  var late=live.reduce(function(n,a){return n+a.openAss.filter(function(x){return x.late}).length},0);
+  var openN=live.reduce(function(n,a){return n+a.openAss.length},0);
+  var noMeetN=live.filter(function(a){return a.cur<=a.ns&&a.meetNone}).length;
+  var comingN=meetings.filter(function(m){var d=parse(m.date);return d&&d>=t0&&d<=t3&&m.status==="Sắp tới"}).length;
+  var slowN=live.filter(function(a){return a.cur<=a.ns&&a.risk>=3}).length;
+  var orders=active.filter(function(a){return a.hasOrder}).length;
+  var strip='<div class="brief">'
+    +fig(live.length,"học viên đang mentor ("+cnt.VN+" Việt Nam, "+cnt.US+" US)")
+    +fig(slowN,"cần can thiệp",slowN?"bad":"")
+    +fig(comingN,"buổi họp trong 3 ngày tới")
+    +fig(openN,"bài đang giao"+(late?", "+late+" quá hạn":""),late?"bad":"")
+    +fig(noMeetN,"chưa có lịch họp 7 ngày tới",noMeetN?"warn":"")
+    +fig(orders,"đã có đơn đầu tiên",orders?"ok":"")+'</div>';
+  return strip+secToday(live);
 }
 /* ---------- trang riêng từng học viên ---------- */
 function inl(t){return esc(t).replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>").replace(/\[([^\]]+)\]\((https:\/\/[^)\s]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>')}
@@ -946,11 +962,11 @@ function viewStudent(id,tab){
   var contact=SM?[]:[s.phone,s.email].filter(Boolean);
   var nm=a.nextM;
   var out=back+'<div class="sp-h"><div><h2>'+esc(s.name)+'</h2><p class="sp-sub">'+sub+(contact.length?'<br>'+esc(contact.join(" · ")):'')+(s.start?'<br>Bắt đầu '+fmt(s.start):'')+'</p></div></div>';
-  var parts=[pb?'<b>Bước '+a.cur+'/'+a.ns+'</b>: '+esc(pb.name):'<b>Đã xong '+a.ns+' bước</b>'];
-  if(pb&&!SM) parts.push(a.days+' ngày ở bước, chuẩn '+a.std);
-  parts.push(nm?'họp tiếp '+fmt(nm.date)+(nm.time?' '+esc(nm.time):''):'chưa có lịch họp');
-  parts.push(a.openAss.length+' bài đang giao');
-  out+='<p class="sumline">'+parts.join(' · ')+'</p>';
+  out+='<div class="brief">'
+    +fig(a.done+"/"+a.ns,"bước hoàn thành"+(pb?", đang ở bước "+a.cur+": "+pb.name:""),a.done?"ok":"")
+    +(pb&&!SM?fig(a.days+" / "+a.std,"ngày ở bước (chuẩn "+a.std+")",a.risk>=3?"bad":""):'')
+    +fig(nm?fmt(nm.date)+(nm.time?" "+nm.time:""):"Chưa có","buổi họp kế tiếp")
+    +fig(a.openAss.length,"bài đang giao",a.openAss.some(function(x){return x.late})?"bad":"")+'</div>';
   if(!SM){
     var ac=s.account, hasAc=ac&&ac.password&&s.email;
     out+='<div class="acct2">'+(hasAc
