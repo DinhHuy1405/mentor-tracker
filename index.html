@@ -507,6 +507,7 @@ a{color:inherit}
 .sc .chip{background:none!important;border:0!important;padding:0!important;color:var(--muted)!important;font-weight:500}.sc.done .chip{color:var(--done)!important;font-weight:600}.sc.cur .chip{color:var(--ink)!important;font-weight:600}
 .ruler i.c.r2{background:var(--ink)}.fun .tr i.c{background:#b9b6ac}
 .fig.warn b{color:var(--ink)!important}
+.prevbar{margin:0 0 16px;padding:10px 14px;border:1px solid var(--line2);background:var(--info-bg);font-size:14.5px}.prevbar a{margin-left:10px;font-weight:600}
 .todo2{list-style:none;margin:0;padding:0}.todo2 li{padding:6px 0 6px 12px;border-left:3px solid var(--bad)}.todo2 li+li{margin-top:6px}
 /* Theo tuần: mỗi tuần một đoạn, không khung lồng */
 .wk2{margin:0 0 34px}
@@ -973,10 +974,10 @@ function viewStudent(id,tab){
     var ac=s.account, hasAc=ac&&ac.password&&s.email;
     out+='<div class="acct2">'+(hasAc
       ?'<span class="lbl">Tài khoản</span><span>mentor.huytim.com</span><span>'+esc(s.email)+'</span><span class="mono">'+esc(ac.password)+'</span><button class="btn sm" data-copyacct="'+esc(s.id)+'">Sao chép gửi học viên</button>'
-      :'<span class="lbl">Tài khoản</span><span>Chưa có'+(s.email?'':', thiếu email học viên')+'</span>')+'</div>';
+      :'<span class="lbl">Tài khoản</span><span>Chưa có'+(s.email?'':', thiếu email học viên')+'</span>')+'<a class="btn sm" href="#/'+esc(s.id)+'/tien-do?xem" style="'+(hasAc?'margin-left:0':'margin-left:auto')+'">Xem như học viên</a></div>';
   }
   out+='<nav class="tabs stabs" aria-label="Mục của học viên">'+TABS.map(function(t){
-    return '<a href="#/'+esc(s.id)+'/'+t[0]+'"'+(t[0]===tab?' aria-current="page"':'')+'>'+t[1]+(cnt[t[0]]!==""?' <small>'+cnt[t[0]]+'</small>':'')+'</a>'}).join("")+'</nav>';
+    return '<a href="#/'+esc(s.id)+'/'+t[0]+(window.PREVIEW?'?xem':'')+'"'+(t[0]===tab?' aria-current="page"':'')+'>'+t[1]+(cnt[t[0]]!==""?' <small>'+cnt[t[0]]+'</small>':'')+'</a>'}).join("")+'</nav>';
 
   if(tab==="tien-do"){
     var al=a.attn.slice().sort(function(p,q){return q.sev-p.sev});
@@ -1076,7 +1077,21 @@ function stat(v,l,c){return '<div class="stat '+c+'"><div class="v">'+v+'</div><
 function render(){
   var t=today();
   $("#today").textContent="Hôm nay "+pad(t.getDate())+"/"+pad(t.getMonth()+1)+"/"+t.getFullYear();
-  var m=/^#\/([\w-]+)(?:\/([\w-]+))?$/.exec(location.hash||"");
+  var m=/^#\/([\w-]+)(?:\/([\w-]+))?(\?xem)?$/.exec(location.hash||"");
+  if(m&&m[3]&&!window.STUDENT_MODE&&students.some(function(x){return x.id===m[1]})){
+    var id0=m[1], keep=[students,assignments,meetings,reports];
+    var st0=students.filter(function(x){return x.id===id0})[0];
+    students=[{id:st0.id,name:st0.name,market:st0.market,pkg:st0.pkg,niche:st0.niche,goal:st0.goal,start:st0.start,steps:st0.steps||{},checks:st0.checks||{},status:st0.status,firstOrder:st0.firstOrder}];
+    assignments=keep[1].filter(function(x){return x.studentId===id0}).map(function(x){return {id:x.id,studentId:id0,title:x.title,items:x.items,assignedOn:x.assignedOn,due:x.due,dueTime:x.dueTime,status:x.status,note:x.pubnote,submission:x.submission,reviews:x.reviews}});
+    meetings=keep[2].filter(function(x){return x.studentId===id0&&x.status!=="Hủy"}).map(function(x){var h=x.status==="Đã họp";return {id:x.id,studentId:id0,date:x.date,time:x.time,status:x.status,link:x.link,notes:h?x.notes:null,actions:h?x.actions:null}});
+    reports=keep[3].filter(function(x){return x.studentId===id0}).map(function(x){return {id:x.id,studentId:id0,date:x.date,title:x.title,source:x.source,summary:x.summary,charts:x.charts,body:x.body}});
+    window.STUDENT_MODE=id0; window.PREVIEW=true;
+    var html;
+    try{html=viewStudent(id0,m[2])}finally{window.STUDENT_MODE=null; window.PREVIEW=false; students=keep[0]; assignments=keep[1]; meetings=keep[2]; reports=keep[3]}
+    $("#nav").hidden=true; $("#nav").innerHTML="";
+    $("#app").innerHTML='<div class="prevbar">Đang xem đúng như học viên thấy. Dữ liệu riêng của mentor đã được ẩn. <a href="#/'+esc(id0)+'">Thoát</a></div>'+html;
+    return;
+  }
   if(window.STUDENT_MODE){
     var tb=m&&m[1]===window.STUDENT_MODE?m[2]:(m&&MAIN.every(function(x){return x[0]!==m[1]})?null:null);
     $("#nav").hidden=true; $("#nav").innerHTML="";
