@@ -155,14 +155,17 @@
     });
   }
 
-  function addSignOut() {
-    var host = document.getElementById("today");
-    if (!host || document.getElementById("signout")) return;
-    var b = document.createElement("button");
-    b.id = "signout"; b.type = "button"; b.textContent = "Đăng xuất";
-    b.style.cssText = "margin-left:12px;border:0;background:transparent;color:var(--accent);cursor:pointer;font:inherit;font-size:12px;padding:0";
-    b.addEventListener("click", async function () { await sb.auth.signOut(); location.reload(); });
-    host.insertAdjacentElement("afterend", b);
+  async function addSignOut() {
+    var bar = document.querySelector("header.bar");
+    if (!bar || document.getElementById("signout")) return;
+    var email = "";
+    try { var cur = await sb.auth.getSession(); email = (cur.data && cur.data.session && cur.data.session.user.email) || ""; } catch (e) {}
+    var wrap = document.createElement("div");
+    wrap.id = "signbox";
+    wrap.style.cssText = "display:flex;align-items:center;gap:12px;padding-bottom:12px;font-size:14px;color:var(--muted)";
+    wrap.innerHTML = (email ? '<span>' + email.replace(/[<>&"]/g, "") + '</span>' : '') + '<button id="signout" type="button" class="btn sm">Đăng xuất</button>';
+    wrap.querySelector("#signout").addEventListener("click", async function () { await sb.auth.signOut(); location.reload(); });
+    bar.appendChild(wrap);
   }
 
   /* ---------- Học viên: chỉ xem dữ liệu của chính mình qua hàm student_view ---------- */
