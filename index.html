@@ -491,13 +491,13 @@ a{color:inherit}
 .mtl .tm{color:var(--muted)}
 .plan li{display:grid;grid-template-columns:230px minmax(0,1fr);gap:12px}
 @media (max-width:640px){.mtl li,.plan li{grid-template-columns:minmax(0,1fr)}}
-.rt{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.5fr) minmax(0,1fr) minmax(0,1.3fr);gap:6px 18px;padding:14px 0;border-top:1px solid var(--line);align-items:start}
-.rt.h{font-size:13px;color:var(--soft);padding:8px 0;border-top:0;border-bottom:1px solid var(--line2)}
-.rt .n a{font-weight:600;text-decoration:none;border-bottom:1px solid var(--line2)}.rt .n small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
-.rt .p span{display:block;margin-top:5px;font-size:14px}
-.rt .m{font-size:14px;color:var(--ink)}.rt .m.none{color:var(--muted)}
-.rt .x{font-size:14px;color:var(--muted)}.rt .x.red{color:var(--bad)}
-@media (max-width:760px){.rt{grid-template-columns:minmax(0,1fr)}.rt.h{display:none}}
+.rost{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.5fr) minmax(0,1fr) minmax(0,1.3fr);gap:6px 18px;padding:14px 0;border-top:1px solid var(--line);align-items:start}
+.rost.h{font-size:13px;color:var(--soft);padding:8px 0;border-top:0;border-bottom:1px solid var(--line2)}
+.rost .n a{font-weight:600;text-decoration:none;border-bottom:1px solid var(--line2)}.rost .n small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+.rost .p span{display:block;margin-top:5px;font-size:14px}
+.rost .m{font-size:14px;color:var(--ink)}.rost .m.none{color:var(--muted)}
+.rost .x{font-size:14px;color:var(--muted)}.rost .x.red{color:var(--bad)}
+@media (max-width:760px){.rost{grid-template-columns:minmax(0,1fr)}.rost.h{display:none}}
 .mk-h{margin:30px 0 4px;font-size:18px;font-family:var(--serif);font-weight:700}.mk-h small{font-family:var(--font);font-weight:400;font-size:13.5px;color:var(--soft);margin-left:8px}
 .ruler{display:grid;grid-template-columns:repeat(auto-fit,minmax(10px,1fr));gap:3px;height:8px;margin:0}
 .ruler i{background:var(--todo)}.ruler i.d{background:var(--done)}.ruler i.c{background:var(--ink)}.ruler i.c.r3{background:var(--bad)}
@@ -508,6 +508,19 @@ a{color:inherit}
 .ruler i.c.r2{background:var(--ink)}.fun .tr i.c{background:#b9b6ac}
 .fig.warn b{color:var(--ink)!important}
 .prevbar{margin:0 0 16px;padding:10px 14px;border:1px solid var(--line2);background:var(--info-bg);font-size:14.5px}.prevbar a{margin-left:10px;font-weight:600}
+.rp .body h4{font-family:var(--serif);font-size:18px;font-weight:700;color:var(--ink);margin:28px 0 8px}
+.rp .rt th{font-size:13.5px!important;color:var(--muted)!important}
+.rp .rt td{font-size:14.5px}
+.focus{margin:18px 0 20px;border:2px solid var(--ink);background:#fff}
+.focus .fh{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 14px;padding:10px 16px;background:var(--ink);color:#fff}
+.focus .fh b{font-family:var(--serif);font-size:19px}.focus .fh span{font-size:14px;opacity:.85}
+.focus .fb{padding:14px 18px 14px}
+.focus ol{margin:0;padding-left:22px;display:grid;gap:12px;font-size:16px}
+.focus li b{display:block;font-weight:600;font-size:17px}
+.focus .due{display:inline-block;margin-top:2px;font-size:14.5px;color:var(--muted);font-weight:500}.focus .due.late{color:var(--bad);font-weight:700}
+.focus .sub{display:block;margin-top:2px;color:var(--muted);font-size:15px}
+.focus .none{margin:0;color:var(--muted)}
+.focus .fm{margin-top:14px;padding-top:10px;border-top:1px solid var(--line);font-size:15px}
 .todo2{list-style:none;margin:0;padding:0}.todo2 li{padding:6px 0 6px 12px;border-left:3px solid var(--bad)}.todo2 li+li{margin-top:6px}
 /* Theo tuần: mỗi tuần một đoạn, không khung lồng */
 .wk2{margin:0 0 34px}
@@ -822,7 +835,7 @@ function todoOf(a){
 }
 function rowT(a){
   var s=a.s, pb=a.cur<=a.ns?a.pb[a.cur-1]:null, td=todoOf(a);
-  return '<div class="rt"><div class="n"><a href="#/'+esc(s.id)+'">'+esc(s.name)+'</a><small>'+esc([s.pkg,s.platform].filter(Boolean).join(" · "))+'</small></div>'
+  return '<div class="rost"><div class="n"><a href="#/'+esc(s.id)+'">'+esc(s.name)+'</a><small>'+esc([s.pkg,s.platform].filter(Boolean).join(" · "))+'</small></div>'
    +'<div class="p">'+ruler(a)+'<span>'+(pb?'Bước '+a.cur+'/'+a.ns+': '+esc(pb.name):'Đã xong '+a.ns+' bước')+'</span></div>'
    +'<div class="m'+(a.meetNone?' none':'')+'">'+esc(a.meet)+'</div>'
    +'<div class="x'+(td.red?' red':'')+'">'+esc(td.t)+'</div></div>';
@@ -841,7 +854,7 @@ function viewTrack(tab){
       var list=active.filter(function(a){return a.mk===mk}).sort(function(x,y){
         var rx=x.cur>x.ns?-1:x.risk, ry=y.cur>y.ns?-1:y.risk; return ry-rx||y.days-x.days;});
       out+='<div class="mk-h">'+(mk==="VN"?"Việt Nam":"US")+'<small>'+list.length+' học viên</small></div>'
-        +(list.length?'<div class="rt h"><div>Học viên</div><div>Tiến độ</div><div>Buổi họp</div><div>Việc cần làm</div></div>'+list.map(rowT).join(""):'<p class="hint">Chưa có học viên.</p>');
+        +(list.length?'<div class="rost h"><div>Học viên</div><div>Tiến độ</div><div>Buổi họp</div><div>Việc cần làm</div></div>'+list.map(rowT).join(""):'<p class="hint">Chưa có học viên.</p>');
     });
     return out+'</section>';
   }
@@ -950,7 +963,7 @@ function secActivity(a){
 }
 var STABS=[["tien-do","Tiến độ"],["bai-tap","Theo tuần"],["lich-hop","Lịch họp"],["bao-cao","Báo cáo"],["nhat-ky","Nhật ký"]];
 function viewStudent(id,tab){
-  var SM=!!window.STUDENT_MODE, TABS=STABS.filter(function(x){return !SM||x[0]!=="nhat-ky"});
+  var SM=!!window.STUDENT_MODE, TABS=STABS.filter(function(x){return !SM||(x[0]!=="nhat-ky"&&x[0]!=="lich-hop")});
   tab=TABS.some(function(x){return x[0]===tab})?tab:"tien-do";
   var back=SM?'':'<a class="back" href="#/hoc-vien">← Danh sách học viên</a>';
   var s=students.filter(function(x){return x.id===id})[0];
@@ -965,7 +978,18 @@ function viewStudent(id,tab){
   var contact=SM?[]:[s.phone,s.email].filter(Boolean);
   var nm=a.nextM;
   var out=back+'<div class="sp-h"><div><h2>'+esc(s.name)+'</h2><p class="sp-sub">'+sub+(contact.length?'<br>'+esc(contact.join(" · ")):'')+(s.start?'<br>Bắt đầu '+fmt(s.start):'')+'</p></div></div>';
-  out+='<div class="brief">'
+  (function(){
+    var t=today(), w0=mondayOf(t), w1=addDays(w0,6), items=[], dstr=function(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())};
+    a.openAss.forEach(function(x){
+      items.push('<li><b>'+esc(x.title)+'</b>'+(x.due?'<span class="due'+(x.late?' late':'')+'">'+(x.late?'Quá hạn, ':'Hạn ')+fmt(x.due)+(x.dueTime?' '+esc(x.dueTime):'')+'</span>':'<span class="due">Chưa có hạn</span>')+'</li>');
+    });
+    if(pb) items.push('<li><b>Bước '+a.cur+': '+esc(pb.name)+'</b><span class="sub">'+esc(pb.task[a.mk])+'</span></li>');
+    if(a.lastHeld&&a.lastHeld.actions) items.push('<li><b>Việc từ buổi họp '+fmt(a.lastHeld.date)+'</b><span class="sub">'+esc(a.lastHeld.actions)+'</span></li>');
+    out+='<section class="focus"><div class="fh"><b>Việc cần làm tuần này</b><span>'+fmt(dstr(w0))+' đến '+fmt(dstr(w1))+'</span></div><div class="fb">'
+      +(items.length?'<ol>'+items.join("")+'</ol>':'<p class="none">Chưa có việc nào được giao. Chờ mentor giao bài.</p>')
+      +'<div class="fm">'+(nm?'Họp tiếp: <b>'+DOW[parse(nm.date).getDay()]+' '+fmt(nm.date)+(nm.time?', '+esc(nm.time):'')+'</b>'+(/^https:\/\//.test(nm.link||"")?' · <a href="'+esc(nm.link)+'" target="_blank" rel="noopener">Link họp</a>':''):'Chưa có lịch họp tiếp theo')+'</div></div></section>';
+  })();
+  if(!SM) out+='<div class="brief">'
     +fig(a.done+"/"+a.ns,"bước hoàn thành"+(pb?", đang ở bước "+a.cur+": "+pb.name:""),a.done?"ok":"")
     +(pb&&!SM?fig(a.days+" / "+a.std,"ngày ở bước (chuẩn "+a.std+")",a.risk>=3?"bad":""):'')
     +fig(nm?fmt(nm.date)+(nm.time?" "+nm.time:""):"Chưa có","buổi họp kế tiếp")
@@ -982,6 +1006,15 @@ function viewStudent(id,tab){
   if(tab==="tien-do"){
     var al=a.attn.slice().sort(function(p,q){return q.sev-p.sev});
     if(a.s.focus) al.unshift({sev:3,t:a.s.focus.charAt(0).toUpperCase()+a.s.focus.slice(1)});
+    if(SM){
+      var mdl=stepModel(a), curM=mdl.filter(function(m){return m.st==="cur"})[0];
+      var stl0=STORE[a.mk]||STORE.VN, stk0=((s.checks||{}).store)||[];
+      out+='<section class="sec"><h2>Tiến độ của bạn</h2><p class="hint">Đã xong '+a.done+'/'+a.ns+' bước.</p>'
+        +'<div class="sp10">'+mdl.map(function(m){return '<div class="nd '+m.st+'"><i>'+m.n+'</i><span>'+esc(m.pb.name)+'</span></div>'}).join("")+'</div>'
+        +(curM&&curM.sub.length?'<h3 class="gr">Bước đang làm: '+esc(curM.pb.name)+'</h3><ul class="ck">'+curM.sub.map(function(t,i){return '<li class="'+(curM.ck.indexOf(i)>=0?'y':'')+'">'+esc(t)+'</li>'}).join("")+'</ul>':'')+'</section>';
+      if(stk0.length||true) out+='<section class="sec"><h2>Giấy tờ lập cửa hàng</h2><ul class="ck stc">'+stl0.map(function(t,i){return '<li class="'+(stk0.indexOf(i)>=0?'y':'')+'">'+esc(t)+'</li>'}).join("")+'</ul></section>';
+      return out;
+    }
     var al2=al.filter(function(x){return x.sev>=2&&!/^(Chưa có lịch họp|Chưa có bài nào|Chưa họp lần nào)/.test(x.t)});
     if(!SM&&al2.length) out+='<section class="sec"><h2>Việc cần làm</h2><ul class="todo2">'+al2.map(function(x){return '<li>'+esc(x.t)+'</li>'}).join("")+'</ul></section>';
     var model=stepModel(a), totSub=0, doneSub=0;
