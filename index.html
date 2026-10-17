@@ -361,6 +361,28 @@ label.f{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:50
 .mm .d b{display:block;font-weight:600}.mm .d span{color:var(--soft);font-size:13.5px}
 .mm p{margin:0 0 3px;white-space:pre-line}.mm a{color:var(--ink)}
 @media (max-width:640px){.mm{grid-template-columns:1fr}}
+.dk{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px;max-width:960px}
+.dk:fullscreen{max-width:none;padding:24px;display:flex;flex-direction:column;background:var(--bg)}
+.dk-top{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:10px}
+.dk-top select{border:1px solid var(--line2);border-radius:var(--rs);padding:7px 10px;background:var(--field);color:var(--ink);font:inherit}
+.dk-ct{color:var(--soft);font-size:13px}
+.dk-slide{aspect-ratio:16/9;min-height:320px;border:1px solid var(--line);border-radius:var(--r);padding:28px 34px;overflow:auto;background:var(--surface);min-width:0}
+.dk:fullscreen .dk-slide{flex:1;aspect-ratio:auto;font-size:1.25em}
+.dk-slide.k-gen{background:var(--info-bg)} .dk-slide.k-title{display:grid;align-content:center;text-align:center}
+.dk-slide.k-title h3{font-size:38px}
+.dk-slide h3{font-family:var(--serif);font-size:25px;line-height:1.2;margin:8px 0 14px}
+.dk-tag{font-size:13px;color:var(--soft);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.dk-slide.k-title .dk-tag{justify-content:center}
+.dk-b{font-size:12px;font-weight:600;padding:2px 9px;border-radius:99px;background:var(--todo);color:var(--ink)}
+.dk-b.g{background:var(--ok-bg);color:var(--ok)} .dk-b.m{background:var(--warn-bg);color:var(--warn)}
+.dk-b2{font-size:17px;max-width:78ch;overflow-wrap:anywhere} .dk-slide.k-title .dk-b2{margin:0 auto}
+.dk-b2 ul,.dk-b2 ol{padding-left:22px;display:grid;gap:8px;margin:6px 0} .dk-b2 p{margin:6px 0}
+.dk-b2 h4{margin:14px 0 4px;font-size:15px}
+.dk-n{color:var(--soft);font-size:14px}
+.dk,.dk-slide{box-sizing:border-box;max-width:100%}.dk-slide.k-title{grid-template-columns:minmax(0,1fr)}
+@media(max-width:600px){.dk-slide{padding:18px 16px;aspect-ratio:auto;min-height:300px}.dk-slide.k-title h3{font-size:30px}.dk-b2{font-size:16px}}
+.dk-nav{display:flex;justify-content:space-between;gap:10px;margin-top:10px}
+.dk-nav .btn:disabled{opacity:.4;cursor:default}
 .rp{border-top:1px solid var(--line);padding:14px 0}
 .rp:first-of-type{border-top:0;padding-top:0}
 .rp>summary{font-family:var(--serif);font-weight:700;font-size:17px}
@@ -980,7 +1002,94 @@ function mtgItem(m,open){
     +(all.length?'<div class="ln"><span>Link</span>'+all.map(function(l){return '<a href="'+esc(l.url)+'" target="_blank" rel="noopener">'+esc(l.title||"Mở link")+'</a>'}).join(" · ")+'</div>':'')
     +(has?'':'<p class="none">Chưa có ghi chú cho buổi họp này.</p>')+'</div></details>';
 }
-var STABS=[["tien-do","Tiến độ"],["bai-tap","Theo tuần"],["lich-hop","Lịch họp"],["bao-cao","Báo cáo"],["nhat-ky","Nhật ký"]];
+/* ---------- Trình chiếu: kiến thức theo tuần (chung + riêng) ---------- */
+/* Kiến thức chung: market "US", "VN" hoặc "ALL"; date là ngày mentor dạy, slide hiện ở tuần đó (hoặc tuần bắt đầu của học viên nếu vào sau). */
+var KNOW=[
+{market:"US",date:"2026-10-17",title:"Cách tìm ngách US",pts:["Ngách = đối tượng cụ thể tại US + đặc tính của họ + nhóm sản phẩm","Viết lại thành MỘT cụm từ ngách","Ví dụ mentor đưa: cộng đồng người Việt tại US, 28 đến 35 tuổi, cà phê mật ong Việt (chỉ là ví dụ)","5 câu hỏi lọc: đối tượng, branding và rebranding, logistics (giá, kích thước, giấy tờ), thế mạnh của mình, dữ liệu kiểm chứng"]},
+{market:"US",date:"2026-10-17",title:"Ngách rủi ro và ngách có thể win",pts:["Ngách rủi ro: tác động trực tiếp tới con người, sức khỏe","Ngách có thể win: tự nhiên, dùng hằng ngày, dễ bảo quản, nhẹ","Tiêu chí hàng: giá rẻ ở Việt Nam, bán giá cao ở US; hàng dư thừa, sản xuất nhiều tại VN, US có nhu cầu","Sản phẩm tự nhiên không cần lo nhiều chuyện theo trend hay theo mùa"]},
+{market:"US",date:"2026-10-17",title:"Từ ngách đến 5 sản phẩm win và 5 sản phẩm vệ tinh",pts:["Tìm website và sản phẩm organic (nĩa lõi ngô, ly tre, kê đũa tre, khăn vải sợi tre)","Vào Facebook tìm sản phẩm xuất đi US, thủ công, organic","Thu thập dữ liệu, dùng AI (ChatGPT) để chọn 5 sản phẩm win và 5 sản phẩm vệ tinh","Tìm nhà sản xuất có sẵn và đưa vào listing"]},
+{market:"US",date:"2026-10-17",title:"Dữ liệu và AI như một trợ lý",pts:["Nghĩ tới câu chuyện dữ liệu ngay từ đầu: lưu bảng sản phẩm, giá, nhà cung cấp, nguồn","Dùng AI cho việc lặp lại: keyword, phân loại, tóm tắt, tính giá","Mọi quyết định phải dựa trên dữ liệu thật (FastMoss, Kalodata), quyết định cuối là của học viên"]},
+{market:"VN",date:"2026-10-17",title:"Từ ngách đến nhà cung cấp 1688",pts:["Chọn 5 sản phẩm ngách và 5 sản phẩm vệ tinh","Nhờ ChatGPT tạo keyword tiếng Trung, tìm sản phẩm trên 1688","Nhập và tính giá bán; lập danh sách nhà máy, người bán trên 1688","Mọi quyết định dựa trên dữ liệu thị trường thật"]}
+];
+var DK={sid:"",slides:[],weeks:[],i:0};
+function deckLines(t){
+  var o="",open=false;
+  String(t||"").split("\n").forEach(function(l){
+    l=l.trim(); if(!l) return;
+    if(/^-\s/.test(l)){ if(!open){o+="<ul>";open=true} o+="<li>"+inl(l.replace(/^-\s+/,""))+"</li>"; return }
+    if(open){o+="</ul>";open=false}
+    o+=/:$/.test(l)?"<h4>"+inl(l)+"</h4>":"<p>"+inl(l)+"</p>";
+  });
+  return o+(open?"</ul>":"");
+}
+function buildDeck(s,mk,asn,ms,rs){
+  var now=new Date(), isoD=function(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())};
+  var mon=function(ds){var d=parse(ds)||parse(s.start)||now,k=(d.getDay()+6)%7;return isoD(addDays(d,-k))};
+  var wk={}, wget=function(ds){var k=mon(ds);return wk[k]=wk[k]||{k:k,s:[]}};
+  var start=s.start||"";
+  KNOW.filter(function(x){return x.market==="ALL"||x.market===mk}).forEach(function(x){
+    wget(start&&start>x.date?start:x.date).s.push({kind:"gen",tag:"Kiến thức chung",title:x.title,html:"<ul>"+x.pts.map(function(p){return "<li>"+esc(p)+"</li>"}).join("")+"</ul>"});
+  });
+  ms.filter(function(m){return m.status==="Đã họp"}).slice().sort(function(p,q){return p.date<q.date?-1:1}).forEach(function(m){
+    var d=parse(m.date), nm=(d?DOW[d.getDay()]+" ":"")+fmt(m.date), W=wget(m.date);
+    if(m.notes) W.s.push({kind:"mine",tag:"Buổi họp "+nm,title:"Nội dung mentor trao đổi",html:deckLines(m.notes)});
+    if(m.edits) W.s.push({kind:"mine",tag:"Buổi họp "+nm,title:"Mentor sửa và nhận xét",html:deckLines(m.edits)});
+    if(m.actions) W.s.push({kind:"mine",tag:"Buổi họp "+nm,title:"Việc tiếp theo",html:deckLines(m.actions)});
+  });
+  asn.filter(function(x){return x.status!=="Hủy"}).slice().sort(function(p,q){return (p.assignedOn||"")<(q.assignedOn||"")?-1:1}).forEach(function(x){
+    wget(x.assignedOn||start).s.push({kind:"mine",tag:"Bài tập"+(x.due?", hạn "+fmt(x.due)+(x.dueTime?" "+x.dueTime:""):""),title:x.title,
+      html:((x.items||[]).length?"<ol>"+x.items.map(function(i){return "<li>"+esc(i)+"</li>"}).join("")+"</ol>":"")+(x.pubnote?"<p class=\"dk-n\">"+inl(x.pubnote)+"</p>":"")+"<p class=\"dk-n\">Trạng thái: "+esc(x.status||"Đang làm")+"</p>"});
+  });
+  rs.slice().sort(function(p,q){return (p.date||"")<(q.date||"")?-1:1}).forEach(function(r){
+    var W=wget(r.date);
+    W.s.push({kind:"mine",tag:"Báo cáo "+fmt(r.date),title:r.title,html:(r.summary?"<p>"+inl(r.summary)+"</p>":"")+(r.source?"<p class=\"dk-n\">Nguồn: "+esc(r.source)+"</p>":"")});
+    (r.charts||[]).forEach(function(c){W.s.push({kind:"chart",tag:"Biểu đồ, "+fmt(r.date),title:"",html:chartHtml(c)})});
+  });
+  var keys=Object.keys(wk).sort(), slides=[], weeks=[], thisWk=mon(isoD(now));
+  keys.forEach(function(k,i){
+    var W=wk[k], first=slides.length, gen=W.s.filter(function(z){return z.kind==="gen"}).length;
+    slides.push({kind:"title",tag:"Tuần "+(i+1)+(k===thisWk?" · tuần này":""),title:"Tuần "+(i+1),html:"<p>"+fmt(k)+" đến "+fmt(isoD(addDays(parse(k),6)))+"</p><p class=\"dk-n\">"+gen+" slide kiến thức chung · "+(W.s.length-gen)+" slide riêng của bạn</p>"});
+    W.s.forEach(function(z){slides.push(z)});
+    weeks.push({k:k,label:"Tuần "+(i+1)+" ("+fmt(k)+")",at:first,cur:k===thisWk});
+  });
+  return {slides:slides,weeks:weeks};
+}
+function dkShow(){
+  var el=document.getElementById("dk-slide"); if(!el||!DK.slides.length) return;
+  var z=DK.slides[DK.i];
+  el.className="dk-slide k-"+z.kind;
+  el.innerHTML='<div class="dk-tag"><span class="dk-b '+(z.kind==="gen"?"g":z.kind==="title"?"t":"m")+'">'+(z.kind==="gen"?"Kiến thức chung":z.kind==="title"?"Tuần":"Của riêng bạn")+'</span>'+esc(z.tag)+'</div>'
+    +(z.title?'<h3>'+esc(z.title)+'</h3>':'')+'<div class="dk-b2">'+z.html+'</div>';
+  var ct=document.getElementById("dk-ct"); if(ct) ct.textContent=(DK.i+1)+" / "+DK.slides.length;
+  var wsel=document.getElementById("dk-wk"); if(wsel){var c=0;DK.weeks.forEach(function(w,j){if(w.at<=DK.i)c=j});wsel.value=String(c)}
+  var pr=document.getElementById("dk-prev"), nx=document.getElementById("dk-next"); if(pr) pr.disabled=DK.i<=0; if(nx) nx.disabled=DK.i>=DK.slides.length-1;
+}
+function dkGo(n){ if(!DK.slides.length) return; DK.i=Math.max(0,Math.min(DK.slides.length-1,n)); dkShow() }
+document.addEventListener("click",function(e){
+  var t=e.target.closest&&e.target.closest("[data-dk]"); if(!t) return;
+  var a=t.getAttribute("data-dk");
+  if(a==="prev") dkGo(DK.i-1); else if(a==="next") dkGo(DK.i+1);
+  else if(a==="fs"){var st=document.getElementById("dk-stage"); if(st){ if(document.fullscreenElement) document.exitFullscreen(); else if(st.requestFullscreen) st.requestFullscreen() }}
+});
+document.addEventListener("change",function(e){ if(e.target&&e.target.id==="dk-wk"){var w=DK.weeks[+e.target.value]; if(w) dkGo(w.at)} });
+document.addEventListener("keydown",function(e){
+  if(!document.getElementById("dk-slide")||/^(INPUT|TEXTAREA|SELECT)$/.test((e.target||{}).tagName||"")) return;
+  if(e.key==="ArrowRight"||e.key==="PageDown") {dkGo(DK.i+1);e.preventDefault()}
+  else if(e.key==="ArrowLeft"||e.key==="PageUp") {dkGo(DK.i-1);e.preventDefault()}
+});
+function deckView(s,mk,asn,ms,rs){
+  var d=buildDeck(s,mk,asn,ms,rs), same=DK.sid===s.id&&DK.slides.length===d.slides.length;
+  DK.slides=d.slides; DK.weeks=d.weeks;
+  if(!same){DK.sid=s.id; var cw=0; d.weeks.forEach(function(w,j){if(w.cur||(!d.weeks.some(function(x){return x.cur})&&j===d.weeks.length-1))cw=j}); DK.i=d.weeks.length?d.weeks[cw].at:0}
+  if(DK.i>=DK.slides.length) DK.i=0;
+  setTimeout(dkShow,0);
+  if(!d.slides.length) return '<section class="sec"><h2>Trình chiếu</h2><div class="empty">Chưa có nội dung để trình chiếu.</div></section>';
+  return '<section class="sec"><h2>Trình chiếu theo tuần</h2><p class="hint">Mỗi tuần là một bộ slide: kiến thức chung mentor dạy cho cả nhóm, và phần riêng của bạn (ghi chú buổi họp, bài tập, biểu đồ từ báo cáo). Dùng phím mũi tên trái phải để chuyển slide.</p>'
+    +'<div class="dk" id="dk-stage"><div class="dk-top"><select id="dk-wk" aria-label="Chọn tuần">'+d.weeks.map(function(w,j){return '<option value="'+j+'">'+esc(w.label)+(w.cur?' · tuần này':'')+'</option>'}).join("")+'</select><span id="dk-ct" class="dk-ct"></span><button type="button" class="btn sm" data-dk="fs">Toàn màn hình</button></div>'
+    +'<div id="dk-slide" class="dk-slide" aria-live="polite"></div>'
+    +'<div class="dk-nav"><button type="button" class="btn" id="dk-prev" data-dk="prev">← Trước</button><button type="button" class="btn" id="dk-next" data-dk="next">Sau →</button></div></div></section>';
+}
+var STABS=[["tien-do","Tiến độ"],["trinh-chieu","Trình chiếu"],["bai-tap","Theo tuần"],["lich-hop","Lịch họp"],["bao-cao","Báo cáo"],["nhat-ky","Nhật ký"]];
 function viewStudent(id,tab){
   var SM=!!window.STUDENT_MODE, TABS=STABS.filter(function(x){return !SM||x[0]!=="nhat-ky"});
   tab=TABS.some(function(x){return x[0]===tab})?tab:"tien-do";
@@ -992,7 +1101,7 @@ function viewStudent(id,tab){
   var asn=assignments.filter(function(x){return x.studentId===s.id}).sort(function(p,q){return (q.assignedOn||"")<(p.assignedOn||"")?-1:1});
   var rs=reports.filter(function(r){return r.studentId===s.id}).sort(function(p,q){return (q.date||"")===(p.date||"")?(q.id<p.id?-1:1):((q.date||"")<(p.date||"")?-1:1)});
   var ms=a.ms.slice().sort(function(p,q){return p.date<q.date?1:-1});
-  var cnt={"tien-do":"","bai-tap":asn.length,"lich-hop":ms.length,"bao-cao":rs.length,"nhat-ky":""};
+  var cnt={"tien-do":"","trinh-chieu":"","bai-tap":asn.length,"lich-hop":ms.length,"bao-cao":rs.length,"nhat-ky":""};
   var sub=[s.pkg,s.platform,MK[a.mk]].filter(Boolean).map(function(x){return '<span>'+esc(x)+'</span>'}).join("");
   var contact=SM?[]:[s.phone,s.email].filter(Boolean);
   var nm=a.nextM;
@@ -1062,6 +1171,7 @@ function viewStudent(id,tab){
     if(prof.length) out+='<section class="sec"><h2>Hồ sơ</h2><div class="spair">'+prof.map(function(x){return '<div><h4>'+x[0]+'</h4><p>'+esc(x[1])+'</p></div>'}).join("")+'</div></section>';
     return out;
   }
+  if(tab==="trinh-chieu") return out+deckView(s,a.mk,asn,ms,rs);
   if(tab==="bai-tap"){
     var now=new Date(), iso=function(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())};
     var mon=function(ds){var d=parse(ds)||parse(s.start)||now,k=(d.getDay()+6)%7;return iso(addDays(d,-k))};
