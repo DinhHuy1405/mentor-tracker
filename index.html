@@ -385,7 +385,7 @@ label.f{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:50
 .dk-nav .btn:disabled{opacity:.4;cursor:default}
 .an{border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;margin:0 0 18px;background:var(--surface);min-width:0}
 .an>small{color:var(--soft)} .an h3{font-family:var(--serif);font-size:16px;margin:2px 0 10px;color:var(--muted);font-weight:600}
-.vd{font-size:19px;font-weight:700;line-height:1.35;margin:0 0 14px;padding:12px 14px;background:var(--info-bg);border-left:4px solid var(--ink);border-radius:var(--rs)}
+.vd{font-size:19px;font-weight:700;line-height:1.35;margin:0 0 14px;padding:12px 14px;background:#fff3a3;border-left:5px solid #f2b705;border-radius:var(--rs)}
 .vzs{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
 .vz{border:1px solid var(--line);border-radius:var(--rs);padding:12px 14px;min-width:0}
 .vz .ck2{margin:0 0 8px;font-weight:600;font-size:15px}
@@ -394,6 +394,25 @@ label.f{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:50
 .dl{list-style:none;margin:0;padding:0;display:grid;gap:5px;font-size:14px;min-width:0;flex:1}
 .dl li{display:grid;grid-template-columns:12px 1fr auto;gap:8px;align-items:center}.dl i{width:12px;height:12px;border-radius:3px}
 .dl span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hlt{background:#fff3a3;padding:1px 9px;border-radius:99px;font-size:13px;font-weight:600;margin-left:8px;letter-spacing:0}
+details.more{margin-top:12px;border:1px solid var(--line);border-radius:var(--rs);padding:10px 14px;background:var(--surface)}
+details.more>summary{font-weight:600}
+.ba{border:1px solid var(--line);border-left:4px solid #f2b705;border-radius:var(--rs);padding:12px 16px;margin:0 0 12px;background:var(--surface)}
+.ba .bt{display:flex;gap:10px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;font-size:16px}
+.chip2{font-size:13px;font-weight:600;padding:2px 10px;border-radius:99px;background:#fff3a3;color:var(--ink)}
+.chip2.late{background:var(--bad-bg);color:var(--bad)}.chip2.sub{background:var(--ok-bg);color:var(--ok)}
+.ba ol{margin:8px 0;padding-left:22px;display:grid;gap:4px}
+.hlb{background:#fff3a3;border-radius:var(--rs);padding:8px 12px;margin:8px 0 0;font-weight:500}
+.dl2{margin:8px 0 0;padding-left:20px;color:var(--muted)}
+.dk-b2 strong,.vd strong{background:#fff3a3;padding:0 3px;border-radius:3px;font-weight:700}
+.dk-slide.hl{background:#fff8c9;border-color:#f2b705}
+.dk-slide h3{background:linear-gradient(transparent 62%,#fff3a3 62%);display:inline-block}
+.vz .ck2{background:#fff3a3;display:inline-block;padding:3px 9px;border-radius:var(--rs)}
+.vz .rcr{grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;padding:7px 0}
+.vz .rcr .rl{grid-column:1/-1;white-space:normal;overflow:visible;font-size:13.5px;line-height:1.3}
+.vz .rcr.hi .rl{background:#fff3a3;justify-self:start;padding:0 5px;border-radius:3px}
+.vz .rcr.hi .rt2 i{background:#f2b705}.vz .rcr.bad .rt2 i{background:var(--f-bad)}
+.dl span{white-space:normal;overflow:visible}.dl li{align-items:start}
 .rp{border-top:1px solid var(--line);padding:14px 0}
 .rp:first-of-type{border-top:0;padding-top:0}
 .rp>summary{font-family:var(--serif);font-weight:700;font-size:17px}
@@ -631,7 +650,7 @@ var PBV=[
 
 var PBU=[
 {name:"Phân tích: keyword sản phẩm & dữ liệu Kalodata US",std:{US:10,VN:10},done:"Chốt được keyword và sản phẩm dựa trên dữ liệu thị trường US từ Kalodata.",
- task:{US:"Chọn đối tượng cụ thể tại US (độ tuổi, cộng đồng, sở thích), kiểm tra 5 tiêu chí: branding và rebranding, logistics (giá, kích thước, giấy tờ), thế mạnh của mình, dữ liệu kiểm chứng. Ưu tiên ngách tự nhiên, dùng hằng ngày, dễ bảo quản, nhẹ; tránh ngách tác động trực tiếp tới sức khỏe. Tìm ý tưởng trên website organic, Facebook, Instagram, crawl dữ liệu đưa vào ChatGPT để chọn 5 sản phẩm win và 5 sản phẩm vệ tinh, rồi viết lại thành một cụm từ ngách. Phân tích dữ liệu thị trường US bằng Kalodata và FastMoss.",VN:""},
+ task:{US:"Chốt **một ngách** (đối tượng + đặc tính + sản phẩm), chọn **5 sản phẩm win và 5 sản phẩm vệ tinh**, kiểm chứng bằng Kalodata và FastMoss. Cách làm xem ở tab Kiến thức.",VN:""},
  help:{US:"Hướng dẫn cách tìm ngách (xem tài liệu cach-tim-ngach-US), phản biện ngách và danh sách 5+5 sản phẩm, kiểm tra dữ liệu Kalodata/FastMoss, chốt sản phẩm.",VN:""},
  risk:"Chọn theo cảm tính, thiếu dữ liệu thị trường US."},
 {name:"Tìm nhà cung cấp & mẫu mã tại Việt Nam",std:{US:14,VN:14},done:"Đã chốt nhà cung cấp, sản phẩm và mẫu mã tại Việt Nam.",
@@ -963,7 +982,7 @@ function stepCard(m,a){
   var bar=m.days!=null?'<div class="dbar '+(m.st==="done"?"d":"")+'"><div class="t"><div class="'+rc+'" style="height:100%"><i style="width:'+(Math.min(r,1.5)/1.5*100)+'%"></i></div><b></b></div><span>'+m.days+'/'+m.std+' ngày</span></div>':'<div class="dbar"><span>Chuẩn '+m.std+' ngày</span></div>';
   var ck=m.sub.map(function(t,i){var y=m.st==="done"||m.ck.indexOf(i)>=0;return '<li class="'+(y?"y":"")+'">'+esc(t)+'</li>'}).join("");
   return '<details class="sc '+m.st+(m.st==="cur"?" r"+a.risk:"")+'" id="stp-'+m.n+'"'+(m.st==="cur"?" open":"")+'><summary><span class="n">'+m.n+'</span><span class="nm2"><b>'+esc(m.pb.name)+'</b></span><span class="chip">'+esc(chip)+'</span>'+bar+'</summary>'
-    +'<div class="bd"><p class="dn">Việc cần làm: '+esc(m.pb.task[a.mk])+'</p>'+(m.st==="cur"?'<p class="dn">Xong bước này khi: '+esc(m.pb.done)+'</p>':'')
+    +'<div class="bd"><p class="dn">Việc cần làm: '+inl(m.pb.task[a.mk])+'</p>'+(m.st==="cur"?'<p class="dn">Xong bước này khi: '+esc(m.pb.done)+'</p>':'')
     +(ck?'<p class="ckn">Đầu việc: '+m.nd+'/'+m.sub.length+'</p><ul class="ck">'+ck+'</ul>':'')
     +(m.st!=="done"&&m.pb.risk?'<p class="ckn" style="margin-top:10px">Rủi ro hay gặp: '+esc(m.pb.risk)+'</p>':'')
     +(m.st!=="done"&&!window.STUDENT_MODE?'<div class="cpy"><button class="btn sm" data-copystep="'+esc(a.s.id)+':'+m.n+'">Sao chép tin nhắn giao bước này</button></div>':'')+'</div></details>';
@@ -1016,11 +1035,11 @@ function mtgItem(m,open){
 /* ---------- Trình chiếu: kiến thức theo tuần (chung + riêng) ---------- */
 /* Kiến thức chung: market "US", "VN" hoặc "ALL"; date là ngày mentor dạy, slide hiện ở tuần đó (hoặc tuần bắt đầu của học viên nếu vào sau). */
 var KNOW=[
-{market:"US",date:"2026-10-17",title:"Cách tìm ngách US",pts:["Ngách = đối tượng cụ thể tại US + đặc tính của họ + nhóm sản phẩm","Viết lại thành MỘT cụm từ ngách","Ví dụ mentor đưa: cộng đồng người Việt tại US, 28 đến 35 tuổi, cà phê mật ong Việt (chỉ là ví dụ)","5 câu hỏi lọc: đối tượng, branding và rebranding, logistics (giá, kích thước, giấy tờ), thế mạnh của mình, dữ liệu kiểm chứng"]},
-{market:"US",date:"2026-10-17",title:"Ngách rủi ro và ngách có thể win",pts:["Ngách rủi ro: tác động trực tiếp tới con người, sức khỏe","Ngách có thể win: tự nhiên, dùng hằng ngày, dễ bảo quản, nhẹ","Tiêu chí hàng: giá rẻ ở Việt Nam, bán giá cao ở US; hàng dư thừa, sản xuất nhiều tại VN, US có nhu cầu","Sản phẩm tự nhiên không cần lo nhiều chuyện theo trend hay theo mùa"]},
-{market:"US",date:"2026-10-17",title:"Từ ngách đến 5 sản phẩm win và 5 sản phẩm vệ tinh",pts:["Tìm website và sản phẩm organic (nĩa lõi ngô, ly tre, kê đũa tre, khăn vải sợi tre)","Vào Facebook tìm sản phẩm xuất đi US, thủ công, organic","Thu thập dữ liệu, dùng AI (ChatGPT) để chọn 5 sản phẩm win và 5 sản phẩm vệ tinh","Tìm nhà sản xuất có sẵn và đưa vào listing"]},
-{market:"US",date:"2026-10-17",title:"Dữ liệu và AI như một trợ lý",pts:["Nghĩ tới câu chuyện dữ liệu ngay từ đầu: lưu bảng sản phẩm, giá, nhà cung cấp, nguồn","Dùng AI cho việc lặp lại: keyword, phân loại, tóm tắt, tính giá","Mọi quyết định phải dựa trên dữ liệu thật (FastMoss, Kalodata), quyết định cuối là của học viên"]},
-{market:"VN",date:"2026-10-17",title:"Từ ngách đến nhà cung cấp 1688",pts:["Chọn 5 sản phẩm ngách và 5 sản phẩm vệ tinh","Nhờ ChatGPT tạo keyword tiếng Trung, tìm sản phẩm trên 1688","Nhập và tính giá bán; lập danh sách nhà máy, người bán trên 1688","Mọi quyết định dựa trên dữ liệu thị trường thật"]}
+{market:"US",date:"2026-10-17",title:"Cách tìm ngách US",pts:["Ngách = **đối tượng cụ thể tại US** + đặc tính của họ + nhóm sản phẩm","Viết lại thành **MỘT cụm từ ngách**","Ví dụ mentor đưa: cộng đồng người Việt tại US, 28 đến 35 tuổi, cà phê mật ong Việt (chỉ là ví dụ)","**5 câu hỏi lọc**: đối tượng, branding và rebranding, logistics (giá, kích thước, giấy tờ), thế mạnh của mình, dữ liệu kiểm chứng"]},
+{market:"US",date:"2026-10-17",title:"Ngách rủi ro và ngách có thể win",pts:["**Ngách rủi ro**: tác động trực tiếp tới con người, sức khỏe","**Ngách có thể win**: tự nhiên, dùng hằng ngày, dễ bảo quản, nhẹ","Tiêu chí hàng: giá rẻ ở Việt Nam, bán giá cao ở US; hàng dư thừa, sản xuất nhiều tại VN, US có nhu cầu","Sản phẩm tự nhiên không cần lo nhiều chuyện theo trend hay theo mùa"]},
+{market:"US",date:"2026-10-17",title:"Từ ngách đến 5 sản phẩm win và 5 sản phẩm vệ tinh",pts:["Tìm website và sản phẩm organic (nĩa lõi ngô, ly tre, kê đũa tre, khăn vải sợi tre)","Vào Facebook tìm sản phẩm xuất đi US, thủ công, organic","Thu thập dữ liệu, dùng AI (ChatGPT) để chọn **5 sản phẩm win và 5 sản phẩm vệ tinh**","Tìm nhà sản xuất có sẵn và đưa vào listing"]},
+{market:"US",date:"2026-10-17",title:"Dữ liệu và AI như một trợ lý",pts:["Nghĩ tới câu chuyện dữ liệu ngay từ đầu: lưu bảng sản phẩm, giá, nhà cung cấp, nguồn","Dùng AI cho việc lặp lại: keyword, phân loại, tóm tắt, tính giá","**Mọi quyết định phải dựa trên dữ liệu thật** (FastMoss, Kalodata), quyết định cuối là của học viên"]},
+{market:"VN",date:"2026-10-17",title:"Từ ngách đến nhà cung cấp 1688",pts:["Chọn **5 sản phẩm ngách và 5 sản phẩm vệ tinh**","Nhờ ChatGPT tạo keyword tiếng Trung, tìm sản phẩm trên 1688","Nhập và tính giá bán; lập **danh sách nhà máy, người bán trên 1688**","Mọi quyết định dựa trên dữ liệu thị trường thật"]}
 ];
 var DK={sid:"",slides:[],weeks:[],i:0};
 function deckLines(t){
@@ -1039,13 +1058,13 @@ function buildDeck(s,mk,asn,ms,rs){
   var wk={}, wget=function(ds){var k=mon(ds);return wk[k]=wk[k]||{k:k,s:[]}};
   var start=s.start||"";
   KNOW.filter(function(x){return x.market==="ALL"||x.market===mk}).forEach(function(x){
-    wget(start&&start>x.date?start:x.date).s.push({kind:"gen",tag:"Kiến thức chung",title:x.title,html:"<ul>"+x.pts.map(function(p){return "<li>"+esc(p)+"</li>"}).join("")+"</ul>"});
+    wget(start&&start>x.date?start:x.date).s.push({kind:"gen",tag:"Kiến thức chung",title:x.title,html:"<ul>"+x.pts.map(function(p){return "<li>"+inl(p)+"</li>"}).join("")+"</ul>"});
   });
   ms.filter(function(m){return m.status==="Đã họp"}).slice().sort(function(p,q){return p.date<q.date?-1:1}).forEach(function(m){
     var d=parse(m.date), nm=(d?DOW[d.getDay()]+" ":"")+fmt(m.date), W=wget(m.date);
     if(m.notes) W.s.push({kind:"mine",tag:"Buổi họp "+nm,title:"Nội dung mentor trao đổi",html:deckLines(m.notes)});
     if(m.edits) W.s.push({kind:"mine",tag:"Buổi họp "+nm,title:"Mentor sửa và nhận xét",html:deckLines(m.edits)});
-    if(m.actions) W.s.push({kind:"mine",tag:"Buổi họp "+nm,title:"Việc tiếp theo",html:deckLines(m.actions)});
+    if(m.actions) W.s.push({kind:"mine",hl:1,tag:"Buổi họp "+nm,title:"Việc tiếp theo",html:deckLines(m.actions)});
   });
   asn.filter(function(x){return x.status!=="Hủy"}).slice().sort(function(p,q){return (p.assignedOn||"")<(q.assignedOn||"")?-1:1}).forEach(function(x){
     wget(x.assignedOn||start).s.push({kind:"mine",tag:"Bài tập"+(x.due?", hạn "+fmt(x.due)+(x.dueTime?" "+x.dueTime:""):""),title:x.title,
@@ -1063,7 +1082,7 @@ function buildDeck(s,mk,asn,ms,rs){
 function dkShow(){
   var el=document.getElementById("dk-slide"); if(!el||!DK.slides.length) return;
   var z=DK.slides[DK.i];
-  el.className="dk-slide k-"+z.kind;
+  el.className="dk-slide k-"+z.kind+(z.hl?" hl":"");
   el.innerHTML='<div class="dk-tag"><span class="dk-b '+(z.kind==="gen"?"g":z.kind==="title"?"t":"m")+'">'+(z.kind==="gen"?"Kiến thức chung":z.kind==="title"?"Tuần":"Của riêng bạn")+'</span>'+esc(z.tag)+'</div>'
     +(z.title?'<h3>'+esc(z.title)+'</h3>':'')+'<div class="dk-b2">'+z.html+'</div>';
   var ct=document.getElementById("dk-ct"); if(ct) ct.textContent=(DK.i+1)+" / "+DK.slides.length;
@@ -1095,6 +1114,23 @@ function deckView(s,mk,asn,ms,rs){
     +'<div id="dk-slide" class="dk-slide" aria-live="polite"></div>'
     +'<div class="dk-nav"><button type="button" class="btn" id="dk-prev" data-dk="prev">← Trước</button><button type="button" class="btn" id="dk-next" data-dk="next">Sau →</button></div></div></section>';
 }
+function assignView(asn,ms){
+  var now=new Date(), live=asn.filter(function(x){return x.status!=="Đạt"&&x.status!=="Hủy"}), done=asn.filter(function(x){return x.status==="Đạt"});
+  var late=function(x){if(x.status==="Đã nộp")return false;var dd=parse(x.due),tm=/^(\d{1,2}):(\d{2})$/.exec(x.dueTime||"");return !!dd&&new Date(dd.getFullYear(),dd.getMonth(),dd.getDate(),tm?+tm[1]:23,tm?+tm[2]:59)<now};
+  var o='<section class="sec"><h2>Bài tập</h2>';
+  if(!live.length) o+='<div class="empty">Chưa có bài đang giao. Chờ mentor giao bài.</div>';
+  o+=live.map(function(x){
+    var l=late(x);
+    return '<article class="ba"><div class="bt"><b>'+esc(x.title)+'</b><span class="chip2 '+(l?'late':(x.status==="Đã nộp"?'sub':'due'))+'">'+(x.status==="Đã nộp"?'Đã nộp, chờ nhận xét':(x.due?(l?'Quá hạn ':'Hạn ')+fmt(x.due)+(x.dueTime?' '+esc(x.dueTime):''):'Chưa có hạn'))+'</span></div>'
+      +((x.items||[]).length?'<ol>'+x.items.map(function(i){return '<li>'+esc(i)+'</li>'}).join("")+'</ol>':'')
+      +(x.note?'<p class="hlb">'+inl(x.note)+'</p>':'')
+      +(x.reviews||[]).map(function(r){return '<p class="hlb">Nhận xét '+fmt(r.date)+': '+esc(r.text)+'</p>'}).join("")+'</article>';
+  }).join("");
+  if(done.length) o+='<details class="more"><summary>Bài đã đạt ('+done.length+')</summary><ul class="dl2">'+done.map(function(x){return '<li>'+esc(x.title)+'</li>'}).join("")+'</ul></details>';
+  var held=ms.filter(function(m){return m.status!=="Hủy"});
+  if(held.length) o+='<details class="more"><summary>Lịch họp và ghi chú các buổi ('+held.length+')</summary>'+held.map(function(m,i){return mtgItem(m,false)}).join("")+'</details>';
+  return o+'</section>';
+}
 var VC=["#1a1a18","#1fa25a","#2563eb","#c0392b","#b8860b","#7a5aa6","#9a978c"];
 function donutHtml(c){
   var it=(c.items||[]).filter(function(v){return +v.value>0}).slice().sort(function(p,q){return q.value-p.value});
@@ -1102,12 +1138,14 @@ function donutHtml(c){
   var tot=it.reduce(function(a,b){return a+(+b.value)},0)||1, r=42, C=2*Math.PI*r, off=0;
   var arcs=it.map(function(v,k){var len=(+v.value)/tot*C, s='<circle cx="60" cy="60" r="'+r+'" fill="none" stroke="'+VC[k%VC.length]+'" stroke-width="22" stroke-dasharray="'+len.toFixed(2)+' '+(C-len).toFixed(2)+'" stroke-dashoffset="'+(-off).toFixed(2)+'" transform="rotate(-90 60 60)"/>'; off+=len; return s}).join("");
   return '<div class="dn2"><svg viewBox="0 0 120 120" role="img" aria-label="Biểu đồ tròn">'+arcs+'<text x="60" y="66" text-anchor="middle" font-size="19" font-weight="700" fill="currentColor">'+Math.round((+it[0].value)/tot*100)+'%</text></svg>'
-    +'<ul class="dl">'+it.map(function(v,k){return '<li><i style="background:'+VC[k%VC.length]+'"></i><span title="'+esc(v.label)+'">'+esc(String(v.label).replace(/\s*\(.*$/,""))+'</span><b>'+Math.round((+v.value)/tot*100)+'%</b></li>'}).join("")+'</ul></div>';
+    +'<ul class="dl">'+it.map(function(v,k){return '<li><i style="background:'+VC[k%VC.length]+'"></i><span>'+esc(v.label)+'</span><b>'+Math.round((+v.value)/tot*100)+'%</b></li>'}).join("")+'</ul></div>';
 }
 function barsHtml(items){
+  items=(items||[]).map(function(i){return i});
+  if(!items.some(function(i){return i.hi||i.bad})){var bi=0;items.forEach(function(i,k){if((+i.value||0)>(+items[bi].value||0))bi=k});if(items.length)items[bi]=Object.assign({},items[bi],{hi:true})}
   var mx=Math.max.apply(null,(items||[]).map(function(i){return +i.value||0}).concat([1]));
   return '<div class="rc">'+(items||[]).map(function(i){
-    return '<div class="rcr'+(i.hi?" hi":"")+(i.bad?" bad":"")+'"><div class="rl">'+esc(String(i.label).replace(/\s*\(.*$/,""))+'</div><div class="rt2"><i style="width:'+Math.max(1,(+i.value||0)/mx*100)+'%"></i></div><div class="rv">'+esc(i.text!=null?i.text:i.value)+'</div></div>'}).join("")+'</div>';
+    return '<div class="rcr'+(i.hi?" hi":"")+(i.bad?" bad":"")+'"><div class="rl">'+esc(i.label)+'</div><div class="rt2"><i style="width:'+Math.max(1,(+i.value||0)/mx*100)+'%"></i></div><div class="rv">'+esc(i.text!=null?i.text:i.value)+'</div></div>'}).join("")+'</div>';
 }
 function analysisView(rs){
   var list=rs.filter(function(r){return (r.charts||[]).length});
@@ -1121,7 +1159,7 @@ function analysisView(rs){
 }
 var STABS=[["tien-do","Tiến độ"],["trinh-chieu","Trình chiếu"],["bai-tap","Theo tuần"],["lich-hop","Lịch họp"],["bao-cao","Báo cáo"],["nhat-ky","Nhật ký"]];
 function viewStudent(id,tab){
-  var SM=!!window.STUDENT_MODE, TABS=SM?[["tien-do","Quá trình"],["trinh-chieu","Kiến thức"],["phan-tich","Phân tích"]]:STABS;
+  var SM=!!window.STUDENT_MODE, TABS=SM?[["tien-do","Quá trình"],["trinh-chieu","Kiến thức"],["bai-tap","Bài tập"],["phan-tich","Phân tích"]]:STABS;
   tab=TABS.some(function(x){return x[0]===tab})?tab:"tien-do";
   var back=SM?'':'<a class="back" href="#/hoc-vien">← Danh sách học viên</a>';
   var s=students.filter(function(x){return x.id===id})[0];
@@ -1131,18 +1169,18 @@ function viewStudent(id,tab){
   var asn=assignments.filter(function(x){return x.studentId===s.id}).sort(function(p,q){return (q.assignedOn||"")<(p.assignedOn||"")?-1:1});
   var rs=reports.filter(function(r){return r.studentId===s.id}).sort(function(p,q){return (q.date||"")===(p.date||"")?(q.id<p.id?-1:1):((q.date||"")<(p.date||"")?-1:1)});
   var ms=a.ms.slice().sort(function(p,q){return p.date<q.date?1:-1});
-  var cnt={"tien-do":"","trinh-chieu":"","phan-tich":"","bai-tap":asn.length,"lich-hop":ms.length,"bao-cao":rs.length,"nhat-ky":""};
-  var sub=[s.pkg,s.platform,MK[a.mk]].filter(Boolean).map(function(x){return '<span>'+esc(x)+'</span>'}).join("");
+  var cnt={"tien-do":"","trinh-chieu":"","phan-tich":"","bai-tap":SM?a.openAss.length||"":asn.length,"lich-hop":ms.length,"bao-cao":rs.length,"nhat-ky":""};
+  var sub=(SM?[MK[a.mk]]:[s.pkg,s.platform,MK[a.mk]]).filter(Boolean).map(function(x){return '<span>'+esc(x)+'</span>'}).join("");
   var contact=SM?[]:[s.phone,s.email].filter(Boolean);
   var nm=a.nextM;
   var out=back+'<div class="sp-h"><div><h2>'+esc(s.name)+'</h2><p class="sp-sub">'+sub+(contact.length?'<br>'+esc(contact.join(" · ")):'')+(s.start?'<br>Bắt đầu '+fmt(s.start):'')+'</p></div></div>';
-  (function(){
+  if(!SM||tab==='tien-do') (function(){
     var t=today(), w0=mondayOf(t), w1=addDays(w0,6), items=[], dstr=function(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())};
     a.openAss.forEach(function(x){
       items.push('<li><b>'+esc(x.title)+'</b>'+(x.due?'<span class="due'+(x.late?' late':'')+'">'+(x.late?'Quá hạn, ':'Hạn ')+fmt(x.due)+(x.dueTime?' '+esc(x.dueTime):'')+'</span>':'<span class="due">Chưa có hạn</span>')+'</li>');
     });
-    if(pb) items.push('<li><b>Bước '+a.cur+': '+esc(pb.name)+'</b><span class="sub">'+esc(pb.task[a.mk])+'</span></li>');
-    if(a.lastHeld&&a.lastHeld.actions) items.push('<li><b>Việc từ buổi họp '+fmt(a.lastHeld.date)+'</b><span class="sub">'+esc(a.lastHeld.actions)+'</span></li>');
+    if(pb) items.push('<li><b>Bước '+a.cur+': '+esc(pb.name)+'</b>'+(SM?'':'<span class="sub">'+esc(pb.task[a.mk])+'</span>')+'</li>');
+    if(a.lastHeld&&a.lastHeld.actions&&!SM) items.push('<li><b>Việc từ buổi họp '+fmt(a.lastHeld.date)+'</b><span class="sub">'+esc(a.lastHeld.actions)+'</span></li>');
     out+='<section class="focus"><div class="fh"><b>Việc cần làm tuần này</b><span>'+fmt(dstr(w0))+' đến '+fmt(dstr(w1))+'</span></div><div class="fb">'
       +(items.length?'<ol>'+items.join("")+'</ol>':'<p class="none">Chưa có việc nào được giao. Chờ mentor giao bài.</p>')
       +'<div class="fm">'+(nm?'Họp tiếp: <b>'+DOW[parse(nm.date).getDay()]+' '+fmt(nm.date)+(nm.time?', '+esc(nm.time):'')+'</b>'+(/^https:\/\//.test(nm.link||"")?' · <a href="'+esc(nm.link)+'" target="_blank" rel="noopener">Link họp</a>':''):'Chưa có lịch họp tiếp theo')+'</div></div></section>';
@@ -1167,16 +1205,19 @@ function viewStudent(id,tab){
     if(SM){
       var mdl=stepModel(a);
       var stl0=STORE[a.mk]||STORE.VN, stk0=((s.checks||{}).store)||[];
-      out+='<section class="sec"><h2>Các bước của bạn</h2><p class="hint">Đã xong '+a.done+'/'+a.ns+' bước. Bấm vào từng bước để xem trước việc cần làm.</p>'
+      var card=function(m){
+        var chip=m.st==="done"?"Đã xong"+(m.raw?" "+fmt(m.raw):""):(m.st==="cur"?"Đang làm":"Sắp tới");
+        return '<details class="sc sm '+m.st+'" id="stp-'+m.n+'"'+(m.st==="cur"?' open':'')+'><summary><span class="n">'+m.n+'</span><span class="nm2"><b>'+esc(m.pb.name)+'</b></span><span class="chip">'+chip+'</span></summary>'
+          +'<div class="bd"><p class="dn"><b>Việc cần làm:</b> '+inl(m.pb.task[a.mk])+'</p>'
+          +(m.sub.length?'<ul class="ck">'+m.sub.map(function(t,i){return '<li class="'+((m.st==="done"||m.ck.indexOf(i)>=0)?'y':'')+'">'+esc(t)+'</li>'}).join("")+'</ul>':'')
+          +'<p class="dn" style="margin-top:10px"><b>Xong bước này khi:</b> '+esc(m.pb.done)+'</p></div></details>';
+      };
+      var curM=mdl.filter(function(m){return m.st==="cur"}), othM=mdl.filter(function(m){return m.st!=="cur"});
+      out+='<section class="sec"><h2>Các bước của bạn <span class="hlt">'+a.done+'/'+a.ns+' bước đã xong</span></h2>'
         +'<div class="sp10" style="grid-template-columns:repeat('+mdl.length+',minmax(0,1fr))">'+mdl.map(function(m){return '<div class="nd '+m.st+'" data-step="'+m.n+'" role="button" tabindex="0"><i>'+m.n+'</i><span>'+esc(m.pb.name)+'</span></div>'}).join("")+'</div>'
-        +mdl.map(function(m){
-          var chip=m.st==="done"?"Đã xong"+(m.raw?" "+fmt(m.raw):""):(m.st==="cur"?"Đang làm":"Sắp tới");
-          return '<details class="sc sm '+m.st+'" id="stp-'+m.n+'"'+(m.st==="cur"?' open':'')+'><summary><span class="n">'+m.n+'</span><span class="nm2"><b>'+esc(m.pb.name)+'</b></span><span class="chip">'+chip+'</span></summary>'
-            +'<div class="bd"><p class="dn"><b>Việc cần làm:</b> '+esc(m.pb.task[a.mk])+'</p>'
-            +(m.sub.length?'<ul class="ck">'+m.sub.map(function(t,i){return '<li class="'+((m.st==="done"||m.ck.indexOf(i)>=0)?'y':'')+'">'+esc(t)+'</li>'}).join("")+'</ul>':'')
-            +'<p class="dn" style="margin-top:10px"><b>Xong bước này khi:</b> '+esc(m.pb.done)+'</p></div></details>';
-        }).join("")+'</section>';
-      out+='<section class="sec"><h2>Giấy tờ lập cửa hàng</h2><ul class="ck stc">'+stl0.map(function(t,i){return '<li class="'+(stk0.indexOf(i)>=0?'y':'')+'">'+esc(t)+'</li>'}).join("")+'</ul></section>';
+        +curM.map(card).join("")
+        +'<details class="more"><summary>Xem các bước còn lại</summary>'+othM.map(card).join("")+'</details>'
+        +'<details class="more"><summary>Giấy tờ lập cửa hàng ('+stk0.filter(function(i){return i<stl0.length}).length+'/'+stl0.length+')</summary><ul class="ck stc">'+stl0.map(function(t,i){return '<li class="'+(stk0.indexOf(i)>=0?'y':'')+'">'+esc(t)+'</li>'}).join("")+'</ul></details></section>';
       return out;
     }
     var al2=al.filter(function(x){return x.sev>=2&&!/^(Chưa có lịch họp|Chưa có bài nào|Chưa họp lần nào)/.test(x.t)});
@@ -1195,7 +1236,7 @@ function viewStudent(id,tab){
     if(s.blocker) help.push("Học viên đang vướng: "+s.blocker);
     if(s.mentorNext) help.push("Mentor sẽ làm: "+s.mentorNext);
     if(pb) help.push(pb.help[a.mk]);
-    out+='<section class="sec"><h2>Tuần này</h2><div class="spair"><div><h4>Học viên cần làm</h4><p>'+esc(pb?pb.task[a.mk]:"Tổng kết, thu thập phản hồi, chốt kết thúc mentor.")+'</p></div>'
+    out+='<section class="sec"><h2>Tuần này</h2><div class="spair"><div><h4>Học viên cần làm</h4><p>'+inl(pb?pb.task[a.mk]:"Tổng kết, thu thập phản hồi, chốt kết thúc mentor.")+'</p></div>'
       +(SM?'':'<div><h4>Mentor cần support</h4><p>'+esc(help.join("\n"))+'</p></div>')+'</div></section>';
     var prof=(SM?[["Mục tiêu",s.goal],["Ngách",s.niche]]:[["Mục tiêu",s.goal],["Ngách",s.niche],["Đang vướng",s.blocker],["Mentor sẽ làm",s.mentorNext],["Ghi chú",s.note]]).filter(function(x){return x[1]});
     if(prof.length) out+='<section class="sec"><h2>Hồ sơ</h2><div class="spair">'+prof.map(function(x){return '<div><h4>'+x[0]+'</h4><p>'+esc(x[1])+'</p></div>'}).join("")+'</div></section>';
@@ -1203,6 +1244,7 @@ function viewStudent(id,tab){
   }
   if(tab==="trinh-chieu") return out+deckView(s,a.mk,asn,ms,rs);
   if(tab==="phan-tich") return out+analysisView(rs);
+  if(SM&&tab==="bai-tap") return out+assignView(asn,ms);
   if(tab==="bai-tap"){
     var now=new Date(), iso=function(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())};
     var mon=function(ds){var d=parse(ds)||parse(s.start)||now,k=(d.getDay()+6)%7;return iso(addDays(d,-k))};
@@ -1315,7 +1357,7 @@ async function copyMsg(msg){
 function openStep(e){
   var nd=e.target.closest&&e.target.closest(".nd[data-step]"); if(!nd) return false;
   var d=document.getElementById("stp-"+nd.dataset.step); if(!d) return true;
-  d.open=true; d.scrollIntoView({behavior:"smooth",block:"center"}); return true;
+  var pp=d.parentElement; while(pp){if(pp.tagName==="DETAILS")pp.open=true; pp=pp.parentElement} d.open=true; d.scrollIntoView({behavior:"smooth",block:"center"}); return true;
 }
 document.addEventListener("keydown",function(e){if((e.key==="Enter"||e.key===" ")&&openStep(e))e.preventDefault()});
 document.addEventListener("click",async function(e){
