@@ -383,6 +383,17 @@ label.f{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:50
 @media(max-width:600px){.dk-slide{padding:18px 16px;aspect-ratio:auto;min-height:300px}.dk-slide.k-title h3{font-size:30px}.dk-b2{font-size:16px}}
 .dk-nav{display:flex;justify-content:space-between;gap:10px;margin-top:10px}
 .dk-nav .btn:disabled{opacity:.4;cursor:default}
+.an{border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;margin:0 0 18px;background:var(--surface);min-width:0}
+.an>small{color:var(--soft)} .an h3{font-family:var(--serif);font-size:16px;margin:2px 0 10px;color:var(--muted);font-weight:600}
+.vd{font-size:19px;font-weight:700;line-height:1.35;margin:0 0 14px;padding:12px 14px;background:var(--info-bg);border-left:4px solid var(--ink);border-radius:var(--rs)}
+.vzs{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.vz{border:1px solid var(--line);border-radius:var(--rs);padding:12px 14px;min-width:0}
+.vz .ck2{margin:0 0 8px;font-weight:600;font-size:15px}
+.vz h4{margin:10px 0 0;font-size:12px;color:var(--soft);font-weight:400}
+.dn2{display:flex;gap:14px;align-items:center;flex-wrap:wrap}.dn2 svg{width:130px;height:130px;flex:none}
+.dl{list-style:none;margin:0;padding:0;display:grid;gap:5px;font-size:14px;min-width:0;flex:1}
+.dl li{display:grid;grid-template-columns:12px 1fr auto;gap:8px;align-items:center}.dl i{width:12px;height:12px;border-radius:3px}
+.dl span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rp{border-top:1px solid var(--line);padding:14px 0}
 .rp:first-of-type{border-top:0;padding-top:0}
 .rp>summary{font-family:var(--serif);font-weight:700;font-size:17px}
@@ -1040,15 +1051,10 @@ function buildDeck(s,mk,asn,ms,rs){
     wget(x.assignedOn||start).s.push({kind:"mine",tag:"Bài tập"+(x.due?", hạn "+fmt(x.due)+(x.dueTime?" "+x.dueTime:""):""),title:x.title,
       html:((x.items||[]).length?"<ol>"+x.items.map(function(i){return "<li>"+esc(i)+"</li>"}).join("")+"</ol>":"")+(x.pubnote?"<p class=\"dk-n\">"+inl(x.pubnote)+"</p>":"")+"<p class=\"dk-n\">Trạng thái: "+esc(x.status||"Đang làm")+"</p>"});
   });
-  rs.slice().sort(function(p,q){return (p.date||"")<(q.date||"")?-1:1}).forEach(function(r){
-    var W=wget(r.date);
-    W.s.push({kind:"mine",tag:"Báo cáo "+fmt(r.date),title:r.title,html:(r.summary?"<p>"+inl(r.summary)+"</p>":"")+(r.source?"<p class=\"dk-n\">Nguồn: "+esc(r.source)+"</p>":"")});
-    (r.charts||[]).forEach(function(c){W.s.push({kind:"chart",tag:"Biểu đồ, "+fmt(r.date),title:"",html:chartHtml(c)})});
-  });
   var keys=Object.keys(wk).sort(), slides=[], weeks=[], thisWk=mon(isoD(now));
   keys.forEach(function(k,i){
     var W=wk[k], first=slides.length, gen=W.s.filter(function(z){return z.kind==="gen"}).length;
-    slides.push({kind:"title",tag:"Tuần "+(i+1)+(k===thisWk?" · tuần này":""),title:"Tuần "+(i+1),html:"<p>"+fmt(k)+" đến "+fmt(isoD(addDays(parse(k),6)))+"</p><p class=\"dk-n\">"+gen+" slide kiến thức chung · "+(W.s.length-gen)+" slide riêng của bạn</p>"});
+    slides.push({kind:"title",tag:"Tuần "+(i+1)+(k===thisWk?" · tuần này":""),title:"Tuần "+(i+1),html:"<p>"+fmt(k)+" đến "+fmt(isoD(addDays(parse(k),6)))+"</p><p class=\"dk-n\">"+gen+" slide kiến thức chung · "+(W.s.length-gen)+" slide của riêng bạn</p>"});
     W.s.forEach(function(z){slides.push(z)});
     weeks.push({k:k,label:"Tuần "+(i+1)+" ("+fmt(k)+")",at:first,cur:k===thisWk});
   });
@@ -1084,14 +1090,38 @@ function deckView(s,mk,asn,ms,rs){
   if(DK.i>=DK.slides.length) DK.i=0;
   setTimeout(dkShow,0);
   if(!d.slides.length) return '<section class="sec"><h2>Trình chiếu</h2><div class="empty">Chưa có nội dung để trình chiếu.</div></section>';
-  return '<section class="sec"><h2>Trình chiếu theo tuần</h2><p class="hint">Mỗi tuần là một bộ slide: kiến thức chung mentor dạy cho cả nhóm, và phần riêng của bạn (ghi chú buổi họp, bài tập, biểu đồ từ báo cáo). Dùng phím mũi tên trái phải để chuyển slide.</p>'
+  return '<section class="sec"><h2>Trình chiếu theo tuần</h2><p class="hint">Mỗi tuần là một bộ slide: kiến thức chung mentor dạy cho cả nhóm, và phần riêng của bạn (buổi họp, bài tập). Dùng phím mũi tên để chuyển slide.</p>'
     +'<div class="dk" id="dk-stage"><div class="dk-top"><select id="dk-wk" aria-label="Chọn tuần">'+d.weeks.map(function(w,j){return '<option value="'+j+'">'+esc(w.label)+(w.cur?' · tuần này':'')+'</option>'}).join("")+'</select><span id="dk-ct" class="dk-ct"></span><button type="button" class="btn sm" data-dk="fs">Toàn màn hình</button></div>'
     +'<div id="dk-slide" class="dk-slide" aria-live="polite"></div>'
     +'<div class="dk-nav"><button type="button" class="btn" id="dk-prev" data-dk="prev">← Trước</button><button type="button" class="btn" id="dk-next" data-dk="next">Sau →</button></div></div></section>';
 }
+var VC=["#1a1a18","#1fa25a","#2563eb","#c0392b","#b8860b","#7a5aa6","#9a978c"];
+function donutHtml(c){
+  var it=(c.items||[]).filter(function(v){return +v.value>0}).slice().sort(function(p,q){return q.value-p.value});
+  if(it.length>6){var rest=it.slice(5).reduce(function(a,b){return a+(+b.value)},0); it=it.slice(0,5).concat([{label:"Khác",value:rest}])}
+  var tot=it.reduce(function(a,b){return a+(+b.value)},0)||1, r=42, C=2*Math.PI*r, off=0;
+  var arcs=it.map(function(v,k){var len=(+v.value)/tot*C, s='<circle cx="60" cy="60" r="'+r+'" fill="none" stroke="'+VC[k%VC.length]+'" stroke-width="22" stroke-dasharray="'+len.toFixed(2)+' '+(C-len).toFixed(2)+'" stroke-dashoffset="'+(-off).toFixed(2)+'" transform="rotate(-90 60 60)"/>'; off+=len; return s}).join("");
+  return '<div class="dn2"><svg viewBox="0 0 120 120" role="img" aria-label="Biểu đồ tròn">'+arcs+'<text x="60" y="66" text-anchor="middle" font-size="19" font-weight="700" fill="currentColor">'+Math.round((+it[0].value)/tot*100)+'%</text></svg>'
+    +'<ul class="dl">'+it.map(function(v,k){return '<li><i style="background:'+VC[k%VC.length]+'"></i><span title="'+esc(v.label)+'">'+esc(String(v.label).replace(/\s*\(.*$/,""))+'</span><b>'+Math.round((+v.value)/tot*100)+'%</b></li>'}).join("")+'</ul></div>';
+}
+function barsHtml(items){
+  var mx=Math.max.apply(null,(items||[]).map(function(i){return +i.value||0}).concat([1]));
+  return '<div class="rc">'+(items||[]).map(function(i){
+    return '<div class="rcr'+(i.hi?" hi":"")+(i.bad?" bad":"")+'"><div class="rl">'+esc(String(i.label).replace(/\s*\(.*$/,""))+'</div><div class="rt2"><i style="width:'+Math.max(1,(+i.value||0)/mx*100)+'%"></i></div><div class="rv">'+esc(i.text!=null?i.text:i.value)+'</div></div>'}).join("")+'</div>';
+}
+function analysisView(rs){
+  var list=rs.filter(function(r){return (r.charts||[]).length});
+  if(!list.length) return '<section class="sec"><h2>Phân tích</h2><div class="empty">Chưa có phân tích nào.</div></section>';
+  return '<section class="sec"><h2>Phân tích</h2>'+list.map(function(r){
+    var v=r.verdict||String(r.summary||"").split(/(?<=\.)\s/)[0];
+    return '<article class="an"><small>'+fmt(r.date)+'</small><h3>'+esc(r.title)+'</h3><p class="vd">'+inl(v)+'</p><div class="vzs">'
+      +(r.charts||[]).map(function(c){
+        return '<div class="vz">'+(c.ck?'<p class="ck2">'+esc(c.ck)+'</p>':'')+(c.type==="pie"?donutHtml(c):barsHtml(c.items))+'<h4>'+esc(c.title)+'</h4></div>'}).join("")+'</div></article>';
+  }).join("")+'</section>';
+}
 var STABS=[["tien-do","Tiến độ"],["trinh-chieu","Trình chiếu"],["bai-tap","Theo tuần"],["lich-hop","Lịch họp"],["bao-cao","Báo cáo"],["nhat-ky","Nhật ký"]];
 function viewStudent(id,tab){
-  var SM=!!window.STUDENT_MODE, TABS=STABS.filter(function(x){return !SM||x[0]!=="nhat-ky"});
+  var SM=!!window.STUDENT_MODE, TABS=SM?[["tien-do","Quá trình"],["trinh-chieu","Kiến thức"],["phan-tich","Phân tích"]]:STABS;
   tab=TABS.some(function(x){return x[0]===tab})?tab:"tien-do";
   var back=SM?'':'<a class="back" href="#/hoc-vien">← Danh sách học viên</a>';
   var s=students.filter(function(x){return x.id===id})[0];
@@ -1101,7 +1131,7 @@ function viewStudent(id,tab){
   var asn=assignments.filter(function(x){return x.studentId===s.id}).sort(function(p,q){return (q.assignedOn||"")<(p.assignedOn||"")?-1:1});
   var rs=reports.filter(function(r){return r.studentId===s.id}).sort(function(p,q){return (q.date||"")===(p.date||"")?(q.id<p.id?-1:1):((q.date||"")<(p.date||"")?-1:1)});
   var ms=a.ms.slice().sort(function(p,q){return p.date<q.date?1:-1});
-  var cnt={"tien-do":"","trinh-chieu":"","bai-tap":asn.length,"lich-hop":ms.length,"bao-cao":rs.length,"nhat-ky":""};
+  var cnt={"tien-do":"","trinh-chieu":"","phan-tich":"","bai-tap":asn.length,"lich-hop":ms.length,"bao-cao":rs.length,"nhat-ky":""};
   var sub=[s.pkg,s.platform,MK[a.mk]].filter(Boolean).map(function(x){return '<span>'+esc(x)+'</span>'}).join("");
   var contact=SM?[]:[s.phone,s.email].filter(Boolean);
   var nm=a.nextM;
@@ -1172,6 +1202,7 @@ function viewStudent(id,tab){
     return out;
   }
   if(tab==="trinh-chieu") return out+deckView(s,a.mk,asn,ms,rs);
+  if(tab==="phan-tich") return out+analysisView(rs);
   if(tab==="bai-tap"){
     var now=new Date(), iso=function(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())};
     var mon=function(ds){var d=parse(ds)||parse(s.start)||now,k=(d.getDay()+6)%7;return iso(addDays(d,-k))};
@@ -1246,7 +1277,7 @@ function render(){
     students=[{id:st0.id,name:st0.name,market:st0.market,pkg:st0.pkg,niche:st0.niche,goal:st0.goal,start:st0.start,steps:st0.steps||{},checks:st0.checks||{},status:st0.status,firstOrder:st0.firstOrder}];
     assignments=keep[1].filter(function(x){return x.studentId===id0}).map(function(x){return {id:x.id,studentId:id0,title:x.title,items:x.items,assignedOn:x.assignedOn,due:x.due,dueTime:x.dueTime,status:x.status,note:x.pubnote,submission:x.submission,reviews:x.reviews}});
     meetings=keep[2].filter(function(x){return x.studentId===id0&&x.status!=="Hủy"}).map(function(x){var h=x.status==="Đã họp";return {id:x.id,studentId:id0,date:x.date,time:x.time,status:x.status,link:x.link,notes:h?x.notes:null,edits:h?x.edits:null,actions:h?x.actions:null,links:h?x.links:null}});
-    reports=keep[3].filter(function(x){return x.studentId===id0}).map(function(x){return {id:x.id,studentId:id0,date:x.date,title:x.title,source:x.source,summary:x.summary,charts:x.charts,body:x.body}});
+    reports=keep[3].filter(function(x){return x.studentId===id0}).map(function(x){return {id:x.id,studentId:id0,date:x.date,title:x.title,source:x.source,summary:x.summary,verdict:x.verdict,charts:x.charts,body:x.body}});
     window.STUDENT_MODE=id0; window.PREVIEW=true;
     var html;
     try{html=viewStudent(id0,m[2])}finally{window.STUDENT_MODE=null; window.PREVIEW=false; students=keep[0]; assignments=keep[1]; meetings=keep[2]; reports=keep[3]}
