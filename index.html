@@ -491,6 +491,16 @@ details.more>summary{font-weight:600}
 .dkctl select{font-family:'VNMS',Inter,sans-serif;font-weight:400;font-size:15px}
 .dkp{font-synthesis:none}
 .dkp .q strong,.dkp .q b{font-weight:400}
+/* Trình chiếu: chỉ dùng 4 màu (cobalt, kem, cacao, mango) */
+.dkp .rule{background:var(--mango)}
+.dkp .lbl{color:rgba(45,25,15,.7)}
+.dkp .card.m .lbl{color:var(--cocoa)}
+.dkp .note{border-left-color:var(--mango)}
+.dkp .row .n.c1,.dkp .row .n.c2,.dkp .row .n.c3,.dkp .row .n.c4{background:var(--mango);color:var(--cocoa)}
+.dkp .chip.n{background:var(--cobalt);color:var(--cream)}.dkp .chip.v{background:var(--mango)}
+.dkp .page.blue .rule{background:var(--mango)}
+.dkp .sum>div:nth-child(2){background:var(--mango)}
+.nextm{margin:2px 0 14px;color:var(--muted);font-size:15px}.nextm b{color:var(--ink)}
 .rp{border-top:1px solid var(--line);padding:14px 0}
 .rp:first-of-type{border-top:0;padding-top:0}
 .rp>summary{font-family:var(--serif);font-weight:700;font-size:17px}
@@ -1185,7 +1195,7 @@ function knowSlide(x,tag){
 function trainBlock(mk,n,full){
   var t=(TRAIN[mk]||{})[n]; if(!t) return "";
   var has=knowFor(mk,n,"9999").length, SM=!!window.STUDENT_MODE;
-  var o='<div class="tb"><p><b>Buổi train 30 phút:</b> '+esc(t.title)+'</p><p><b>Chuẩn bị trước:</b> '+esc(t.prep)+'</p>';
+  var o='<div class="tb"><p><b>Buổi train 30 phút:</b> '+esc(t.title)+'</p>'+(SM?'':'<p><b>Chuẩn bị trước:</b> '+esc(t.prep)+'</p>');
   if(has&&SM) o+='<p><button type="button" class="btn sm" data-dkstep="'+n+'">Xem kiến thức của bước này</button></p>';
   else if(has) o+='<p><b>Kiến thức:</b> '+has+' slide</p>';
   o+='<p><b>Đầu ra đạt khi:</b></p><ul class="hli">'+t.out.map(function(x){return '<li>'+esc(x)+'</li>'}).join("")+'</ul>';
@@ -1231,13 +1241,13 @@ function buildDeck(s,mk,asn,ms,rs){
   });
   /* Của riêng bạn, theo tuần */
   var wk={}, wget=function(ds){var k=mon(ds);return wk[k]=wk[k]||{k:k,s:[]}};
-  ms.filter(function(m){return m.status==="Đã họp"}).slice().sort(function(p,q){return p.date<q.date?-1:1}).forEach(function(m){
+  if(!window.STUDENT_MODE) ms.filter(function(m){return m.status==="Đã họp"}).slice().sort(function(p,q){return p.date<q.date?-1:1}).forEach(function(m){
     var d=parse(m.date), nm=(d?DOW[d.getDay()]+" ":"")+fmt(m.date), W=wget(m.date);
     if(m.notes) W.s.push({kind:"mine",tag:"Buổi họp "+nm,title:"Nội dung mentor trao đổi",html:deckLines(m.notes)});
     if(m.edits) W.s.push({kind:"mine",tag:"Buổi họp "+nm,title:"Mentor sửa và nhận xét",html:deckLines(m.edits)});
     if(m.actions) W.s.push({kind:"mine",tag:"Buổi họp "+nm,title:"Việc tiếp theo",html:'<div class="card m"><div class="lbl">VIỆC TIẾP THEO</div>'+deckLines(m.actions)+'</div>'});
   });
-  asn.filter(function(x){return x.status!=="Hủy"}).slice().sort(function(p,q){return (p.assignedOn||"")<(q.assignedOn||"")?-1:1}).forEach(function(x){
+  if(!window.STUDENT_MODE) asn.filter(function(x){return x.status!=="Hủy"}).slice().sort(function(p,q){return (p.assignedOn||"")<(q.assignedOn||"")?-1:1}).forEach(function(x){
     wget(x.assignedOn||start).s.push({kind:"mine",tag:"Bài tập"+(x.due?", hạn "+fmt(x.due)+(x.dueTime?" "+x.dueTime:""):""),title:x.title,
       html:((x.items||[]).length?rowsHtml(x.items.map(esc),true):"")+(x.note?'<div class="ex">'+inl(x.note)+'</div>':'')+'<p style="margin-top:2mm"><span class="chip '+(x.status==="Đạt"?"n":"i")+'">'+esc(x.status||"Đang làm")+'</span></p>'});
   });
@@ -1302,15 +1312,15 @@ function deckView(s,mk,asn,ms,rs){
   if(DK.i>=DK.slides.length) DK.i=0;
   setTimeout(dkShow,0);
   if(!d.slides.length) return '<section class="sec"><h2>Trình chiếu</h2><div class="empty">Chưa có nội dung để trình chiếu.</div></section>';
-  return '<section class="sec"><h2>Kiến thức</h2><p class="hint">Tổng quan, kiến thức của từng bước, và phần riêng của bạn theo tuần (buổi họp, bài tập). Dùng phím mũi tên để chuyển slide.</p>'
+  return '<section class="sec"><h2>Kiến thức</h2><p class="hint">'+(window.STUDENT_MODE?'Tổng quan và kiến thức của từng bước. Dùng phím mũi tên để chuyển slide.':'Tổng quan, kiến thức của từng bước, và phần riêng của học viên theo tuần (buổi họp, bài tập). Dùng phím mũi tên để chuyển slide.')+'</p>'
     +'<div class="dk" id="dk-stage"><div class="dkctl"><select id="dk-wk" aria-label="Chọn phần">'+d.weeks.map(function(w,j){return '<option value="'+j+'">'+esc(w.label)+(w.cur&&w.step>=0?' · đang làm':(w.cur?' · tuần này':''))+'</option>'}).join("")+'</select><span id="dk-ct" class="dkct"></span><button type="button" class="btn sm" data-dk="fs">Toàn màn hình</button></div>'
     +'<div class="dkp"><div class="dkv" id="dk-view" aria-live="polite"></div></div>'
     +'<div class="dk-nav"><button type="button" class="btn" id="dk-prev" data-dk="prev">← Trước</button><button type="button" class="btn" id="dk-next" data-dk="next">Sau →</button></div></div></section>';
 }
-function assignView(asn,ms){
+function assignParts(asn,ms){
   var now=new Date(), live=asn.filter(function(x){return x.status!=="Đạt"&&x.status!=="Hủy"}), done=asn.filter(function(x){return x.status==="Đạt"});
   var late=function(x){if(x.status==="Đã nộp")return false;var dd=parse(x.due),tm=/^(\d{1,2}):(\d{2})$/.exec(x.dueTime||"");return !!dd&&new Date(dd.getFullYear(),dd.getMonth(),dd.getDate(),tm?+tm[1]:23,tm?+tm[2]:59)<now};
-  var o='<section class="sec"><h2>Bài tập</h2>';
+  var o='', more='';
   if(!live.length) o+='<div class="empty">Chưa có bài đang giao. Chờ mentor giao bài.</div>';
   o+=live.map(function(x){
     var l=late(x);
@@ -1319,11 +1329,12 @@ function assignView(asn,ms){
       +(x.note?'<p class="hlb">'+inl(x.note)+'</p>':'')
       +(x.reviews||[]).map(function(r){return '<p class="hlb">Nhận xét '+fmt(r.date)+': '+esc(r.text)+'</p>'}).join("")+'</article>';
   }).join("");
-  if(done.length) o+='<details class="more"><summary>Bài đã đạt ('+done.length+')</summary><ul class="dl2">'+done.map(function(x){return '<li>'+esc(x.title)+'</li>'}).join("")+'</ul></details>';
+  if(done.length) more+='<details class="more"><summary>Bài đã đạt ('+done.length+')</summary><ul class="dl2">'+done.map(function(x){return '<li>'+esc(x.title)+'</li>'}).join("")+'</ul></details>';
   var held=ms.filter(function(m){return m.status!=="Hủy"});
-  if(held.length) o+='<details class="more"><summary>Lịch họp và ghi chú các buổi ('+held.length+')</summary>'+held.map(function(m,i){return mtgItem(m,false)}).join("")+'</details>';
-  return o+'</section>';
+  if(held.length) more+='<details class="more"><summary>Lịch họp và ghi chú các buổi ('+held.length+')</summary>'+held.map(function(m,i){return mtgItem(m,false)}).join("")+'</details>';
+  return {live:o,more:more,hasLive:live.length>0};
 }
+function assignView(asn,ms){var q=assignParts(asn,ms);return '<section class="sec"><h2>Bài tập</h2>'+q.live+q.more+'</section>'}
 var VC=["#1a1a18","#1fa25a","#2563eb","#c0392b","#b8860b","#7a5aa6","#9a978c"];
 function donutHtml(c){
   var it=(c.items||[]).filter(function(v){return +v.value>0}).slice().sort(function(p,q){return q.value-p.value});
@@ -1352,7 +1363,7 @@ function analysisView(rs){
 }
 var STABS=[["tien-do","Tiến độ"],["trinh-chieu","Trình chiếu"],["bai-tap","Theo tuần"],["lich-hop","Lịch họp"],["bao-cao","Báo cáo"],["nhat-ky","Nhật ký"]];
 function viewStudent(id,tab){
-  var SM=!!window.STUDENT_MODE, TABS=SM?[["tien-do","Quá trình"],["trinh-chieu","Kiến thức"],["bai-tap","Bài tập"],["phan-tich","Phân tích"]]:STABS;
+  var SM=!!window.STUDENT_MODE, TABS=SM?[["tien-do","Quá trình"],["trinh-chieu","Kiến thức"],["phan-tich","Phân tích"]]:STABS;
   tab=TABS.some(function(x){return x[0]===tab})?tab:"tien-do";
   var back=SM?'':'<a class="back" href="#/hoc-vien">← Danh sách học viên</a>';
   var s=students.filter(function(x){return x.id===id})[0];
@@ -1362,12 +1373,13 @@ function viewStudent(id,tab){
   var asn=assignments.filter(function(x){return x.studentId===s.id}).sort(function(p,q){return (q.assignedOn||"")<(p.assignedOn||"")?-1:1});
   var rs=reports.filter(function(r){return r.studentId===s.id}).sort(function(p,q){return (q.date||"")===(p.date||"")?(q.id<p.id?-1:1):((q.date||"")<(p.date||"")?-1:1)});
   var ms=a.ms.slice().sort(function(p,q){return p.date<q.date?1:-1});
-  var cnt={"tien-do":"","trinh-chieu":"","phan-tich":"","bai-tap":SM?a.openAss.length||"":asn.length,"lich-hop":ms.length,"bao-cao":rs.length,"nhat-ky":""};
+  var cnt={"tien-do":"","trinh-chieu":"","phan-tich":"","bai-tap":asn.length,"lich-hop":ms.length,"bao-cao":rs.length,"nhat-ky":""};
   var sub=(SM?[MK[a.mk]]:[s.pkg,s.platform,MK[a.mk]]).filter(Boolean).map(function(x){return '<span>'+esc(x)+'</span>'}).join("");
   var contact=SM?[]:[s.phone,s.email].filter(Boolean);
   var nm=a.nextM;
-  var out=back+'<div class="sp-h"><div><h2>'+esc(s.name)+'</h2><p class="sp-sub">'+sub+(contact.length?'<br>'+esc(contact.join(" · ")):'')+(s.start?'<br>Bắt đầu '+fmt(s.start):'')+'</p></div></div>';
-  if(!SM||tab==='tien-do') (function(){
+  var out=back+'<div class="sp-h"><div><h2>'+esc(s.name)+'</h2><p class="sp-sub">'+sub+(contact.length?'<br>'+esc(contact.join(" · ")):'')+(s.start&&!SM?'<br>Bắt đầu '+fmt(s.start):'')+'</p></div></div>';
+  if(SM&&nm) out+='<p class="nextm">Họp tiếp: <b>'+DOW[parse(nm.date).getDay()]+' '+fmt(nm.date)+(nm.time?', '+esc(nm.time):'')+'</b>'+(/^https:\/\//.test(nm.link||"")?' · <a href="'+esc(nm.link)+'" target="_blank" rel="noopener">Link họp</a>':'')+'</p>';
+  if(!SM) (function(){
     var t=today(), w0=mondayOf(t), w1=addDays(w0,6), items=[], dstr=function(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())};
     a.openAss.forEach(function(x){
       items.push('<li><b>'+esc(x.title)+'</b>'+(x.due?'<span class="due'+(x.late?' late':'')+'">'+(x.late?'Quá hạn, ':'Hạn ')+fmt(x.due)+(x.dueTime?' '+esc(x.dueTime):'')+'</span>':'<span class="due">Chưa có hạn</span>')+'</li>');
@@ -1406,11 +1418,14 @@ function viewStudent(id,tab){
           +trainBlock(a.mk,m.n,false)+'</div></details>';
       };
       var curM=mdl.filter(function(m){return m.st==="cur"}), othM=mdl.filter(function(m){return m.st!=="cur"});
+      var ap=assignParts(asn,ms);
+      if(ap.hasLive) out+='<section class="sec"><h2>Bài đang giao</h2>'+ap.live+'</section>';
       out+='<section class="sec"><h2>Các bước của bạn <span class="hlt">'+a.done+'/'+a.ns+' bước đã xong</span></h2>'
         +'<div class="sp10" style="grid-template-columns:repeat('+mdl.length+',minmax(0,1fr))">'+mdl.map(function(m){return '<div class="nd '+m.st+'" data-step="'+m.n+'" role="button" tabindex="0"><i>'+m.n+'</i><span>'+esc(m.pb.name)+'</span></div>'}).join("")+'</div>'
         +curM.map(card).join("")
         +'<details class="more"><summary>Xem các bước còn lại</summary>'+othM.map(card).join("")+'</details>'
         +'<details class="more"><summary>Giấy tờ lập cửa hàng ('+stk0.filter(function(i){return i<stl0.length}).length+'/'+stl0.length+')</summary><ul class="ck stc">'+stl0.map(function(t,i){return '<li class="'+(stk0.indexOf(i)>=0?'y':'')+'">'+esc(t)+'</li>'}).join("")+'</ul></details></section>';
+      if(ap.more) out+='<section class="sec">'+ap.more+'</section>';
       return out;
     }
     var al2=al.filter(function(x){return x.sev>=2&&!/^(Chưa có lịch họp|Chưa có bài nào|Chưa họp lần nào)/.test(x.t)});
