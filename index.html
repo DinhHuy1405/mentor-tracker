@@ -413,6 +413,16 @@ details.more>summary{font-weight:600}
 .vz .rcr.hi .rl{background:#fff3a3;justify-self:start;padding:0 5px;border-radius:3px}
 .vz .rcr.hi .rt2 i{background:#f2b705}.vz .rcr.bad .rt2 i{background:var(--f-bad)}
 .dl span{white-space:normal;overflow:visible}.dl li{align-items:start}
+.tb{margin-top:12px;border-top:1px dashed var(--line2);padding-top:10px;font-size:14.5px}
+.tb p{margin:4px 0}.hli{margin:4px 0 0;padding-left:20px;display:grid;gap:3px}
+.hli li{background:#fff8c9;border-radius:4px;padding:1px 6px;list-style-position:inside}
+.dk-map{list-style:none;margin:0;padding:0;display:grid;gap:8px;text-align:left;max-width:620px;margin-inline:auto}
+.dk-map li{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:center;padding:7px 10px;border:1px solid var(--line);border-radius:var(--rs);font-size:15px;background:var(--surface)}
+.dk-map i{font-style:normal;font-weight:700;width:26px;height:26px;border-radius:99px;display:grid;place-items:center;background:var(--todo)}
+.dk-map li.done i{background:var(--done);color:#fff}.dk-map li.cur{background:#fff3a3;border-color:#f2b705}.dk-map li.cur i{background:var(--ink);color:#fff}
+.dk-map em{font-style:normal;font-size:12.5px;color:var(--soft)}
+.dk-slide.k-title:has(.dk-map){align-content:start;text-align:left}
+.dk-slide:has(.dk-map) .dk-tag{justify-content:center}
 .rp{border-top:1px solid var(--line);padding:14px 0}
 .rp:first-of-type{border-top:0;padding-top:0}
 .rp>summary{font-family:var(--serif);font-weight:700;font-size:17px}
@@ -684,14 +694,14 @@ var PBU=[
 ];
 var PBM={VN:PBV,US:PBU};
 var SUBU={
-1:["Bắt keyword sản phẩm","Phân tích dữ liệu thị trường US bằng Kalodata"],
-2:["Tìm nhà cung cấp tại Việt Nam","Tìm sản phẩm tại Việt Nam","Chọn mẫu mã"],
+1:["Bắt keyword sản phẩm","Phân tích dữ liệu thị trường US bằng Kalodata","Phân tích bằng AI và FastMoss, kết luận từng sản phẩm"],
+2:["Tìm nhà cung cấp tại Việt Nam","Tìm sản phẩm tại Việt Nam","Chọn mẫu mã","Làm Google Sheet tính giá bán và lợi nhuận"],
 3:["Nhập hàng về","Đóng packing mẫu mã","Dán barcode"],
 4:["Đăng ký đơn vị LLC","Hoàn thiện giấy tờ"],
 5:["Đăng ký với đơn vị fulfillment","Hỏi rõ phí và khâu có thể cắt giảm"],
 6:["Liên kết với đơn vị logistics","Gửi hàng sang US"],
 7:["Đăng ký tài khoản","List sản phẩm lên trong lúc hàng đi qua US"],
-8:["Đẩy bán sản phẩm","Phản hồi khách trong 24 giờ","Có đơn thật đầu tiên"]
+8:["Đẩy bán sản phẩm","Phản hồi khách trong 24 giờ","Có đơn thật đầu tiên","Lên kế hoạch một chiến dịch marketing"]
 };
 var SUB={
 1:["Học cách bắt keyword ngách","Tổng hợp thông tin mentor cung cấp thành ngách","Đăng ký tài khoản TikTok Shop (kiểm giấy tờ ở mục Setup store)"],
@@ -699,7 +709,7 @@ var SUB={
 3:["Chọn sản phẩm","Đặt hàng","Gộp kiện hàng trên 1688"],
 4:["Nhập dữ liệu và thuế thị trường vào sheet tính giá bán","Làm hình ảnh","Setup listing lên store"],
 5:["Hàng về","Kiểm hàng","Packing"],
-6:["Đẩy bán sản phẩm","Phản hồi khách trong 24 giờ","Có đơn thật đầu tiên"]
+6:["Đẩy bán sản phẩm","Phản hồi khách trong 24 giờ","Có đơn thật đầu tiên","Lên kế hoạch một chiến dịch marketing"]
 };
 var STORE={
 VN:["Đăng ký tài khoản TikTok Shop, chính chủ, thông tin chính xác","CCCD và giấy tờ chính chủ, khớp thông tin đăng ký (địa chỉ nhập không dấu nếu báo lỗi)","Mã số thuế, hình thức đăng ký (cá nhân hoặc hộ kinh doanh)","Tài khoản ngân hàng chính chủ nhận tiền","Shop được xác minh và duyệt","Kết nối vận chuyển và thông tin thuế trên store"],
@@ -984,7 +994,7 @@ function stepCard(m,a){
   return '<details class="sc '+m.st+(m.st==="cur"?" r"+a.risk:"")+'" id="stp-'+m.n+'"'+(m.st==="cur"?" open":"")+'><summary><span class="n">'+m.n+'</span><span class="nm2"><b>'+esc(m.pb.name)+'</b></span><span class="chip">'+esc(chip)+'</span>'+bar+'</summary>'
     +'<div class="bd"><p class="dn">Việc cần làm: '+inl(m.pb.task[a.mk])+'</p>'+(m.st==="cur"?'<p class="dn">Xong bước này khi: '+esc(m.pb.done)+'</p>':'')
     +(ck?'<p class="ckn">Đầu việc: '+m.nd+'/'+m.sub.length+'</p><ul class="ck">'+ck+'</ul>':'')
-    +(m.st!=="done"&&m.pb.risk?'<p class="ckn" style="margin-top:10px">Rủi ro hay gặp: '+esc(m.pb.risk)+'</p>':'')
+    +(m.st!=="done"&&m.pb.risk?'<p class="ckn" style="margin-top:10px">Rủi ro hay gặp: '+esc(m.pb.risk)+'</p>':'')+trainBlock(a.mk,m.n,true)
     +(m.st!=="done"&&!window.STUDENT_MODE?'<div class="cpy"><button class="btn sm" data-copystep="'+esc(a.s.id)+':'+m.n+'">Sao chép tin nhắn giao bước này</button></div>':'')+'</div></details>';
 }
 function secActivity(a){
@@ -1032,20 +1042,64 @@ function mtgItem(m,open){
     +(all.length?'<div class="ln"><span>Link</span>'+all.map(function(l){return '<a href="'+esc(l.url)+'" target="_blank" rel="noopener">'+esc(l.title||"Mở link")+'</a>'}).join(" · ")+'</div>':'')
     +(has?'':'<p class="none">Chưa có ghi chú cho buổi họp này.</p>')+'</div></details>';
 }
-/* ---------- Trình chiếu: kiến thức theo tuần (chung + riêng) ---------- */
-/* Kiến thức chung: market "US", "VN" hoặc "ALL"; date là ngày mentor dạy, slide hiện ở tuần đó (hoặc tuần bắt đầu của học viên nếu vào sau). */
+/* ---------- Trình chiếu: kiến thức theo bước (chung) + theo tuần (riêng) ---------- */
+/* at: {US:số bước, VN:số bước}, 0 là phần Tổng quan. market: US, VN hoặc ALL. from: chỉ hiện với học viên bắt đầu từ ngày này. */
 var KNOW=[
-{market:"US",date:"2026-10-18",title:"Mục tiêu và cách làm việc",pts:["Mục tiêu: trở thành **một seller thực thụ**","Mentor đồng hành đến khi **sản phẩm lên sàn** thì dừng họp","Trong quá trình có vấn đề cứ **chat trực tiếp** với mentor","Thường mất **2 đến 3 tháng** để tự vận hành được","US khó hơn: **giai đoạn đầu và setup nền tảng** là khó nhất, sau đó bạn tự vận hành"]},
-{market:"US",date:"2026-10-18",title:"Bán ở đâu: sàn TMĐT trước",pts:["Mentor hỗ trợ lên **sàn thương mại điện tử** trước","**Shopify** là phụ trợ, dùng về sau khi làm branding và chạy ads mạnh"]},
-{market:"US",date:"2026-10-18",title:"Trước khi bán cần chuẩn bị",pts:["**Giấy tờ** (LLC và các giấy tờ liên quan)","**Logistics**: đưa hàng từ Việt Nam sang US","**Đăng ký đơn vị fulfillment** và hiểu cách vận hành","Sau đó **lên sàn và nối vào fulfillment**","Giai đoạn đầu ưu tiên **sản phẩm giá rẻ** để đi được nhiều"]},
-{market:"US",date:"2026-10-18",from:"2026-10-18",title:"Bài đầu tiên: xác định 1 ngách",pts:["Ghép thông tin của 1 sản phẩm thành **1 ngách muốn bán**","Ví dụ: sản phẩm sức khỏe cho người đứng tuổi làm văn phòng 40 đến 65 tuổi, am hiểu công nghệ và linh động","Tìm keywords theo ngách trên **Instagram Reels**","Tìm sản phẩm tương tự trên **Shopee, TikTok** theo file sheet mentor gửi","Copy sheet ra file mới, chia sẻ và **gửi trước buổi họp**"]},
-{market:"US",date:"2026-10-17",title:"Cách tìm ngách US",pts:["Ngách = **đối tượng cụ thể tại US** + đặc tính của họ + nhóm sản phẩm","Viết lại thành **MỘT cụm từ ngách**","Ví dụ mentor đưa: cộng đồng người Việt tại US, 28 đến 35 tuổi, cà phê mật ong Việt (chỉ là ví dụ)","**5 câu hỏi lọc**: đối tượng, branding và rebranding, logistics (giá, kích thước, giấy tờ), thế mạnh của mình, dữ liệu kiểm chứng"]},
-{market:"US",date:"2026-10-17",title:"Ngách rủi ro và ngách có thể win",pts:["**Ngách rủi ro**: tác động trực tiếp tới con người, sức khỏe","**Ngách có thể win**: tự nhiên, dùng hằng ngày, dễ bảo quản, nhẹ","Tiêu chí hàng: giá rẻ ở Việt Nam, bán giá cao ở US; hàng dư thừa, sản xuất nhiều tại VN, US có nhu cầu","Sản phẩm tự nhiên không cần lo nhiều chuyện theo trend hay theo mùa"]},
-{market:"US",date:"2026-10-17",title:"Từ ngách đến 5 sản phẩm win và 5 sản phẩm vệ tinh",pts:["Tìm website và sản phẩm organic (nĩa lõi ngô, ly tre, kê đũa tre, khăn vải sợi tre)","Vào Facebook tìm sản phẩm xuất đi US, thủ công, organic","Thu thập dữ liệu, dùng AI (ChatGPT) để chọn **5 sản phẩm win và 5 sản phẩm vệ tinh**","Tìm nhà sản xuất có sẵn và đưa vào listing"]},
-{market:"US",date:"2026-10-17",title:"Dữ liệu và AI như một trợ lý",pts:["Nghĩ tới câu chuyện dữ liệu ngay từ đầu: lưu bảng sản phẩm, giá, nhà cung cấp, nguồn","Dùng AI cho việc lặp lại: keyword, phân loại, tóm tắt, tính giá","**Mọi quyết định phải dựa trên dữ liệu thật** (FastMoss, Kalodata), quyết định cuối là của học viên"]},
-{market:"VN",date:"2026-10-17",title:"Từ ngách đến nhà cung cấp 1688",pts:["Chọn **5 sản phẩm ngách và 5 sản phẩm vệ tinh**","Nhờ ChatGPT tạo keyword tiếng Trung, tìm sản phẩm trên 1688","Nhập và tính giá bán; lập **danh sách nhà máy, người bán trên 1688**","Mọi quyết định dựa trên dữ liệu thị trường thật"]}
+{market:"ALL",at:{US:0,VN:0},title:"Mỗi bước có 4 phần",pts:["**Bạn sẽ làm gì** ở bước này","**Kiến thức** bổ trợ: các slide của bước","**Buổi train 30 phút** riêng cho bước","**Đầu ra đạt khi**: 3 dòng để biết mình đã xong chưa"]},
+{market:"ALL",at:{US:0,VN:0},title:"Một buổi train 30 phút",pts:["5 phút: **đối chiếu bài** tuần trước","7 phút: **kiến thức** của bước","12 phút: **làm trực tiếp** trên dữ liệu của bạn","4 phút: **chốt kết luận** bằng một câu","2 phút: **giao bài** và đặt hạn","Chưa đạt thì buổi sau **sửa bài trước**, chưa học tiếp"]},
+{market:"US",at:{US:0},title:"Mục tiêu và cách làm việc",pts:["Mục tiêu: trở thành **một seller thực thụ**","Mentor đồng hành đến khi **sản phẩm lên sàn** thì dừng họp","Trong quá trình có vấn đề cứ **chat trực tiếp** với mentor","Thường mất **2 đến 3 tháng** để tự vận hành được","US khó hơn: **giai đoạn đầu và setup nền tảng** là khó nhất, sau đó bạn tự vận hành"]},
+{market:"US",at:{US:0},title:"Bán ở đâu: sàn TMĐT trước",pts:["Mentor hỗ trợ lên **sàn thương mại điện tử** trước","**Shopify** là phụ trợ, dùng về sau khi làm branding và chạy ads mạnh"]},
+{market:"US",at:{US:0},title:"Trước khi bán cần chuẩn bị",pts:["**Giấy tờ** (LLC và các giấy tờ liên quan)","**Logistics**: đưa hàng từ Việt Nam sang US","**Đăng ký đơn vị fulfillment** và hiểu cách vận hành","Sau đó **lên sàn và nối vào fulfillment**","Giai đoạn đầu ưu tiên **sản phẩm giá rẻ** để đi được nhiều"]},
+{market:"ALL",at:{US:1,VN:1},title:"Cách tìm ngách",pts:["Ngách = **đối tượng cụ thể** + đặc tính của họ + nhóm sản phẩm","Viết lại thành **MỘT cụm từ ngách**","**5 câu hỏi lọc**: đối tượng, branding và rebranding, logistics (giá, kích thước, giấy tờ), thế mạnh của mình, dữ liệu kiểm chứng","Dùng **Instagram Reels** tìm sản phẩm hay theo ngành, lấy ảnh sang **TikTok Shop, Shopee** tìm sản phẩm tương tự"]},
+{market:"US",at:{US:1},title:"Ngách rủi ro và ngách có thể win",pts:["**Ngách rủi ro**: tác động trực tiếp tới con người, sức khỏe","**Ngách có thể win**: tự nhiên, dùng hằng ngày, dễ bảo quản, nhẹ","Tiêu chí hàng: giá rẻ ở Việt Nam, bán giá cao ở US; hàng dư thừa, sản xuất nhiều tại VN, US có nhu cầu","Sản phẩm tự nhiên không cần lo nhiều chuyện theo trend hay theo mùa"]},
+{market:"US",at:{US:1},title:"Từ ngách đến 5 sản phẩm win và 5 sản phẩm vệ tinh",pts:["Tìm website và sản phẩm organic (nĩa lõi ngô, ly tre, kê đũa tre, khăn vải sợi tre)","Vào Facebook tìm sản phẩm xuất đi US, thủ công, organic","Thu thập dữ liệu, dùng AI (ChatGPT) để chọn **5 sản phẩm win và 5 sản phẩm vệ tinh**","Tìm nhà sản xuất có sẵn và đưa vào listing"]},
+{market:"US",at:{US:1},from:"2026-10-18",title:"Bài đầu tiên: xác định 1 ngách",pts:["Ghép thông tin của 1 sản phẩm thành **1 ngách muốn bán**","Ví dụ: sản phẩm sức khỏe cho người đứng tuổi làm văn phòng 40 đến 65 tuổi, am hiểu công nghệ và linh động","Tìm keywords theo ngách trên **Instagram Reels**","Tìm sản phẩm tương tự trên **Shopee, TikTok** theo file sheet mentor gửi","Copy sheet ra file mới, chia sẻ và **gửi trước buổi họp**"]},
+{market:"VN",at:{VN:1},title:"Sản phẩm win và sản phẩm vệ tinh",pts:["**Sản phẩm win**: sản phẩm bán chính của ngách","**Sản phẩm vệ tinh**: sản phẩm bán kèm cùng nhóm khách","Chọn **5 sản phẩm win và 5 sản phẩm vệ tinh** cho ngách của bạn","Mỗi sản phẩm có link, giá và nơi bạn thấy nó"]},
+{market:"VN",at:{VN:1},title:"Đăng ký TikTok Shop",pts:["Đăng ký **chính chủ**, thông tin chính xác","Giấy tờ kiểm ở mục **Giấy tờ lập cửa hàng** trong tab Quá trình"]},
+{market:"ALL",at:{US:1,VN:2},title:"Dùng AI phân tích: khung prompt 6 khối",pts:["**Vai trò**: AI đóng vai chuyên gia nào","**Bối cảnh**: ngách, thị trường, thế mạnh của bạn","**Dữ liệu**: dán số liệu thật bạn đã xuất","**Nhiệm vụ** và **định dạng đầu ra** (một bảng)","**Ràng buộc**: chỉ dùng số đã dán, thiếu thì ghi chưa có dữ liệu, cuối bài ghi giới hạn dữ liệu"]},
+{market:"ALL",at:{US:1,VN:2},title:"FastMoss và Kalodata: 8 chỉ số cần đọc",pts:["**GMV 28 ngày** và **số cái bán**: quy mô cầu","**Giá bán**: vùng giá khách chấp nhận","**Số creator mới**: tín hiệu dẫn dắt, tăng thì cầu còn tăng","**Tỷ lệ doanh thu từ quảng cáo** và **từ affiliate**: cần ngân sách hay cần mạng creator","**Đánh giá sao**: đánh giá thấp là chỗ để vượt bằng chất lượng","**Ngày lên sàn** và số shop cạnh tranh: thị trường mới hay đã đông"]},
+{market:"ALL",at:{US:1,VN:2},title:"Đọc dữ liệu để thấy vấn đề",pts:["Phần lớn doanh thu từ quảng cáo: **phải có ngân sách quảng cáo**","Số creator đứng yên: **cầu có thể đã đạt đỉnh**","Tìm theo từ khóa có thể **sót listing**: đối chiếu bằng lọc giá và xem từng shop","Mỗi sản phẩm kết thúc bằng **một câu kết luận**: Làm, Cân nhắc hoặc Bỏ"]},
+{market:"VN",at:{VN:2},title:"Nghiên cứu nguồn hàng trên 1688",pts:["Nhờ ChatGPT tạo **keyword tiếng Trung** từ ngách và sản phẩm","Tìm sản phẩm trên **1688 và Taobao**","Lập **danh sách nhà máy, người bán** của từng sản phẩm","Hỏi **số lượng lớn**, nhập thông tin vào bảng dữ liệu sản phẩm"]},
+{market:"VN",at:{VN:2},title:"Google Sheet: từ giá bán suy ra giá nhập tối đa",pts:["Bắt đầu từ **giá bán thị trường**","Trừ **phí sàn, hoa hồng và biên lợi nhuận** mong muốn","Trừ **ship**, chia tỷ giá ra **giá nhập tối đa (tệ)**","So với giá nhà cung cấp 1688: **thấp hơn giá tối đa mới làm**"]},
+{market:"VN",at:{VN:3},title:"Chọn sản phẩm và đặt hàng",pts:["Chỉ chọn sản phẩm có **giá nhà cung cấp thấp hơn giá nhập tối đa**","Ưu tiên sản phẩm **ít phụ thuộc quảng cáo**","Đặt hàng trên 1688 và **gộp kiện** để giảm chi phí ship"]},
+{market:"VN",at:{VN:4},title:"Setup listing lên store",pts:["**Giá bán** lấy từ sheet, đã tính thuế và phí thị trường","Làm **hình ảnh** rõ ràng cho từng sản phẩm","Đăng listing lên store"]},
+{market:"US",at:{US:2},title:"Tìm nhà sản xuất tại Việt Nam",pts:["Tìm **nhà sản xuất có sẵn** (Facebook, hàng thủ công, organic) và đưa vào listing","Hỏi mỗi nhà cung cấp: **giá theo số lượng, MOQ, thời gian, hàng mẫu**","Hỏi thêm **quy cách packing và cân nặng mỗi cái**","Mỗi sản phẩm có ít nhất **3 nhà cung cấp** để so sánh"]},
+{market:"US",at:{US:2},title:"Google Sheet: chi phí đưa hàng sang US",pts:["**Giá nhập** từ nhà sản xuất Việt Nam","**Shipping 25 USD/kg**, logistics Việt Nam theo packing","**Logistics US 4,5 USD**, **fulfillment 1,5 đến 2 USD mỗi đơn**, phí packing","Cộng phí sàn, hoa hồng, hoàn trả, quảng cáo ra **lãi mỗi cái và biên %**","Các số trên là mức mentor đang dùng, có thể điều chỉnh theo từng sản phẩm"]},
+{market:"US",at:{US:5},title:"Đăng ký đơn vị fulfillment",pts:["Đăng ký với **đơn vị fulfillment** để nhận hàng gửi sang","Hỏi rõ **các khoản phí** và khâu có thể cắt giảm","Cập nhật phí vào **Google Sheet** tính giá"]}
 ];
-var DK={sid:"",slides:[],weeks:[],i:0};
+var TRAIN={
+VN:{
+1:{title:"Bắt key ngách và chọn sản phẩm",prep:"Viết ngách nháp, lưu 10 sản phẩm hay từ Instagram Reels",out:["Một cụm ngách duy nhất","5 sản phẩm win và 5 sản phẩm vệ tinh, mỗi sản phẩm có link và giá","Tài khoản TikTok Shop đã đăng ký chính chủ"]},
+2:{title:"AI, FastMoss, Kalodata và Google Sheet tính giá",prep:"Xuất dữ liệu FastMoss, Kalodata cho 10 sản phẩm",out:["Phiếu dữ liệu 8 chỉ số cho 10 sản phẩm","Mỗi sản phẩm có giá nhập tối đa và nhà cung cấp 1688 ứng viên","Mỗi sản phẩm có kết luận Làm, Cân nhắc hoặc Bỏ"]},
+3:{title:"Chọn sản phẩm và nhập hàng 1688",prep:"Danh sách sản phẩm đã chọn kèm báo giá nhà cung cấp",out:["Sản phẩm chọn có lãi theo Google Sheet","Đã đặt hàng và gộp kiện trên 1688","Có lịch hoặc mã vận đơn hàng về"]},
+4:{title:"Setup listing",prep:"Giá bán tính từ sheet và bộ ảnh nháp",out:["Giá bán tính từ sheet, đã tính thuế và phí thị trường","Bộ hình ảnh đạt","Listing đã lên store"]},
+5:{title:"Hàng về và ship hàng",prep:"Mã vận đơn và danh sách hàng dự kiến",out:["Hàng đã về và kiểm đủ","Packing đúng quy cách","Sẵn sàng giao đơn"]},
+6:{title:"Bán hàng và chiến dịch marketing",prep:"Số liệu traffic, giá và ảnh hiện tại",out:["Có kế hoạch cho một chiến dịch marketing","Phản hồi khách trong 24 giờ","Có đơn thật đầu tiên"]}
+},
+US:{
+1:{title:"Bắt key ngách, AI, FastMoss và Kalodata",prep:"Viết ngách nháp, lưu sản phẩm từ Reels, xuất dữ liệu FastMoss và Kalodata",out:["Một cụm ngách duy nhất","5 sản phẩm win và 5 sản phẩm vệ tinh có phiếu dữ liệu 8 chỉ số","Mỗi sản phẩm có kết luận Làm, Cân nhắc hoặc Bỏ"]},
+2:{title:"Nhà sản xuất Việt Nam và Google Sheet tính giá",prep:"Danh sách nhà sản xuất đã liên hệ kèm báo giá",out:["Mỗi sản phẩm win có ít nhất 3 nhà cung cấp, có giá, MOQ, thời gian, hàng mẫu","Sheet có đủ chi phí: nhập, ship, fulfillment, logistics, packing, phí sàn","Lãi mỗi cái và biên % cho từng sản phẩm"]},
+3:{title:"Nhập hàng, packing và barcode",prep:"Báo giá cuối và yêu cầu packing của fulfillment",out:["Hàng đã nhập đủ số lượng","Packing đúng yêu cầu","Barcode dán đúng"]},
+4:{title:"LLC và giấy tờ",prep:"Giấy tờ cá nhân và thông tin doanh nghiệp",out:["LLC đã đăng ký","Giấy tờ khớp thông tin đăng ký","EIN và tài khoản nhận tiền sẵn sàng"]},
+5:{title:"Fulfillment và mô hình dropshipping",prep:"Báo giá fulfillment và bảng giá hiện tại",out:["Đã đăng ký đơn vị fulfillment","Biết rõ từng khoản phí","Đã chọn mô hình (nhập hàng hay dropshipping) và ghi vào sheet giá"]},
+6:{title:"Logistics sang US",prep:"Danh sách hàng và báo giá vận chuyển",out:["Đã liên kết đơn vị logistics","Biết báo giá và thời gian vận chuyển","Đã gửi hàng sang US"]},
+7:{title:"Nền tảng và list sản phẩm",prep:"Hồ sơ tài khoản bán hàng, bộ ảnh và giá",out:["Tài khoản bán hàng được duyệt","Listing đủ thông tin và hình ảnh","Giá khớp Google Sheet"]},
+8:{title:"Bán hàng và chiến dịch marketing",prep:"Số liệu traffic, giá và ảnh hiện tại",out:["Có kế hoạch cho một chiến dịch marketing","Phản hồi khách trong 24 giờ","Có đơn thật đầu tiên"]}
+}};
+function knowFor(mk,n,start){
+  return KNOW.filter(function(x){return (x.market==="ALL"||x.market===mk)&&x.at&&x.at[mk]===n&&(!x.from||(start&&start>=x.from))});
+}
+function knowSlide(x){return {kind:"gen",tag:"Kiến thức chung",title:x.title,html:"<ul>"+x.pts.map(function(p){return "<li>"+inl(p)+"</li>"}).join("")+"</ul>"}}
+function trainBlock(mk,n,full){
+  var t=(TRAIN[mk]||{})[n]; if(!t) return "";
+  var has=knowFor(mk,n,"9999").length, SM=!!window.STUDENT_MODE;
+  var o='<div class="tb"><p><b>Buổi train 30 phút:</b> '+esc(t.title)+'</p><p><b>Chuẩn bị trước:</b> '+esc(t.prep)+'</p>';
+  if(has&&SM) o+='<p><button type="button" class="btn sm" data-dkstep="'+n+'">Xem kiến thức của bước này</button></p>';
+  else if(has) o+='<p><b>Kiến thức:</b> '+has+' slide</p>';
+  o+='<p><b>Đầu ra đạt khi:</b></p><ul class="hli">'+t.out.map(function(x){return '<li>'+esc(x)+'</li>'}).join("")+'</ul>';
+  if(full) o+='<p class="ckn">Khung buổi: đối chiếu bài 5 phút, kiến thức 7 phút, làm trực tiếp 12 phút, chốt kết luận 4 phút, giao bài 2 phút.</p>';
+  return o+'</div>';
+}
 function deckLines(t){
   var o="",open=false;
   String(t||"").split("\n").forEach(function(l){
@@ -1059,11 +1113,24 @@ function deckLines(t){
 function buildDeck(s,mk,asn,ms,rs){
   var now=new Date(), isoD=function(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())};
   var mon=function(ds){var d=parse(ds)||parse(s.start)||now,k=(d.getDay()+6)%7;return isoD(addDays(d,-k))};
-  var wk={}, wget=function(ds){var k=mon(ds);return wk[k]=wk[k]||{k:k,s:[]}};
-  var start=s.start||"";
-  KNOW.filter(function(x){return (x.market==="ALL"||x.market===mk)&&(!x.from||(start&&start>=x.from))}).forEach(function(x){
-    wget(start&&start>x.date?start:x.date).s.push({kind:"gen",tag:"Kiến thức chung",title:x.title,html:"<ul>"+x.pts.map(function(p){return "<li>"+inl(p)+"</li>"}).join("")+"</ul>"});
+  var start=s.start||"", pb=PBM[mk]||[], steps=s.steps||{}, cur=0;
+  for(var q=1;q<=pb.length;q++){if(!steps[q]){cur=q;break}}
+  var slides=[], sections=[];
+  function open(label,step,isCur){sections.push({label:label,at:slides.length,step:step,cur:!!isCur})}
+  /* Tổng quan */
+  open("Tổng quan",0,false);
+  slides.push({kind:"title",tag:"Tổng quan",title:"Hành trình "+pb.length+" bước",html:'<ol class="dk-map">'+pb.map(function(b,k){var n=k+1,st=steps[n]?"done":(n===cur?"cur":"todo");return '<li class="'+st+'"><i>'+n+'</i><span>'+esc(b.name)+'</span><em>'+(st==="done"?"Đã xong":st==="cur"?"Đang làm":"Sắp tới")+'</em></li>'}).join("")+'</ol>'});
+  knowFor(mk,0,start).forEach(function(x){slides.push(knowSlide(x))});
+  /* Theo từng bước */
+  pb.forEach(function(b,k){
+    var n=k+1, ks=knowFor(mk,n,start); if(!ks.length) return;
+    var st=steps[n]?"Đã xong":(n===cur?"Đang làm":"Sắp tới");
+    open("Bước "+n+": "+b.name,n,n===cur);
+    slides.push({kind:"title",tag:"Bước "+n+" · "+st,title:"Bước "+n,html:"<p><b>"+esc(b.name)+"</b></p><p class=\"dk-n\">"+ks.length+" slide kiến thức</p>"+(TRAIN[mk]&&TRAIN[mk][n]?"<p class=\"dk-n\">Buổi train 30 phút: "+esc(TRAIN[mk][n].title)+"</p>":"")});
+    ks.forEach(function(x){slides.push(knowSlide(x))});
   });
+  /* Của riêng bạn, theo tuần */
+  var wk={}, wget=function(ds){var k=mon(ds);return wk[k]=wk[k]||{k:k,s:[]}};
   ms.filter(function(m){return m.status==="Đã họp"}).slice().sort(function(p,q){return p.date<q.date?-1:1}).forEach(function(m){
     var d=parse(m.date), nm=(d?DOW[d.getDay()]+" ":"")+fmt(m.date), W=wget(m.date);
     if(m.notes) W.s.push({kind:"mine",tag:"Buổi họp "+nm,title:"Nội dung mentor trao đổi",html:deckLines(m.notes)});
@@ -1072,33 +1139,41 @@ function buildDeck(s,mk,asn,ms,rs){
   });
   asn.filter(function(x){return x.status!=="Hủy"}).slice().sort(function(p,q){return (p.assignedOn||"")<(q.assignedOn||"")?-1:1}).forEach(function(x){
     wget(x.assignedOn||start).s.push({kind:"mine",tag:"Bài tập"+(x.due?", hạn "+fmt(x.due)+(x.dueTime?" "+x.dueTime:""):""),title:x.title,
-      html:((x.items||[]).length?"<ol>"+x.items.map(function(i){return "<li>"+esc(i)+"</li>"}).join("")+"</ol>":"")+(x.pubnote?"<p class=\"dk-n\">"+inl(x.pubnote)+"</p>":"")+"<p class=\"dk-n\">Trạng thái: "+esc(x.status||"Đang làm")+"</p>"});
+      html:((x.items||[]).length?"<ol>"+x.items.map(function(i){return "<li>"+esc(i)+"</li>"}).join("")+"</ol>":"")+(x.note?"<p class=\"dk-n\">"+inl(x.note)+"</p>":"")+"<p class=\"dk-n\">Trạng thái: "+esc(x.status||"Đang làm")+"</p>"});
   });
-  var keys=Object.keys(wk).sort(), slides=[], weeks=[], thisWk=mon(isoD(now));
+  var keys=Object.keys(wk).sort(), thisWk=mon(isoD(now));
   keys.forEach(function(k,i){
-    var W=wk[k], first=slides.length, gen=W.s.filter(function(z){return z.kind==="gen"}).length;
-    slides.push({kind:"title",tag:"Tuần "+(i+1)+(k===thisWk?" · tuần này":""),title:"Tuần "+(i+1),html:"<p>"+fmt(k)+" đến "+fmt(isoD(addDays(parse(k),6)))+"</p><p class=\"dk-n\">"+gen+" slide kiến thức chung · "+(W.s.length-gen)+" slide của riêng bạn</p>"});
+    var W=wk[k]; if(!W.s.length) return;
+    open("Của riêng bạn · tuần "+(i+1)+" ("+fmt(k)+")",-1,k===thisWk);
+    slides.push({kind:"title",tag:"Của riêng bạn"+(k===thisWk?" · tuần này":""),title:"Tuần "+(i+1),html:"<p>"+fmt(k)+" đến "+fmt(isoD(addDays(parse(k),6)))+"</p><p class=\"dk-n\">"+W.s.length+" slide</p>"});
     W.s.forEach(function(z){slides.push(z)});
-    weeks.push({k:k,label:"Tuần "+(i+1)+" ("+fmt(k)+")",at:first,cur:k===thisWk});
   });
-  return {slides:slides,weeks:weeks};
+  var curSec=0; sections.forEach(function(sc,j){if(sc.step===cur&&cur>0)curSec=j});
+  return {slides:slides,weeks:sections,curSec:curSec};
 }
 function dkShow(){
   var el=document.getElementById("dk-slide"); if(!el||!DK.slides.length) return;
   var z=DK.slides[DK.i];
   el.className="dk-slide k-"+z.kind+(z.hl?" hl":"");
-  el.innerHTML='<div class="dk-tag"><span class="dk-b '+(z.kind==="gen"?"g":z.kind==="title"?"t":"m")+'">'+(z.kind==="gen"?"Kiến thức chung":z.kind==="title"?"Tuần":"Của riêng bạn")+'</span>'+esc(z.tag)+'</div>'
+  el.innerHTML='<div class="dk-tag"><span class="dk-b '+(z.kind==="gen"?"g":z.kind==="title"?"t":"m")+'">'+(z.kind==="gen"?"Kiến thức chung":z.kind==="title"?"Phần":"Của riêng bạn")+'</span>'+esc(z.tag)+'</div>'
     +(z.title?'<h3>'+esc(z.title)+'</h3>':'')+'<div class="dk-b2">'+z.html+'</div>';
   var ct=document.getElementById("dk-ct"); if(ct) ct.textContent=(DK.i+1)+" / "+DK.slides.length;
   var wsel=document.getElementById("dk-wk"); if(wsel){var c=0;DK.weeks.forEach(function(w,j){if(w.at<=DK.i)c=j});wsel.value=String(c)}
   var pr=document.getElementById("dk-prev"), nx=document.getElementById("dk-next"); if(pr) pr.disabled=DK.i<=0; if(nx) nx.disabled=DK.i>=DK.slides.length-1;
 }
+var DK={sid:"",slides:[],weeks:[],i:0};
 function dkGo(n){ if(!DK.slides.length) return; DK.i=Math.max(0,Math.min(DK.slides.length-1,n)); dkShow() }
 document.addEventListener("click",function(e){
   var t=e.target.closest&&e.target.closest("[data-dk]"); if(!t) return;
   var a=t.getAttribute("data-dk");
   if(a==="prev") dkGo(DK.i-1); else if(a==="next") dkGo(DK.i+1);
   else if(a==="fs"){var st=document.getElementById("dk-stage"); if(st){ if(document.fullscreenElement) document.exitFullscreen(); else if(st.requestFullscreen) st.requestFullscreen() }}
+});
+document.addEventListener("click",function(e){
+  var t=e.target.closest&&e.target.closest("[data-dkstep]"); if(!t) return;
+  window.DK_GO=+t.getAttribute("data-dkstep");
+  var m=/^#\/([\w-]+)\/[\w-]+(\?xem)?$/.exec(location.hash||""), id=m?m[1]:window.STUDENT_MODE;
+  location.hash="#/"+id+"/trinh-chieu"+(m&&m[2]?m[2]:"");
 });
 document.addEventListener("change",function(e){ if(e.target&&e.target.id==="dk-wk"){var w=DK.weeks[+e.target.value]; if(w) dkGo(w.at)} });
 document.addEventListener("keydown",function(e){
@@ -1109,12 +1184,13 @@ document.addEventListener("keydown",function(e){
 function deckView(s,mk,asn,ms,rs){
   var d=buildDeck(s,mk,asn,ms,rs), same=DK.sid===s.id&&DK.slides.length===d.slides.length;
   DK.slides=d.slides; DK.weeks=d.weeks;
-  if(!same){DK.sid=s.id; var cw=0; d.weeks.forEach(function(w,j){if(w.cur||(!d.weeks.some(function(x){return x.cur})&&j===d.weeks.length-1))cw=j}); DK.i=d.weeks.length?d.weeks[cw].at:0}
+  if(!same){DK.sid=s.id; DK.i=d.weeks.length?d.weeks[d.curSec].at:0}
+  if(window.DK_GO!=null){var gs=d.weeks.filter(function(w){return w.step===window.DK_GO})[0]; if(gs) DK.i=gs.at; window.DK_GO=null}
   if(DK.i>=DK.slides.length) DK.i=0;
   setTimeout(dkShow,0);
   if(!d.slides.length) return '<section class="sec"><h2>Trình chiếu</h2><div class="empty">Chưa có nội dung để trình chiếu.</div></section>';
-  return '<section class="sec"><h2>Trình chiếu theo tuần</h2><p class="hint">Mỗi tuần là một bộ slide: kiến thức chung mentor dạy cho cả nhóm, và phần riêng của bạn (buổi họp, bài tập). Dùng phím mũi tên để chuyển slide.</p>'
-    +'<div class="dk" id="dk-stage"><div class="dk-top"><select id="dk-wk" aria-label="Chọn tuần">'+d.weeks.map(function(w,j){return '<option value="'+j+'">'+esc(w.label)+(w.cur?' · tuần này':'')+'</option>'}).join("")+'</select><span id="dk-ct" class="dk-ct"></span><button type="button" class="btn sm" data-dk="fs">Toàn màn hình</button></div>'
+  return '<section class="sec"><h2>Kiến thức</h2><p class="hint">Tổng quan, kiến thức của từng bước, và phần riêng của bạn theo tuần (buổi họp, bài tập). Dùng phím mũi tên để chuyển slide.</p>'
+    +'<div class="dk" id="dk-stage"><div class="dk-top"><select id="dk-wk" aria-label="Chọn phần">'+d.weeks.map(function(w,j){return '<option value="'+j+'">'+esc(w.label)+(w.cur&&w.step>=0?' · đang làm':(w.cur?' · tuần này':''))+'</option>'}).join("")+'</select><span id="dk-ct" class="dk-ct"></span><button type="button" class="btn sm" data-dk="fs">Toàn màn hình</button></div>'
     +'<div id="dk-slide" class="dk-slide" aria-live="polite"></div>'
     +'<div class="dk-nav"><button type="button" class="btn" id="dk-prev" data-dk="prev">← Trước</button><button type="button" class="btn" id="dk-next" data-dk="next">Sau →</button></div></div></section>';
 }
@@ -1214,7 +1290,7 @@ function viewStudent(id,tab){
         return '<details class="sc sm '+m.st+'" id="stp-'+m.n+'"'+(m.st==="cur"?' open':'')+'><summary><span class="n">'+m.n+'</span><span class="nm2"><b>'+esc(m.pb.name)+'</b></span><span class="chip">'+chip+'</span></summary>'
           +'<div class="bd"><p class="dn"><b>Việc cần làm:</b> '+inl(m.pb.task[a.mk])+'</p>'
           +(m.sub.length?'<ul class="ck">'+m.sub.map(function(t,i){return '<li class="'+((m.st==="done"||m.ck.indexOf(i)>=0)?'y':'')+'">'+esc(t)+'</li>'}).join("")+'</ul>':'')
-          +'<p class="dn" style="margin-top:10px"><b>Xong bước này khi:</b> '+esc(m.pb.done)+'</p></div></details>';
+          +trainBlock(a.mk,m.n,false)+'</div></details>';
       };
       var curM=mdl.filter(function(m){return m.st==="cur"}), othM=mdl.filter(function(m){return m.st!=="cur"});
       out+='<section class="sec"><h2>Các bước của bạn <span class="hlt">'+a.done+'/'+a.ns+' bước đã xong</span></h2>'

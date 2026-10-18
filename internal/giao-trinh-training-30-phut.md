@@ -1,97 +1,81 @@
-# Giáo trình training 30 phút: từ ngách đến phân tích lợi nhuận
+# Giáo trình training 30 phút, bám 6 bước VN và 8 bước US
 
-Bản nháp để mentor Huy duyệt. Căn cứ: dữ liệu 11 học viên, 28 buổi họp, 22 bài tập, 11 báo cáo FastMoss trong hệ thống tính đến 18/10/2026.
+Bản nháp để mentor Huy duyệt (cập nhật 18/10/2026). Căn cứ: dữ liệu 11 học viên, 28 buổi họp, 22 bài tập, 11 báo cáo, playbook 6 bước VN và 8 bước US trong `index.html`, và các chỉ đạo của mentor trong cuộc trao đổi ngày 18/10.
 
-## 1. Hiện trạng từ dữ liệu
+## 1. Nguyên tắc đã chốt với mentor
 
-| Phát hiện | Số liệu | Hệ quả |
-|---|---|---|
-| Hầu hết học viên đang kẹt ở bước chọn ngách và sản phẩm | Chỉ 2 trên 11 bạn đã hoàn thành bước 1 (Đạt, Phong); chưa ai hoàn thành bước 2 | Phải chuẩn hóa thật kỹ 3 buổi đầu |
-| Cùng một bài tập nhưng mỗi bạn một tên, một yêu cầu | Có ít nhất 7 tên khác nhau cho bài "xác định ngách" | Học viên không biết thế nào là đạt |
-| Chưa có định nghĩa "đầu ra đạt" cho từng buổi | Bài nộp là file sheet tự do, nhận xét viết tay | Mentor chấm mất thời gian, khó so sánh |
-| Mỗi buổi họp phân tích ad hoc | 11 báo cáo FastMoss, mỗi báo cáo khác cách trình bày | Không tái sử dụng, học viên không học được cách tự phân tích |
-| US và VN có đường đi khác nhau | VN: nguồn hàng 1688 (Trung Quốc). US: nhà sản xuất Việt Nam, LLC, fulfillment | Cần hai nhánh sau buổi 3 |
-| Công cụ dữ liệu có giới hạn | FastMoss tìm theo từ khóa dễ sót listing; không có dữ liệu Canada | Prompt phải ép AI nói rõ giới hạn dữ liệu |
-| Một số học viên chưa cập nhật tiến độ | Giang (hv07) và Khôi Nguyên (hv08) hiện 0 buổi "Đã họp" dù đã có lịch | Cần đối chiếu lại trạng thái buổi họp |
+1. Bám đúng lộ trình đang giao: **VN 6 bước, US 8 bước**. Không tạo lộ trình song song.
+2. **Luôn có bước tổng quan** (sơ đồ việc phải làm) trước mọi bước.
+3. **Bước nào cũng có kiến thức bổ trợ** và **một buổi train riêng 30 phút** dựa trên bước đó.
+4. Format chung cho toàn bộ học viên, nội dung linh động theo học viên (ví dụ dropshipping tùy học viên).
+5. Chiến dịch marketing gắn vào bước cuối "Bán hàng và đơn đầu tiên" của VN và US.
+6. US không nhập từ 1688 mà từ **nhà sản xuất Việt Nam**.
+7. Học viên nhìn thấy ít và gọn: Quá trình, Kiến thức, Bài tập, Phân tích.
 
-Kết luận: vấn đề không nằm ở nội dung mà ở **thiếu khung chung**. Một khung 30 phút cố định, một bộ đầu ra cố định và một thư viện prompt sẽ giúp mọi học viên học cùng một cách.
+## 2. Phân tích: nội dung mentor muốn dạy so với playbook hiện có
 
-## 2. Khung một buổi 30 phút (dùng cho mọi buổi)
-
-| Phút | Khối | Việc làm | Tài liệu |
+| Nội dung mentor muốn dạy | VN (6 bước) hiện có | US (8 bước) hiện có | Khoảng trống |
 |---|---|---|---|
-| 0 đến 5 | 1. Đối chiếu bài | Mentor chấm bài tuần trước theo bảng tiêu chí đạt (mục 4) | Phiếu chấm |
-| 5 đến 12 | 2. Kiến thức | 1 slide deck 5 đến 7 slide, một ý chính duy nhất | Slide trên tab Kiến thức |
-| 12 đến 24 | 3. Làm trực tiếp | Mentor làm mẫu 5 phút, học viên làm lại 7 phút trên dữ liệu của mình | Prompt mẫu, sheet mẫu |
-| 24 đến 28 | 4. Chốt đầu ra | Học viên nói lại kết luận bằng một câu | Câu kết luận |
-| 28 đến 30 | 5. Giao bài | Giao đúng bài của buổi sau, đặt hạn | Bài tập chuẩn |
+| Sơ đồ tổng quan | Chưa có | Chưa có | Đã thêm slide Tổng quan tự vẽ từ các bước |
+| Bắt key ngách theo thị trường, 5 win + 5 vệ tinh | Bước 1 | Bước 1 | Đủ chỗ, thiếu kiến thức chuẩn hóa (đã thêm slide) |
+| AI, FastMoss, Kalodata để xác định sản phẩm win | Bước 2 (có Kalodata, FastMoss, AI) | Bước 1 chỉ có Kalodata | US thiếu AI và FastMoss: đã thêm đầu việc vào bước 1 US |
+| Google Sheet tính giá cost, giá nhập, giá bán | Bước 2 (làm Excel) và bước 4 (nhập thuế vào sheet) | **Không có bước nào** | US thiếu: đã thêm đầu việc "Làm Google Sheet tính giá" vào bước 2 US |
+| Nhập hàng 1688 | Bước 3 | Không áp dụng (US nhập từ nhà sản xuất VN, bước 2 và 3) | Đúng thiết kế |
+| Listing | Bước 4 | Bước 7 | Đủ chỗ |
+| Chiến dịch marketing | Không có | Không có | Đã gắn vào bước cuối, thêm đầu việc "Lên kế hoạch một chiến dịch marketing" |
+| Ship hàng | Bước 5 (chờ hàng, packing) | Bước 6 (logistics) | Đủ chỗ |
+| Fulfillment, nền tảng, dropshipping | Không áp dụng | Bước 5 (fulfillment), 7 (nền tảng) | Chưa có nội dung dropshipping, cần mentor cung cấp |
 
-Quy tắc: một buổi chỉ dạy **một** kỹ năng. Nếu bài tuần trước chưa đạt thì dành khối 3 để sửa bài, không học thêm kiến thức mới.
+### Các điểm đáng chú ý từ phân tích
 
-## 3. Lộ trình giai đoạn 1: 7 buổi (khoảng 7 tuần)
+1. **Bước 2 VN quá nặng**: 7 đầu việc, chuẩn 10 ngày, gồm 4 mảng kiến thức (AI, FastMoss/Kalodata, 1688, sheet giá). Đề xuất tách thành **2 buổi train** (2a: AI + FastMoss + Kalodata; 2b: 1688 + sheet giá).
+2. **Bước 1 và 2 US cũng cần 2 buổi mỗi bước**: bước 1 (ngách, rồi AI + dữ liệu), bước 2 (nhà sản xuất, rồi sheet giá).
+3. **Tổng thời gian chuẩn US là 100 ngày** (cộng chuẩn 8 bước), dài hơn mốc 2 đến 3 tháng mentor nói với học viên. Các bước giấy tờ (LLC, fulfillment) nên chạy song song với bước 2 và 3 thay vì nối đuôi.
+4. **Phụ thuộc chéo ở US**: sheet giá ở bước 2 cần phí fulfillment, nhưng đăng ký fulfillment ở bước 5. Giải pháp: dùng số mentor đã cho (1,5 đến 2 USD mỗi đơn) ở bước 2, chốt số thật ở bước 5.
+5. **Một số hồ sơ lệch bước**: Minh Pham (hv09) đã đánh dấu bước 4 (LLC) xong khi bước 1 đến 3 chưa xong, nên tiến độ bị hiển thị lệch. Nên cho phép "bước chạy song song" hoặc sửa lại cách ghi.
+6. **Đa số đang ở bước 1** (9 trên 11 bạn): 2 buổi train đầu tiên (bước 1 và 2) sẽ dùng nhiều nhất, nên làm kỹ trước.
 
-| Buổi | Tên | Học viên làm ra (đầu ra) | Công cụ |
-|---|---|---|---|
-| 0 | Onboarding | Hiểu lộ trình, tài khoản trang theo dõi, nhận bài buổi 1 | Trang theo dõi |
-| 1 | Chốt 1 ngách | 1 cụm từ ngách theo công thức + 5 keywords | Instagram Reels, ChatGPT |
-| 2 | Chọn 5 sản phẩm win và 5 sản phẩm vệ tinh | Bảng 10 sản phẩm theo file sheet chuẩn | Shopee, TikTok, Reels |
-| 3 | Tìm nhà cung cấp | Mỗi sản phẩm có ít nhất 3 nhà cung cấp kèm giá, MOQ, thời gian, hàng mẫu | VN: 1688 (keyword tiếng Trung từ ChatGPT). US: nhà sản xuất Việt Nam (Facebook, nhà sản xuất có sẵn) |
-| 4 | Dùng AI phân tích: cách viết prompt | Bộ prompt riêng của học viên cho ngách của mình | ChatGPT hoặc Claude |
-| 5 | FastMoss và Kalodata | Phiếu dữ liệu thị trường cho 10 sản phẩm | FastMoss (US, VN), Kalodata (US) |
-| 6 | Bảng giá bán và lợi nhuận | Mỗi sản phẩm có giá bán đề xuất, lãi mỗi cái, biên lợi nhuận, kết luận làm hay bỏ | File Excel tính giá |
+## 3. Khung mỗi bước (4 phần) và khung buổi 30 phút
 
-Sau buổi 6 học viên chuyển sang **giai đoạn 2** (đặt hàng, giấy tờ, fulfillment, lên sàn, đơn đầu tiên). Giai đoạn 2 dùng 6 bước đã có trong playbook, sẽ chuẩn hóa tiếp ở bản sau.
+Mỗi bước trên trang học viên có đúng 4 phần: **Bạn sẽ làm gì**, **Kiến thức** (slide), **Buổi train 30 phút**, **Đầu ra đạt khi** (3 dòng).
 
-### Chi tiết từng buổi
+Khung buổi 30 phút: đối chiếu bài 5 phút, kiến thức 7 phút, làm trực tiếp 12 phút, chốt kết luận 4 phút, giao bài 2 phút. Mỗi buổi dạy một kỹ năng; chưa đạt thì buổi sau sửa bài trước.
 
-**Buổi 1. Chốt 1 ngách**
-- Học viên chuẩn bị: viết mô tả khách hàng mong muốn (ai, tuổi, sở thích) và sản phẩm nghĩ tới.
-- Kiến thức: công thức ngách: đối tượng cụ thể + đặc tính + nhóm sản phẩm; 5 câu hỏi lọc (đối tượng, branding và rebranding, logistics, thế mạnh, dữ liệu); ngách rủi ro và ngách có thể win.
-- Làm trực tiếp: chạy prompt P1 (mục 5) để ra 3 phương án ngách, học viên chọn 1.
-- Đầu ra đạt: một cụm từ ngách duy nhất; đủ 5 trường; không thuộc ngách rủi ro (tác động trực tiếp tới sức khỏe).
-- Bài buổi 2: tìm sản phẩm trên Reels và Shopee, TikTok theo file sheet chuẩn.
+## 4. Đặc tả từng bước
 
-**Buổi 2. 5 sản phẩm win và 5 sản phẩm vệ tinh**
-- Kiến thức: sản phẩm win là sản phẩm bán chính, vệ tinh là sản phẩm bán kèm cùng nhóm khách; bảng chấm điểm: nhẹ, mỏng, giá thành tốt, dễ bảo quản, không cần giấy tờ phức tạp.
-- Làm trực tiếp: chạy prompt P3 để chấm điểm 10 sản phẩm.
-- Đầu ra đạt: bảng 10 sản phẩm, mỗi dòng có link, giá, nguồn thấy sản phẩm, điểm; không có tên thương hiệu trong sản phẩm (chỉ ở tag).
-- Bài buổi 3: tìm nhà cung cấp cho 10 sản phẩm.
+Cột "Nội dung" cho biết nguồn: **Có** là đã có nội dung từ mentor hoặc playbook và đã đưa lên trang; **Cần mentor** là chưa có nội dung, trang chỉ hiện đầu ra và buổi train.
 
-**Buổi 3. Tìm nhà cung cấp**
-- VN: keyword tiếng Trung do ChatGPT tạo (prompt P2), tìm trên 1688, nhập vào sheet.
-- US: tìm nhà sản xuất Việt Nam có sẵn, hỏi MOQ, giá, thời gian sản xuất, hàng mẫu (prompt P6).
-- Đầu ra đạt: mỗi sản phẩm có ít nhất 3 nhà cung cấp, có số lượng lớn và hàng mẫu được hỏi.
-- Bài buổi 4: học viên viết lại prompt cho ngách của mình theo khung mục 5.
+### VN (6 bước)
 
-**Buổi 4. Dùng AI phân tích**
-- Kiến thức: khung 6 khối của prompt (mục 5); AI chỉ được dùng số do học viên dán vào, không tự bịa số.
-- Làm trực tiếp: học viên viết prompt, mentor sửa 2 lỗi phổ biến (thiếu bối cảnh, thiếu định dạng đầu ra).
-- Đầu ra đạt: prompt chạy ra bảng đúng định dạng, có dòng "giới hạn dữ liệu".
-- Bài buổi 5: xuất dữ liệu FastMoss và Kalodata cho 10 sản phẩm.
+| Bước | Buổi train | Chuẩn bị | Đầu ra đạt khi | Slide đã có | Nội dung |
+|---|---|---|---|---|---|
+| Tổng quan | Giới thiệu hành trình, khung 30 phút | Không | Hiểu 6 bước và cách làm việc | Sơ đồ, 4 phần mỗi bước, khung 30 phút | Có |
+| 1. Bắt keyword ngách và đăng ký TikTok Shop | Bắt key ngách và chọn sản phẩm | Ngách nháp, 10 sản phẩm từ Reels | 1 cụm ngách; 5 win + 5 vệ tinh có link, giá; TikTok Shop chính chủ | Cách tìm ngách; win và vệ tinh; đăng ký TikTok Shop | Có |
+| 2. Phân tích dữ liệu và nghiên cứu nguồn hàng | 2a: AI, FastMoss, Kalodata. 2b: 1688 và Google Sheet tính giá | Dữ liệu FastMoss, Kalodata của 10 sản phẩm | Phiếu 8 chỉ số; giá nhập tối đa và nhà cung cấp 1688; kết luận Làm, Cân nhắc, Bỏ | Khung prompt; 8 chỉ số; đọc dữ liệu; 1688; sheet giá nhập tối đa | Có (Kalodata chi tiết cần mentor) |
+| 3. Chọn sản phẩm và đặt hàng | Chọn sản phẩm, nhập hàng 1688 | Danh sách sản phẩm và báo giá | Có lãi theo sheet; đã đặt và gộp kiện; có lịch hàng về | Chọn sản phẩm và đặt hàng | Có (ngắn) |
+| 4. Setup listing lên store | Setup listing | Giá bán từ sheet, ảnh nháp | Giá tính từ sheet; ảnh đạt; listing lên store | Setup listing | Có (ngắn) |
+| 5. Chờ hàng về và packing | Hàng về và ship hàng | Mã vận đơn, danh sách hàng | Hàng về đủ; packing đúng; sẵn sàng giao | Chưa có | Cần mentor |
+| 6. Bán hàng và đơn đầu tiên | Bán hàng và chiến dịch marketing | Số liệu traffic, giá, ảnh | Kế hoạch 1 chiến dịch; phản hồi khách 24 giờ; đơn đầu tiên | Chưa có | Cần mentor |
 
-**Buổi 5. FastMoss và Kalodata**
-- Kiến thức: đọc 8 chỉ số trong phiếu dữ liệu (mục 6); số creator tăng là tín hiệu dẫn dắt doanh số; tìm theo từ khóa có thể sót nên phải đối chiếu bằng lọc giá và xem từng shop.
-- Làm trực tiếp: xuất 1 sản phẩm mẫu, dán vào prompt P4.
-- Đầu ra đạt: phiếu dữ liệu 10 sản phẩm, mỗi sản phẩm có một câu kết luận.
-- Bài buổi 6: điền giá nhập và chi phí vào file Excel tính giá.
+### US (8 bước)
 
-**Buổi 6. Bảng giá bán và lợi nhuận**
-- Kiến thức: bảng tính nối dữ liệu thị trường (giá bán thực tế) với chi phí (mục 7).
-- Làm trực tiếp: điền 1 sản phẩm, chạy prompt P5 để diễn giải kết quả.
-- Đầu ra đạt: mỗi sản phẩm có lãi trên mỗi cái, biên %, giá hòa vốn; kết luận Làm, Cân nhắc hoặc Bỏ.
+| Bước | Buổi train | Chuẩn bị | Đầu ra đạt khi | Slide đã có | Nội dung |
+|---|---|---|---|---|---|
+| Tổng quan | Giới thiệu hành trình | Không | Hiểu 8 bước, cách làm việc, chi phí và thời gian | Sơ đồ, mục tiêu, bán ở đâu, chuẩn bị trước khi bán, khung 30 phút | Có |
+| 1. Keyword và dữ liệu Kalodata US | 1a: bắt key ngách. 1b: AI, FastMoss, Kalodata | Ngách nháp, sản phẩm từ Reels, dữ liệu | 1 cụm ngách; 5+5 có phiếu 8 chỉ số; kết luận từng sản phẩm | Cách tìm ngách, ngách rủi ro và win, 5+5, bài đầu tiên, khung prompt, 8 chỉ số, đọc dữ liệu | Có |
+| 2. Nhà cung cấp và mẫu mã tại VN | 2a: nhà sản xuất VN. 2b: Google Sheet tính giá | Danh sách nhà sản xuất, báo giá | 3 nhà cung cấp mỗi sản phẩm; sheet đủ chi phí; lãi và biên % | Tìm nhà sản xuất VN; chi phí đưa hàng sang US | Có |
+| 3. Nhập hàng, packing, barcode | Nhập hàng, packing, barcode | Báo giá cuối, yêu cầu packing | Nhập đủ; packing đúng; barcode đúng | Chưa có | Cần mentor |
+| 4. Đăng ký LLC và giấy tờ | LLC và giấy tờ | Giấy tờ cá nhân | LLC xong; giấy tờ khớp; EIN, tài khoản nhận tiền | Chưa có | Cần mentor |
+| 5. Đăng ký fulfillment | Fulfillment và mô hình dropshipping | Báo giá fulfillment, sheet giá | Đã đăng ký; biết từng khoản phí; chọn mô hình nhập hàng hay dropshipping | Đăng ký fulfillment | Có (ngắn), dropshipping cần mentor |
+| 6. Liên kết logistics | Logistics sang US | Danh sách hàng, báo giá | Đã liên kết; biết báo giá, thời gian; đã gửi hàng | Chưa có | Cần mentor |
+| 7. Đăng ký tài khoản và list sản phẩm | Nền tảng và list | Hồ sơ tài khoản, ảnh, giá | Tài khoản được duyệt; listing đủ; giá khớp sheet | Chưa có | Cần mentor |
+| 8. Bán hàng và đơn đầu tiên | Bán hàng và chiến dịch marketing | Số liệu traffic, giá, ảnh | Kế hoạch 1 chiến dịch; phản hồi 24 giờ; đơn đầu tiên | Chưa có | Cần mentor |
 
-## 4. Tiêu chí đạt (dùng để chấm bài, mỗi buổi 3 dòng)
+## 5. Thay đổi đã làm trên trang theo dõi
 
-| Buổi | Đạt khi |
-|---|---|
-| 1 | Có đủ 5 trường; viết được thành một cụm; không thuộc ngách rủi ro |
-| 2 | Đủ 10 sản phẩm; có link và giá; mỗi sản phẩm có điểm theo 5 tiêu chí |
-| 3 | 3 nhà cung cấp mỗi sản phẩm; có giá, MOQ, thời gian; đã hỏi mẫu |
-| 4 | Prompt đủ 6 khối; đầu ra đúng bảng; có ghi giới hạn dữ liệu |
-| 5 | Đủ phiếu 8 chỉ số cho 10 sản phẩm; mỗi sản phẩm có một câu kết luận |
-| 6 | Đủ lãi, biên, hòa vốn cho 10 sản phẩm; giả định ghi rõ nguồn |
-
-Trạng thái bài chỉ dùng 4 giá trị cố định: Đang làm, Đã nộp, Cần sửa, Đạt.
+1. Tab **Kiến thức** của học viên đổi cách sắp xếp: **Tổng quan** (sơ đồ và khung 30 phút), rồi **kiến thức từng bước**, rồi **phần riêng theo tuần** (ghi chú buổi họp, bài tập). Mặc định mở đúng bước đang làm.
+2. Mỗi bước trong tab **Quá trình** có khối **Buổi train 30 phút** (tên buổi, chuẩn bị, đầu ra đạt khi, nút xem kiến thức). Mentor thấy thêm khung 5 khối thời gian.
+3. Thêm 3 đầu việc vào các bước: AI và FastMoss (bước 1 US), Google Sheet tính giá (bước 2 US), kế hoạch chiến dịch marketing (bước cuối VN và US). Đầu việc mới thêm ở cuối nên không làm lệch các ô đã tích của học viên cũ.
 
 ## 5. Thư viện prompt chuẩn
 
@@ -157,47 +141,33 @@ Ngưỡng để quyết định (gợi ý, anh chỉnh): quảng cáo trên 70% 
 
 Lưu ý bắt buộc trong mọi báo cáo: FastMoss tìm theo từ khóa không đầy đủ; không có dữ liệu Canada; số liệu chỉ để so sánh tương đối.
 
-## 7. Bảng giá bán và lợi nhuận (nối với dữ liệu thị trường)
+## 8. Phiếu dữ liệu thị trường và bảng giá
 
-Nối từ file Excel đã làm cho Phong (có sẵn công thức giá nhập tối đa). Các cột chuẩn:
+Dùng 8 chỉ số trong slide "FastMoss và Kalodata: 8 chỉ số cần đọc": GMV 28 ngày, số cái bán, giá bán, số creator mới, tỷ lệ doanh thu từ quảng cáo, từ affiliate, đánh giá sao, ngày lên sàn và số shop cạnh tranh.
 
-| Nhóm | Cột |
-|---|---|
-| Dữ liệu thị trường (từ phiếu buổi 5) | giá bán thị trường, số cái bán 28 ngày, % doanh thu từ quảng cáo |
-| Chi phí hàng | giá nhập, cân nặng mỗi cái |
-| Chi phí vận chuyển (mentor đưa cho Emily) | shipping 25 USD/kg, logistics Việt Nam theo packing, logistics US 4,5 USD, fulfillment 1,5 đến 2 USD mỗi đơn, packing |
-| Chi phí sàn | phí sàn, hoa hồng affiliate (FastMoss cho từng listing), hoàn trả (% giả định) |
-| Kết quả | giá vốn đưa tới khách, lãi mỗi cái, biên %, giá hòa vốn quảng cáo (ROAS hòa vốn), kết luận |
+Bảng giá nối với phiếu dữ liệu: giá bán thị trường, giá nhập, cân nặng, shipping 25 USD/kg, logistics Việt Nam theo packing, logistics US 4,5 USD, fulfillment 1,5 đến 2 USD mỗi đơn, packing, phí sàn, hoa hồng affiliate, hoàn trả, quảng cáo, ra lãi mỗi cái, biên %, giá hòa vốn. Bản VN dùng công thức đã có trong file Excel của Phong: giá nhập tối đa = giá bán × (1 − phí sàn − hoa hồng − biên) rồi trừ ship, chia tỷ giá.
 
-Công thức: `lãi = giá bán - (giá nhập + ship + fulfillment + logistics US + packing + phí sàn + hoa hồng + hoàn trả + quảng cáo)`. Mọi giả định ghi rõ nguồn và ngày.
+## 6. Việc cần mentor cung cấp
 
-## 8. Đồng bộ trên trang theo dõi
+| # | Nội dung | Dùng cho |
+|---|---|---|
+| 1 | Cách mentor dạy Kalodata (xuất dữ liệu nào, đọc chỉ số nào) | Bước 2 VN, bước 1 US |
+| 2 | Quy trình nhập hàng 1688 và gộp kiện, mốc cần lưu ý | Bước 3 VN |
+| 3 | Chuẩn ảnh và listing trên TikTok Shop VN | Bước 4 VN |
+| 4 | Kiểm hàng, packing, ship hàng VN | Bước 5 VN |
+| 5 | Quy cách packing, barcode theo fulfillment | Bước 3 US |
+| 6 | Các bước đăng ký LLC, EIN, tài khoản nhận tiền | Bước 4 US |
+| 7 | Đơn vị fulfillment mentor giới thiệu, cách deal phí; mô hình dropshipping | Bước 5 US |
+| 8 | Logistics sang US: đơn vị, thời gian, hải quan | Bước 6 US |
+| 9 | Đăng ký tài khoản bán hàng và listing trên sàn US | Bước 7 US |
+| 10 | Chiến dịch marketing: loại chiến dịch, ngân sách, cách đo | Bước cuối VN và US |
+| 11 | Số còn thiếu cho Google Sheet: phí packing, phí sàn, tỷ lệ hoàn trả giả định | Bước 2 US, bước 2 VN |
 
-1. Slide của từng buổi là slide kiến thức chung (có sẵn cơ chế); thêm 6 bộ slide, mỗi bộ 5 đến 7 slide.
-2. Bài tập mỗi buổi dùng đúng một mẫu (tên chuẩn, các mục chuẩn, tiêu chí đạt). Em sẽ chuẩn hóa tên các bài hiện có.
-3. Báo cáo phân tích cho học viên luôn theo cùng cấu trúc: 1 câu kết luận, biểu đồ tròn hoặc cột, 1 nhận định mỗi biểu đồ.
-4. Phiếu chấm 3 dòng cho mỗi buổi (mục 4).
+Cách cung cấp nhanh nhất: mentor gửi ý chính của từng buổi train (như tin nhắn đã gửi), em dựng slide, phiếu đầu ra, prompt và sheet.
 
-## 9. Việc cần mentor quyết định
+## 7. Việc em sẽ làm tiếp (nếu mentor đồng ý)
 
-1. Có chốt lộ trình 7 buổi giai đoạn 1 và khung 30 phút ở mục 2 không?
-2. Học viên cũ đã qua buổi 1 hoặc 2 sẽ xếp vào buổi nào? (đề xuất ở bảng bên dưới)
-3. Ngưỡng ở mục 6 (quảng cáo 70%, tập trung 50%) anh muốn chỉnh thế nào?
-4. Các chi phí ở mục 7: anh cho em các số còn thiếu (phí packing, phí sàn, tỷ lệ hoàn trả giả định) để đưa vào bảng mẫu.
-5. Em có làm tiếp 6 bộ slide và file Excel tính giá chuẩn (US và VN) không?
-
-### Xếp học viên hiện tại vào lộ trình (đề xuất)
-
-| Học viên | Thị trường | Đang ở | Buổi tiếp theo |
-|---|---|---|---|
-| Emily Vuong | US (Canada) | Đã có ngách, đang chọn 5+5 và nhà bán sỉ | Buổi 2 (hoàn thiện), rồi buổi 3 |
-| Nguyễn Thành Đạt | US | Có hướng ngách Tre, đang chọn sản phẩm | Buổi 2 |
-| Bùi Đức Phong | VN | Đã có ngách, đang chọn 5+5 và 1688 | Buổi 3 |
-| Khánh Huyền | VN | Đang tìm hiểu 1688 | Buổi 2 |
-| Phediabui | VN | Ngách "Lão", đang phân tích | Buổi 2 |
-| Quỳnh Vũ | US | Đang viết lại ngách và chọn 5+5 | Buổi 1 hoàn thiện, rồi 2 |
-| Giang Nguyễn | US | Mới nộp bảng sản phẩm | Buổi 1 |
-| Khôi Nguyên | VN | Đang bắt keywords | Buổi 1 |
-| Minh Pham | US | Chưa chốt ngách, LLC xong | Buổi 1 |
-| Quang Vũ Lê | VN | Chưa có ngách | Buổi 1 |
-| Nguyễn Tuấn Khang | US | Mới vào, có bài ngách | Buổi 1 (sau buổi 0 ngày 24/10) |
+1. Dựng slide cho các bước còn trống ngay khi có nội dung ở mục 6.
+2. File Excel tính giá chuẩn: bản US và bản VN, nối với phiếu dữ liệu 8 chỉ số.
+3. Chuẩn hóa tên và mục các bài tập hiện có theo "Đầu ra đạt khi" của từng bước.
+4. Mẫu "Phiếu buổi train" một trang cho mentor dùng khi họp.
