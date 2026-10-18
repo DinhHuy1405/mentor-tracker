@@ -438,6 +438,11 @@ details.more>summary{font-weight:600}
 .dkp .row.mapr .b{flex-direction:row;align-items:center;justify-content:space-between;gap:3mm;padding:1.8mm 4mm;border-radius:4mm}
 .dkp .row.mapr .q{font-size:10.5pt;margin:0}
 .dkp .row.mapr .rst{margin:0;align-self:center}
+.dkp .dense .row{margin:1.5mm 0;grid-template-columns:15mm 1fr;gap:4mm}
+.dkp .dense .row .n{font-size:16pt;border-radius:4mm}
+.dkp .dense .row .b{padding:1.4mm 5mm;border-radius:4mm}
+.dkp .dense .row .b .t{font-size:13.5pt}.dkp .dense .row .b .q{font-size:10.5pt;margin-top:.4mm}.dkp .dense .row .b .q:first-child{font-size:11.5pt}
+.dkp .dense+.note{margin:2mm 0}
 .dkp .row.cur .b{background:#FFF1CC;border-style:dashed}
 .dkp .q strong,.dkp .q b{color:var(--cobalt);font-weight:700;background:linear-gradient(transparent 60%,#FFF1CC 60%)}
 .dkp .formula{background:var(--cobalt);color:var(--cream);border:var(--bw) solid var(--cocoa);border-radius:5mm;box-shadow:var(--sh) var(--sh) 0 var(--cocoa);padding:3.5mm 5mm;margin:3mm 0;font-family:'VNMD',var(--font);font-weight:700;font-size:12pt;line-height:1.35}
@@ -1102,7 +1107,21 @@ var KNOW=[
 {market:"VN",at:{VN:4},title:"Setup listing lên store",pts:["**Giá bán** lấy từ sheet, đã tính thuế và phí thị trường","Làm **hình ảnh** rõ ràng cho từng sản phẩm","Đăng listing lên store"]},
 {market:"US",at:{US:2},title:"Tìm nhà sản xuất tại Việt Nam",pts:["Tìm **nhà sản xuất có sẵn** (Facebook, hàng thủ công, organic) và đưa vào listing","Hỏi mỗi nhà cung cấp: **giá theo số lượng, MOQ, thời gian, hàng mẫu**","Hỏi thêm **quy cách packing và cân nặng mỗi cái**","Mỗi sản phẩm có ít nhất **3 nhà cung cấp** để so sánh"]},
 {market:"US",at:{US:2},title:"Google Sheet: chi phí đưa hàng sang US",formula:["Lãi mỗi cái = giá bán − (giá nhập + shipping + logistics + fulfillment + packing + phí sàn + hoa hồng + hoàn trả + quảng cáo)","điền trong Google Sheet cho từng sản phẩm"],note:"Các số trên là mức mentor đang dùng, có thể điều chỉnh theo từng sản phẩm.",pts:["**Giá nhập** từ nhà sản xuất Việt Nam","**Shipping 25 USD/kg**, logistics Việt Nam theo packing","**Logistics US 4,5 USD**, **fulfillment 1,5 đến 2 USD mỗi đơn**, phí packing","Cộng phí sàn, hoa hồng, hoàn trả, quảng cáo ra **lãi mỗi cái và biên %**"]},
-{market:"US",at:{US:5},title:"Đăng ký đơn vị fulfillment",pts:["Đăng ký với **đơn vị fulfillment** để nhận hàng gửi sang","Hỏi rõ **các khoản phí** và khâu có thể cắt giảm","Cập nhật phí vào **Google Sheet** tính giá"]}
+,
+{market:"VN",at:{VN:5},title:"Chờ hàng về: việc của bạn",pts:["**Theo dõi hàng về** theo mã vận đơn hoặc lịch nhà cung cấp","**Kiểm hàng**: đếm đủ số lượng, xem hàng lỗi hoặc sai mẫu","**Đóng gói** sản phẩm gọn gàng, chắc chắn","Báo mentor ngay nếu **hàng trễ hoặc lỗi**"]},
+{market:"VN",at:{VN:5},title:"Rủi ro hay gặp ở bước này",pts:["**Hàng trễ**: hỏi lại nhà cung cấp và cập nhật mentor","**Hàng lỗi**: chụp ảnh, ghi lại và báo ngay","**Đóng gói sơ sài**: khách nhận hàng kém sẽ ảnh hưởng đánh giá shop","Xong bước khi **hàng đã về, kiểm tra và đóng gói xong**"]},
+{market:"ALL",at:{VN:6,US:8},title:"Đẩy bán và phản hồi khách",pts:["**Đẩy bán** sản phẩm vừa lên shop","**Phản hồi khách trong 24 giờ**","**Theo dõi đơn** mỗi ngày","Mục tiêu: **đơn thật đầu tiên** trên sàn, không phải đơn tự đặt"]},
+{market:"ALL",at:{VN:6,US:8},title:"Chưa có đơn thì làm gì",pts:["Xem lại bốn chỗ: **traffic, giá, listing, độ tin cậy của shop**","Mỗi lần **chỉ đổi 1 biến số** (giá, ảnh hoặc video) để biết cái nào có tác dụng","**Quá 14 ngày** sau khi có listing mà chưa có đơn: xem lại sản phẩm, giá, listing","Cùng mentor đề ra **1 đến 2 thử nghiệm** mỗi tuần"]},
+{market:"ALL",at:{VN:6,US:8},title:"Chiến dịch marketing: lên kế hoạch",pts:["Chọn **một chiến dịch** để thử trong buổi train","Mỗi lần thử **chỉ đổi một biến số**, ghi lại kết quả","Ghi **kết quả sau mỗi lần thử** để so sánh với lần trước","Chi tiết từng loại chiến dịch mentor hướng dẫn trực tiếp trong buổi train"]},
+{market:"US",at:{US:3},title:"Nhập hàng, packing và barcode",pts:["**Nhập hàng** về từ nhà sản xuất Việt Nam","**Đóng packing mẫu mã** cho sản phẩm","**Dán barcode** lên sản phẩm"]},
+{market:"US",at:{US:3},title:"Làm đúng yêu cầu của đơn vị fulfillment",pts:["Mentor kiểm tra **packing và barcode theo yêu cầu fulfillment**","Rủi ro hay gặp: **packing hoặc barcode sai quy cách nên bị trả lại**","Hỏi rõ quy cách **trước khi đóng gói hàng loạt**","Xong bước khi hàng đã nhập về, đóng packing và dán barcode xong"]},
+{market:"US",at:{US:4},title:"Giấy tờ lập cửa hàng US",pts:["**Đăng ký đơn vị LLC**","**Giấy tờ chính chủ**, khớp thông tin đăng ký","**EIN**","**Tài khoản nhận tiền** (Payoneer hoặc ngân hàng)","**Tài khoản bán hàng TikTok Shop**, thông tin chính xác, được xác minh và duyệt"]},
+{market:"US",at:{US:4},title:"Tránh làm lại hồ sơ",pts:["**Thông tin phải khớp** giữa các giấy tờ, sai thì phải làm lại","Có bước **phải chờ bên thứ ba**, nên bắt đầu sớm","Mentor kiểm tra hồ sơ **trước khi nộp**","Xong bước khi đã đăng ký LLC và hoàn tất giấy tờ"]},
+{market:"US",at:{US:5},title:"Hỏi rõ phí fulfillment",pts:["Hỏi **từng khoản phí** của đơn vị fulfillment","Hỏi **khâu nào có thể cắt giảm**","Rủi ro hay gặp: **phí cao hơn dự tính**, nên cập nhật vào Google Sheet tính giá","Mentor sẽ cùng bạn **deal phí**"]},
+{market:"US",at:{US:6},title:"Liên kết đơn vị logistics",pts:["**Liên kết** với đơn vị logistics","**Gửi hàng sang US**","Mentor review **báo giá và thời gian vận chuyển**","Xong bước khi đã liên kết logistics để gửi hàng sang US"]},
+{market:"US",at:{US:6},title:"Rủi ro khi gửi hàng sang US",pts:["**Hàng đến trễ** so với dự kiến","**Hàng bị giữ** (rủi ro hải quan), mentor cảnh báo trước","Cập nhật **thời gian vận chuyển** vào kế hoạch bán","Báo mentor ngay khi có thay đổi"]},
+{market:"US",at:{US:7},title:"Đăng ký tài khoản và list sản phẩm",pts:["**Đăng ký tài khoản bán hàng**","**List sản phẩm** lên trong lúc hàng đang đi qua US","Mentor **kiểm tra hồ sơ** trước khi nộp","Góp ý **listing và hình ảnh**"]},
+{market:"US",at:{US:7},title:"Tránh bị từ chối tài khoản",pts:["Rủi ro hay gặp: **thông tin không khớp giấy tờ nên bị từ chối**","Đối chiếu **tên, địa chỉ, giấy tờ** trước khi nộp","Giá trong listing **khớp Google Sheet** tính giá","Xong bước khi đã đăng ký tài khoản và list sản phẩm lên"]}
 ];
 var TRAIN={
 VN:{
@@ -1135,7 +1154,7 @@ function rowHtml(k,t,raw,extra){
 function rowsHtml(items,raw){return items.map(function(t,k){return rowHtml(k,t,raw)}).join("")}
 function knowSlide(x,tag){
   return {kind:"gen",tag:tag||"Kiến thức chung",title:x.title,
-    html:(x.formula?'<div class="formula">'+inl(x.formula[0])+(x.formula[1]?'<small>'+esc(x.formula[1])+'</small>':'')+'</div>':'')+rowsHtml(x.pts)+(x.note?'<div class="note"><b>Lưu ý:</b> '+esc(x.note)+'</div>':'')};
+    html:(x.formula?'<div class="formula">'+inl(x.formula[0])+(x.formula[1]?'<small>'+esc(x.formula[1])+'</small>':'')+'</div>':'')+'<div'+((x.pts.length>=5||(x.formula&&x.pts.length>=4))?' class="dense"':'')+'>'+rowsHtml(x.pts)+'</div>'+(x.note?'<div class="note"><b>Lưu ý:</b> '+esc(x.note)+'</div>':'')};
 }
 function trainBlock(mk,n,full){
   var t=(TRAIN[mk]||{})[n]; if(!t) return "";

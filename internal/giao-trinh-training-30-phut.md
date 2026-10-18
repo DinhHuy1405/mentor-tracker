@@ -54,8 +54,8 @@ Cột "Nội dung" cho biết nguồn: **Có** là đã có nội dung từ ment
 | 2. Phân tích dữ liệu và nghiên cứu nguồn hàng | 2a: AI, FastMoss, Kalodata. 2b: 1688 và Google Sheet tính giá | Dữ liệu FastMoss, Kalodata của 10 sản phẩm | Phiếu 8 chỉ số; giá nhập tối đa và nhà cung cấp 1688; kết luận Làm, Cân nhắc, Bỏ | Khung prompt; 8 chỉ số; đọc dữ liệu; 1688; sheet giá nhập tối đa | Có (Kalodata chi tiết cần mentor) |
 | 3. Chọn sản phẩm và đặt hàng | Chọn sản phẩm, nhập hàng 1688 | Danh sách sản phẩm và báo giá | Có lãi theo sheet; đã đặt và gộp kiện; có lịch hàng về | Chọn sản phẩm và đặt hàng | Có (ngắn) |
 | 4. Setup listing lên store | Setup listing | Giá bán từ sheet, ảnh nháp | Giá tính từ sheet; ảnh đạt; listing lên store | Setup listing | Có (ngắn) |
-| 5. Chờ hàng về và packing | Hàng về và ship hàng | Mã vận đơn, danh sách hàng | Hàng về đủ; packing đúng; sẵn sàng giao | Chưa có | Cần mentor |
-| 6. Bán hàng và đơn đầu tiên | Bán hàng và chiến dịch marketing | Số liệu traffic, giá, ảnh | Kế hoạch 1 chiến dịch; phản hồi khách 24 giờ; đơn đầu tiên | Chưa có | Cần mentor |
+| 5. Chờ hàng về và packing | Hàng về và ship hàng | Mã vận đơn, danh sách hàng | Hàng về đủ; packing đúng; sẵn sàng giao | Đã có bản nháp từ playbook | Cần mentor bổ sung chi tiết |
+| 6. Bán hàng và đơn đầu tiên | Bán hàng và chiến dịch marketing | Số liệu traffic, giá, ảnh | Kế hoạch 1 chiến dịch; phản hồi khách 24 giờ; đơn đầu tiên | Đã có bản nháp từ playbook | Cần mentor bổ sung chi tiết |
 
 ### US (8 bước)
 
@@ -64,12 +64,12 @@ Cột "Nội dung" cho biết nguồn: **Có** là đã có nội dung từ ment
 | Tổng quan | Giới thiệu hành trình | Không | Hiểu 8 bước, cách làm việc, chi phí và thời gian | Sơ đồ, mục tiêu, bán ở đâu, chuẩn bị trước khi bán, khung 30 phút | Có |
 | 1. Keyword và dữ liệu Kalodata US | 1a: bắt key ngách. 1b: AI, FastMoss, Kalodata | Ngách nháp, sản phẩm từ Reels, dữ liệu | 1 cụm ngách; 5+5 có phiếu 8 chỉ số; kết luận từng sản phẩm | Cách tìm ngách, ngách rủi ro và win, 5+5, bài đầu tiên, khung prompt, 8 chỉ số, đọc dữ liệu | Có |
 | 2. Nhà cung cấp và mẫu mã tại VN | 2a: nhà sản xuất VN. 2b: Google Sheet tính giá | Danh sách nhà sản xuất, báo giá | 3 nhà cung cấp mỗi sản phẩm; sheet đủ chi phí; lãi và biên % | Tìm nhà sản xuất VN; chi phí đưa hàng sang US | Có |
-| 3. Nhập hàng, packing, barcode | Nhập hàng, packing, barcode | Báo giá cuối, yêu cầu packing | Nhập đủ; packing đúng; barcode đúng | Chưa có | Cần mentor |
-| 4. Đăng ký LLC và giấy tờ | LLC và giấy tờ | Giấy tờ cá nhân | LLC xong; giấy tờ khớp; EIN, tài khoản nhận tiền | Chưa có | Cần mentor |
+| 3. Nhập hàng, packing, barcode | Nhập hàng, packing, barcode | Báo giá cuối, yêu cầu packing | Nhập đủ; packing đúng; barcode đúng | Đã có bản nháp từ playbook | Cần mentor bổ sung chi tiết |
+| 4. Đăng ký LLC và giấy tờ | LLC và giấy tờ | Giấy tờ cá nhân | LLC xong; giấy tờ khớp; EIN, tài khoản nhận tiền | Đã có bản nháp từ playbook | Cần mentor bổ sung chi tiết |
 | 5. Đăng ký fulfillment | Fulfillment và mô hình dropshipping | Báo giá fulfillment, sheet giá | Đã đăng ký; biết từng khoản phí; chọn mô hình nhập hàng hay dropshipping | Đăng ký fulfillment | Có (ngắn), dropshipping cần mentor |
-| 6. Liên kết logistics | Logistics sang US | Danh sách hàng, báo giá | Đã liên kết; biết báo giá, thời gian; đã gửi hàng | Chưa có | Cần mentor |
-| 7. Đăng ký tài khoản và list sản phẩm | Nền tảng và list | Hồ sơ tài khoản, ảnh, giá | Tài khoản được duyệt; listing đủ; giá khớp sheet | Chưa có | Cần mentor |
-| 8. Bán hàng và đơn đầu tiên | Bán hàng và chiến dịch marketing | Số liệu traffic, giá, ảnh | Kế hoạch 1 chiến dịch; phản hồi 24 giờ; đơn đầu tiên | Chưa có | Cần mentor |
+| 6. Liên kết logistics | Logistics sang US | Danh sách hàng, báo giá | Đã liên kết; biết báo giá, thời gian; đã gửi hàng | Đã có bản nháp từ playbook | Cần mentor bổ sung chi tiết |
+| 7. Đăng ký tài khoản và list sản phẩm | Nền tảng và list | Hồ sơ tài khoản, ảnh, giá | Tài khoản được duyệt; listing đủ; giá khớp sheet | Đã có bản nháp từ playbook | Cần mentor bổ sung chi tiết |
+| 8. Bán hàng và đơn đầu tiên | Bán hàng và chiến dịch marketing | Số liệu traffic, giá, ảnh | Kế hoạch 1 chiến dịch; phản hồi 24 giờ; đơn đầu tiên | Đã có bản nháp từ playbook | Cần mentor bổ sung chi tiết |
 
 ## 5. Thay đổi đã làm trên trang theo dõi
 
@@ -171,3 +171,7 @@ Cách cung cấp nhanh nhất: mentor gửi ý chính của từng buổi train 
 2. File Excel tính giá chuẩn: bản US và bản VN, nối với phiếu dữ liệu 8 chỉ số.
 3. Chuẩn hóa tên và mục các bài tập hiện có theo "Đầu ra đạt khi" của từng bước.
 4. Mẫu "Phiếu buổi train" một trang cho mentor dùng khi họp.
+
+## 9. Ghi chú về slide các bước đã dựng từ playbook (18/10/2026)
+
+Các slide cho VN bước 5, 6 và US bước 3, 4, 5 (bổ sung), 6, 7, 8 được dựng **chỉ từ nội dung đã có trong playbook** (việc cần làm, tiêu chí xong, rủi ro hay gặp, danh sách giấy tờ lập cửa hàng) và các chỉ đạo mentor đã nói. Chưa có hướng dẫn thao tác chi tiết (ví dụ từng bước đăng ký LLC, quy cách barcode, cách chạy từng loại chiến dịch) vì mentor chưa cung cấp. Mentor đọc lại và gửi chi tiết ở mục 6 để em bổ sung.
