@@ -391,53 +391,74 @@ details.more>summary{font-weight:600}
 .tb{margin-top:12px;border-top:1px dashed var(--line2);padding-top:10px;font-size:14.5px}
 .tb p{margin:4px 0}.hli{margin:4px 0 0;padding-left:20px;display:grid;gap:3px}
 .hli li{background:#fff8c9;border-radius:4px;padding:1px 6px;list-style-position:inside}
-/* ---- Trình chiếu: VNM tropical editorial (viền mảnh) ---- */
+/* ---- Trình chiếu: handoff "VNM tropical editorial" (dán theo handoff, thêm tiền tố .dkp; viền chỉnh bằng --bw) ---- */
 @font-face{font-family:'VNMD';src:local('VNM Sans Display Bold'),url('files/fonts/VNM-Sans-Display-Bold.otf');font-weight:700}
 @font-face{font-family:'VNMD';src:local('VNM Sans Display Regular'),url('files/fonts/VNM-Sans-Display-Regular.otf');font-weight:400}
 @font-face{font-family:'VNMS';src:local('VNM Sans Std'),url('files/fonts/VNM-Sans-Std.otf');font-weight:400}
-.dk{--cobalt:#0213B0;--cream:#FFF6E5;--cocoa:#2D190F;--terra:#D85B38;--mango:#F4B940;--leaf:#2F9B62;--aqua:#46AFC2;--dragon:#E8789A;--bd:1.2px solid rgba(45,25,15,.5);--sh:3px 3px 0 rgba(45,25,15,.2);
-  box-sizing:border-box;max-width:980px;min-width:0;color:var(--cocoa);font-family:'VNMS',var(--font)}
-.dk *{box-sizing:border-box}
-.dk:fullscreen{max-width:none;padding:24px;display:flex;flex-direction:column;background:var(--cream)}
-.dk-top{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:12px}
-.dk-top select{border:var(--bd);border-radius:99px;padding:8px 14px;background:#fff;color:var(--cocoa);font:inherit;font-family:'VNMD',var(--font);font-weight:700;font-size:14px;max-width:100%}
-.dk-ct{font-family:'VNMD',var(--font);font-size:13px;color:rgba(45,25,15,.7)}
-.dk .btn{border:var(--bd);border-radius:99px;background:#fff;color:var(--cocoa);font-family:'VNMD',var(--font);font-weight:700;padding:8px 16px;box-shadow:var(--sh)}
-.dk .btn:hover{background:var(--mango)}
-.dk-slide{display:flex;flex-direction:column;aspect-ratio:16/9;min-height:340px;max-width:100%;background:var(--cream);border:var(--bd);border-radius:22px;box-shadow:4px 4px 0 rgba(45,25,15,.2);padding:20px 30px 14px;min-width:0;overflow:hidden}
-.dk:fullscreen .dk-slide{flex:1;aspect-ratio:auto;font-size:1.25em}
-.dk-st{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}
-.dk-pill{display:inline-block;font-family:'VNMD',var(--font);font-weight:700;font-size:12.5px;padding:4px 14px;border:1.2px solid rgba(45,25,15,.55);border-radius:99px;background:var(--mango);color:var(--cocoa)}
-.dk-pn{font-family:'VNMD',var(--font);font-size:12.5px;color:rgba(45,25,15,.65)}
-.dk-slide h3{font-family:'VNMD',var(--font);font-weight:700;font-size:28px;line-height:1.12;color:var(--cobalt);margin:4px 0 0}
-.dk-rule{height:3px;width:46px;background:var(--terra);border-radius:2px;margin:8px 0 12px;flex:none}
-.dk-body{flex:1;overflow:auto;min-height:0;padding:2px 4px 8px 0;font-size:16px;line-height:1.5}
-.dk-body p{margin:6px 0}.dk-body h4{font-family:'VNMD',var(--font);font-size:12.5px;color:var(--terra);margin:12px 0 4px;letter-spacing:.3px;text-transform:none}
-.dk-body strong{font-weight:700;background:linear-gradient(transparent 55%,rgba(244,185,64,.6) 55%);padding:0 2px}
-.dk-n2{color:rgba(45,25,15,.7);font-size:14px}
-.dk-rows{display:grid;gap:8px}
-.dk-row{display:grid;grid-template-columns:40px minmax(0,1fr);gap:12px;align-items:stretch}
-.dk-n{display:flex;align-items:center;justify-content:center;font-style:normal;font-family:'VNMD',var(--font);font-weight:700;font-size:19px;border:var(--bd);border-radius:12px;box-shadow:2px 2px 0 rgba(45,25,15,.18);background:var(--mango);color:var(--cocoa)}
-.dk-n.c1{background:var(--aqua)}.dk-n.c2{background:var(--terra);color:#fff}.dk-n.c3{background:var(--leaf);color:#fff}.dk-n.c4{background:var(--dragon)}.dk-n.c0{background:var(--mango)}
-.dk-r{background:#fff;border:1.2px solid rgba(45,25,15,.4);border-radius:12px;box-shadow:2px 2px 0 rgba(45,25,15,.12);padding:7px 14px;display:flex;align-items:center;gap:10px;justify-content:space-between;overflow-wrap:anywhere}
-.dk-r em{font-style:normal;font-family:'VNMD',var(--font);font-size:12px;color:rgba(45,25,15,.65);white-space:nowrap}
-.dk-row.todo .dk-n{background:#fff;color:var(--cocoa)}.dk-row.done .dk-n{background:var(--leaf);color:#fff}
-.dk-row.cur .dk-r{background:#FFF1CC;border-style:dashed;border-color:rgba(45,25,15,.55)}
-.dk-foot{display:flex;justify-content:space-between;font-size:11px;color:rgba(45,25,15,.6);border-top:1px solid rgba(45,25,15,.25);padding-top:5px;margin-top:6px;flex:none}
-.dk-slide.k-title{background:var(--cobalt);color:var(--cream)}
-.dk-slide.k-title h3{color:var(--cream);font-size:36px}
-.dk-slide.k-title .dk-rule{background:var(--mango);width:56px}
-.dk-slide.k-title .dk-body strong{background:none;color:var(--mango)}
-.dk-slide.k-title .dk-n2{color:rgba(255,246,229,.85)}
-.dk-slide.k-title .dk-pill{background:var(--cream)}
-.dk-slide.k-title .dk-pn,.dk-slide.k-title .dk-foot{color:rgba(255,246,229,.75);border-top-color:rgba(255,246,229,.35)}
-.dk-slide.k-title .dk-r{color:var(--cocoa)}
-.dk-slide.hl{background:#FFF1CC;border-style:dashed}
-.dk-slide.k-mine .dk-pill{background:var(--aqua)}
-.dk-lead{font-family:'VNMD',var(--font);font-weight:700;font-size:20px;margin:4px 0}
-.dk-nav{display:flex;justify-content:space-between;gap:10px;margin-top:12px}
+.dk{max-width:1000px;min-width:0}
+.dkp{--cobalt:#0213B0;--cream:#FFF6E5;--cocoa:#2D190F;--terra:#D85B38;--mango:#F4B940;--leaf:#2F9B62;--aqua:#46AFC2;--dragon:#E8789A;--bw:1.2pt;--sh:1.5mm;
+  font-family:'VNMS','VNMD',var(--font);color:var(--cocoa);font-size:12.5pt;line-height:1.55;min-width:0}
+.dkp *{box-sizing:border-box;margin:0;padding:0}
+.dkv{position:relative;width:100%;overflow:hidden;border-radius:6px}
+.dkp .page{width:297mm;height:167mm;padding:11mm 16mm 12mm;position:absolute;left:0;top:0;transform-origin:0 0;overflow:hidden;background:var(--cream);display:flex;flex-direction:column}
+.dkp .page.port{width:160mm;height:215mm;padding:11mm 10mm 12mm}
+.dkp .page.blue{background:var(--cobalt);color:var(--cream)}
+.dkp h1,.dkp h2,.dkp h3,.dkp .disp{font-family:'VNMD',var(--font);font-weight:700;line-height:1.1}
+.dkp .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:5mm;flex:none}
+.dkp .pill{display:inline-block;font-family:'VNMD',var(--font);font-weight:700;font-size:10pt;padding:2mm 4.5mm;border:var(--bw) solid var(--cocoa);border-radius:20mm;background:var(--mango);color:var(--cocoa)}
+.dkp .pill.w{background:var(--cream)}
+.dkp .rule{height:3pt;background:var(--terra);width:38mm;margin:3mm 0 5mm;border-radius:2pt;flex:none}
+.dkp h2{font-size:27pt;color:var(--cobalt);flex:none}
+.dkp .pbody{flex:1;min-height:0;overflow:auto;padding:0 2mm 2mm 0}
+.dkp p{margin:2mm 0}
+.dkp .card{background:#fff;border:var(--bw) solid var(--cocoa);border-radius:6mm;box-shadow:var(--sh) var(--sh) 0 var(--cocoa);padding:4mm 5.5mm;margin:3mm 0 4.5mm}
+.dkp .card.m{background:var(--mango)}
+.dkp .lbl{font-family:'VNMD',var(--font);font-weight:700;font-size:9.5pt;color:var(--terra);letter-spacing:.3pt}
+.dkp .card.m .lbl{color:var(--cocoa)}
+.dkp .big{font-family:'VNMD',var(--font);font-weight:700;font-size:44pt;line-height:1.02}
+.dkp .foot{margin-top:auto;display:flex;justify-content:space-between;font-size:9pt;opacity:.75;border-top:1pt solid rgba(45,25,15,.35);padding-top:2mm;flex:none}
+.dkp .blue .foot,.dkp .page.blue .foot{border-top-color:rgba(255,246,229,.4)}
+.dkp .chip{display:inline-block;border:var(--bw) solid var(--cocoa);border-radius:3mm;padding:.8mm 3mm;font-family:'VNMD',var(--font);font-weight:700;font-size:9.5pt;margin-right:2mm;background:#fff;color:var(--cocoa);white-space:nowrap}
+.dkp .chip.i{background:var(--mango)}.dkp .chip.v{background:var(--aqua)}.dkp .chip.n{background:var(--leaf);color:#fff}
+.dkp .note{border-left:4pt solid var(--terra);padding:1mm 0 1mm 4mm;margin:3mm 0;font-size:10.5pt}
+.dkp .row{display:grid;grid-template-columns:20mm 1fr;gap:5mm;align-items:stretch;margin:2.8mm 0}
+.dkp .row .n{border:var(--bw) solid var(--cocoa);border-radius:6mm;box-shadow:var(--sh) var(--sh) 0 var(--cocoa);display:flex;align-items:center;justify-content:center;font-family:'VNMD',var(--font);font-weight:700;font-size:22pt;background:var(--mango)}
+.dkp .row .n.c1{background:var(--aqua)}.dkp .row .n.c2{background:var(--terra);color:#fff}.dkp .row .n.c3{background:var(--leaf);color:#fff}.dkp .row .n.c4{background:var(--dragon)}
+.dkp .row .b{border:var(--bw) solid var(--cocoa);border-radius:6mm;box-shadow:var(--sh) var(--sh) 0 var(--cocoa);background:#fff;padding:2.6mm 6mm;display:flex;flex-direction:column;justify-content:center;min-width:0;overflow-wrap:anywhere}
+.dkp .row .b .t{font-family:'VNMD',var(--font);font-weight:700;font-size:17pt;color:var(--cobalt);line-height:1.1}
+.dkp .row .b .q{font-size:11.5pt;margin-top:1mm}
+.dkp .row .b .t+.q{margin-top:1mm}
+.dkp .row .b .q:first-child{margin-top:0;font-size:12.5pt}
+.dkp .row .b .o{font-size:11pt;margin-top:1.5mm;padding-top:1.5mm;border-top:1.2pt dashed var(--cocoa)}
+.dkp .row .b .rst{align-self:flex-start;margin-top:1.5mm}
+.dkp .mapg{display:grid;grid-template-columns:1fr 1fr;column-gap:7mm}
+.dkp .page.port .mapg{grid-template-columns:1fr}
+.dkp .row.mapr{grid-template-columns:12mm 1fr;margin:2mm 0;gap:3mm}
+.dkp .row.mapr .n{font-size:14pt;border-radius:4mm}
+.dkp .row.mapr .b{flex-direction:row;align-items:center;justify-content:space-between;gap:3mm;padding:1.8mm 4mm;border-radius:4mm}
+.dkp .row.mapr .q{font-size:10.5pt;margin:0}
+.dkp .row.mapr .rst{margin:0;align-self:center}
+.dkp .row.cur .b{background:#FFF1CC;border-style:dashed}
+.dkp .q strong,.dkp .q b{color:var(--cobalt);font-weight:700;background:linear-gradient(transparent 60%,#FFF1CC 60%)}
+.dkp .formula{background:var(--cobalt);color:var(--cream);border:var(--bw) solid var(--cocoa);border-radius:5mm;box-shadow:var(--sh) var(--sh) 0 var(--cocoa);padding:3.5mm 5mm;margin:3mm 0;font-family:'VNMD',var(--font);font-weight:700;font-size:12pt;line-height:1.35}
+.dkp .formula small{display:block;font-family:'VNMS',var(--font);font-weight:400;font-size:9.5pt;opacity:.9;margin-top:1.2mm}
+.dkp .ex{background:#FFF1CC;border:var(--bw) dashed var(--cocoa);border-radius:5mm;padding:3mm 4.5mm;margin:3mm 0;font-size:10pt}
+.dkp .sum{display:grid;grid-template-columns:repeat(3,1fr);gap:5mm;margin-top:9mm}
+.dkp .sum>div{border:var(--bw) solid var(--cocoa);border-radius:5mm;box-shadow:var(--sh) var(--sh) 0 var(--cocoa);padding:3.5mm 5mm;background:var(--cream);color:var(--cocoa);min-width:0;overflow-wrap:anywhere}
+.dkp .sum>div:nth-child(2){background:var(--mango)}
+.dkp .sum .lbl{display:block;margin-bottom:1mm}.dkp .sum .v{font-family:'VNMD',var(--font);font-weight:700;font-size:13pt;line-height:1.2}
+.dkp .page.port .sum{grid-template-columns:1fr}
+.dkp .page.blue .big{margin-top:6mm}
+.dkp .page.blue .lead{color:var(--cream)}
+.dkp .lead{font-size:15pt;margin:2mm 0 0;font-family:'VNMD',var(--font);font-weight:700}
+.dkctl{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:12px}
+.dkctl select{border:1.2px solid #2D190F;border-radius:99px;padding:8px 14px;background:#fff;color:#2D190F;font:inherit;font-weight:700;font-size:14px;max-width:100%}
+.dkct{font-size:13px;color:#2D190F;opacity:.7}
+.dk .btn{border:1.2px solid #2D190F;border-radius:99px;background:#fff;color:#2D190F;font-weight:700;padding:8px 16px;box-shadow:2px 2px 0 #2D190F}
+.dk .btn:hover{background:#F4B940}
+.dk .dk-nav{display:flex;justify-content:space-between;gap:10px;margin-top:14px}
 .dk .dk-nav .btn:disabled{opacity:.35;box-shadow:none;cursor:default}
-@media(max-width:600px){.dk-slide{padding:16px 16px 10px;aspect-ratio:auto;min-height:360px}.dk-slide h3{font-size:23px}.dk-slide.k-title h3{font-size:28px}.dk-body{font-size:15px}.dk-row{grid-template-columns:34px minmax(0,1fr);gap:8px}.dk-r{padding:6px 10px}}
+.dk:fullscreen{max-width:none;padding:24px;display:flex;flex-direction:column;background:#FFF6E5}
 .vd strong{background:#fff3a3;padding:0 3px;border-radius:3px;font-weight:700}
 .rp{border-top:1px solid var(--line);padding:14px 0}
 .rp:first-of-type{border-top:0;padding-top:0}
@@ -1066,7 +1087,7 @@ var KNOW=[
 {market:"US",at:{US:0},title:"Mục tiêu và cách làm việc",pts:["Mục tiêu: trở thành **một seller thực thụ**","Mentor đồng hành đến khi **sản phẩm lên sàn** thì dừng họp","Trong quá trình có vấn đề cứ **chat trực tiếp** với mentor","Thường mất **2 đến 3 tháng** để tự vận hành được","US khó hơn: **giai đoạn đầu và setup nền tảng** là khó nhất, sau đó bạn tự vận hành"]},
 {market:"US",at:{US:0},title:"Bán ở đâu: sàn TMĐT trước",pts:["Mentor hỗ trợ lên **sàn thương mại điện tử** trước","**Shopify** là phụ trợ, dùng về sau khi làm branding và chạy ads mạnh"]},
 {market:"US",at:{US:0},title:"Trước khi bán cần chuẩn bị",pts:["**Giấy tờ** (LLC và các giấy tờ liên quan)","**Logistics**: đưa hàng từ Việt Nam sang US","**Đăng ký đơn vị fulfillment** và hiểu cách vận hành","Sau đó **lên sàn và nối vào fulfillment**","Giai đoạn đầu ưu tiên **sản phẩm giá rẻ** để đi được nhiều"]},
-{market:"ALL",at:{US:1,VN:1},title:"Cách tìm ngách",pts:["Ngách = **đối tượng cụ thể** + đặc tính của họ + nhóm sản phẩm","Viết lại thành **MỘT cụm từ ngách**","**5 câu hỏi lọc**: đối tượng, branding và rebranding, logistics (giá, kích thước, giấy tờ), thế mạnh của mình, dữ liệu kiểm chứng","Dùng **Instagram Reels** tìm sản phẩm hay theo ngành, lấy ảnh sang **TikTok Shop, Shopee** tìm sản phẩm tương tự"]},
+{market:"ALL",at:{US:1,VN:1},title:"Cách tìm ngách",formula:["Ngách = đối tượng cụ thể + đặc tính + nhóm sản phẩm","viết lại thành MỘT cụm từ ngách"],pts:["Ngách = **đối tượng cụ thể** + đặc tính của họ + nhóm sản phẩm","Viết lại thành **MỘT cụm từ ngách**","**5 câu hỏi lọc**: đối tượng, branding và rebranding, logistics (giá, kích thước, giấy tờ), thế mạnh của mình, dữ liệu kiểm chứng","Dùng **Instagram Reels** tìm sản phẩm hay theo ngành, lấy ảnh sang **TikTok Shop, Shopee** tìm sản phẩm tương tự"]},
 {market:"US",at:{US:1},title:"Ngách rủi ro và ngách có thể win",pts:["**Ngách rủi ro**: tác động trực tiếp tới con người, sức khỏe","**Ngách có thể win**: tự nhiên, dùng hằng ngày, dễ bảo quản, nhẹ","Tiêu chí hàng: giá rẻ ở Việt Nam, bán giá cao ở US; hàng dư thừa, sản xuất nhiều tại VN, US có nhu cầu","Sản phẩm tự nhiên không cần lo nhiều chuyện theo trend hay theo mùa"]},
 {market:"US",at:{US:1},title:"Từ ngách đến 5 sản phẩm win và 5 sản phẩm vệ tinh",pts:["Tìm website và sản phẩm organic (nĩa lõi ngô, ly tre, kê đũa tre, khăn vải sợi tre)","Vào Facebook tìm sản phẩm xuất đi US, thủ công, organic","Thu thập dữ liệu, dùng AI (ChatGPT) để chọn **5 sản phẩm win và 5 sản phẩm vệ tinh**","Tìm nhà sản xuất có sẵn và đưa vào listing"]},
 {market:"US",at:{US:1},from:"2026-10-18",title:"Bài đầu tiên: xác định 1 ngách",pts:["Ghép thông tin của 1 sản phẩm thành **1 ngách muốn bán**","Ví dụ: sản phẩm sức khỏe cho người đứng tuổi làm văn phòng 40 đến 65 tuổi, am hiểu công nghệ và linh động","Tìm keywords theo ngách trên **Instagram Reels**","Tìm sản phẩm tương tự trên **Shopee, TikTok** theo file sheet mentor gửi","Copy sheet ra file mới, chia sẻ và **gửi trước buổi họp**"]},
@@ -1076,11 +1097,11 @@ var KNOW=[
 {market:"ALL",at:{US:1,VN:2},title:"FastMoss và Kalodata: 8 chỉ số cần đọc",pts:["**GMV 28 ngày** và **số cái bán**: quy mô cầu","**Giá bán**: vùng giá khách chấp nhận","**Số creator mới**: tín hiệu dẫn dắt, tăng thì cầu còn tăng","**Tỷ lệ doanh thu từ quảng cáo** và **từ affiliate**: cần ngân sách hay cần mạng creator","**Đánh giá sao**: đánh giá thấp là chỗ để vượt bằng chất lượng","**Ngày lên sàn** và số shop cạnh tranh: thị trường mới hay đã đông"]},
 {market:"ALL",at:{US:1,VN:2},title:"Đọc dữ liệu để thấy vấn đề",pts:["Phần lớn doanh thu từ quảng cáo: **phải có ngân sách quảng cáo**","Số creator đứng yên: **cầu có thể đã đạt đỉnh**","Tìm theo từ khóa có thể **sót listing**: đối chiếu bằng lọc giá và xem từng shop","Mỗi sản phẩm kết thúc bằng **một câu kết luận**: Làm, Cân nhắc hoặc Bỏ"]},
 {market:"VN",at:{VN:2},title:"Nghiên cứu nguồn hàng trên 1688",pts:["Nhờ ChatGPT tạo **keyword tiếng Trung** từ ngách và sản phẩm","Tìm sản phẩm trên **1688 và Taobao**","Lập **danh sách nhà máy, người bán** của từng sản phẩm","Hỏi **số lượng lớn**, nhập thông tin vào bảng dữ liệu sản phẩm"]},
-{market:"VN",at:{VN:2},title:"Google Sheet: từ giá bán suy ra giá nhập tối đa",pts:["Bắt đầu từ **giá bán thị trường**","Trừ **phí sàn, hoa hồng và biên lợi nhuận** mong muốn","Trừ **ship**, chia tỷ giá ra **giá nhập tối đa (tệ)**","So với giá nhà cung cấp 1688: **thấp hơn giá tối đa mới làm**"]},
+{market:"VN",at:{VN:2},title:"Google Sheet: từ giá bán suy ra giá nhập tối đa",formula:["Giá nhập tối đa = (giá bán × (1 − phí sàn − hoa hồng − biên) − ship) ÷ tỷ giá","tính bằng tệ, chưa gồm ship nội địa"],pts:["Bắt đầu từ **giá bán thị trường**","Trừ **phí sàn, hoa hồng và biên lợi nhuận** mong muốn","Trừ **ship**, chia tỷ giá ra **giá nhập tối đa (tệ)**","So với giá nhà cung cấp 1688: **thấp hơn giá tối đa mới làm**"]},
 {market:"VN",at:{VN:3},title:"Chọn sản phẩm và đặt hàng",pts:["Chỉ chọn sản phẩm có **giá nhà cung cấp thấp hơn giá nhập tối đa**","Ưu tiên sản phẩm **ít phụ thuộc quảng cáo**","Đặt hàng trên 1688 và **gộp kiện** để giảm chi phí ship"]},
 {market:"VN",at:{VN:4},title:"Setup listing lên store",pts:["**Giá bán** lấy từ sheet, đã tính thuế và phí thị trường","Làm **hình ảnh** rõ ràng cho từng sản phẩm","Đăng listing lên store"]},
 {market:"US",at:{US:2},title:"Tìm nhà sản xuất tại Việt Nam",pts:["Tìm **nhà sản xuất có sẵn** (Facebook, hàng thủ công, organic) và đưa vào listing","Hỏi mỗi nhà cung cấp: **giá theo số lượng, MOQ, thời gian, hàng mẫu**","Hỏi thêm **quy cách packing và cân nặng mỗi cái**","Mỗi sản phẩm có ít nhất **3 nhà cung cấp** để so sánh"]},
-{market:"US",at:{US:2},title:"Google Sheet: chi phí đưa hàng sang US",pts:["**Giá nhập** từ nhà sản xuất Việt Nam","**Shipping 25 USD/kg**, logistics Việt Nam theo packing","**Logistics US 4,5 USD**, **fulfillment 1,5 đến 2 USD mỗi đơn**, phí packing","Cộng phí sàn, hoa hồng, hoàn trả, quảng cáo ra **lãi mỗi cái và biên %**","Các số trên là mức mentor đang dùng, có thể điều chỉnh theo từng sản phẩm"]},
+{market:"US",at:{US:2},title:"Google Sheet: chi phí đưa hàng sang US",formula:["Lãi mỗi cái = giá bán − (giá nhập + shipping + logistics + fulfillment + packing + phí sàn + hoa hồng + hoàn trả + quảng cáo)","điền trong Google Sheet cho từng sản phẩm"],note:"Các số trên là mức mentor đang dùng, có thể điều chỉnh theo từng sản phẩm.",pts:["**Giá nhập** từ nhà sản xuất Việt Nam","**Shipping 25 USD/kg**, logistics Việt Nam theo packing","**Logistics US 4,5 USD**, **fulfillment 1,5 đến 2 USD mỗi đơn**, phí packing","Cộng phí sàn, hoa hồng, hoàn trả, quảng cáo ra **lãi mỗi cái và biên %**"]},
 {market:"US",at:{US:5},title:"Đăng ký đơn vị fulfillment",pts:["Đăng ký với **đơn vị fulfillment** để nhận hàng gửi sang","Hỏi rõ **các khoản phí** và khâu có thể cắt giảm","Cập nhật phí vào **Google Sheet** tính giá"]}
 ];
 var TRAIN={
@@ -1105,8 +1126,17 @@ US:{
 function knowFor(mk,n,start){
   return KNOW.filter(function(x){return (x.market==="ALL"||x.market===mk)&&x.at&&x.at[mk]===n&&(!x.from||(start&&start>=x.from))});
 }
-function rowsHtml(items,raw){return '<div class="dk-rows">'+items.map(function(t,k){return '<div class="dk-row"><i class="dk-n c'+(k%5)+'">'+(k+1)+'</i><div class="dk-r"><span>'+(raw?t:inl(t))+'</span></div></div>'}).join("")+'</div>'}
-function knowSlide(x,tag){return {kind:"gen",tag:tag||"Kiến thức chung",title:x.title,html:rowsHtml(x.pts)}}
+var NC=["","c1","c2","c3","c4"];
+function rowHtml(k,t,raw,extra){
+  var title="",q=raw?t:inl(t), m=raw?null:/^\*\*([^*]+)\*\*\s*(.*)$/.exec(t);
+  if(m){title=esc(m[1]);q=inl(m[2].replace(/^[:,\s]+/,''))}
+  return '<div class="row'+(extra&&extra.cls?' '+extra.cls:'')+'"><div class="n '+NC[k%5]+'">'+(extra&&extra.num!=null?extra.num:(k+1))+'</div><div class="b">'+(title?'<div class="t">'+title+'</div>':'')+(q?'<div class="q">'+q+'</div>':'')+(extra&&extra.chip?'<div class="rst">'+extra.chip+'</div>':'')+'</div></div>';
+}
+function rowsHtml(items,raw){return items.map(function(t,k){return rowHtml(k,t,raw)}).join("")}
+function knowSlide(x,tag){
+  return {kind:"gen",tag:tag||"Kiến thức chung",title:x.title,
+    html:(x.formula?'<div class="formula">'+inl(x.formula[0])+(x.formula[1]?'<small>'+esc(x.formula[1])+'</small>':'')+'</div>':'')+rowsHtml(x.pts)+(x.note?'<div class="note"><b>Lưu ý:</b> '+esc(x.note)+'</div>':'')};
+}
 function trainBlock(mk,n,full){
   var t=(TRAIN[mk]||{})[n]; if(!t) return "";
   var has=knowFor(mk,n,"9999").length, SM=!!window.STUDENT_MODE;
@@ -1124,7 +1154,7 @@ function deckLines(t){
     l=l.trim(); if(!l) return;
     if(/^-\s/.test(l)){ buf.push(l.replace(/^-\s+/,"")); return }
     flush();
-    o+=/:$/.test(l)?"<h4>"+inl(l)+"</h4>":"<p>"+inl(l)+"</p>";
+    o+=/:$/.test(l)?'<p class="lbl" style="margin-top:3mm">'+inl(l)+'</p>':'<p>'+inl(l)+'</p>';
   });
   flush();
   return o;
@@ -1138,14 +1168,20 @@ function buildDeck(s,mk,asn,ms,rs){
   function open(label,step,isCur){sections.push({label:label,at:slides.length,step:step,cur:!!isCur})}
   /* Tổng quan */
   open("Tổng quan",0,false);
-  slides.push({kind:"title",tag:"Tổng quan",title:"Hành trình "+pb.length+" bước",html:'<div class="dk-rows">'+pb.map(function(b,k){var n=k+1,st=steps[n]?"done":(n===cur?"cur":"todo");return '<div class="dk-row '+st+'"><i class="dk-n c'+(k%5)+'">'+n+'</i><div class="dk-r"><span>'+esc(b.name)+'</span><em>'+(st==="done"?"Đã xong":st==="cur"?"Đang làm":"Sắp tới")+'</em></div></div>'}).join("")+'</div>'});
+  var nDone=pb.filter(function(b,k){return !!steps[k+1]}).length;
+  slides.push({kind:"cover",tag:"Tổng quan",title:"Hành trình "+pb.length+" bước",lead:"Những việc bạn sẽ làm, từ chọn ngách đến đơn hàng đầu tiên",
+    cells:[["Số bước",pb.length+" bước"],["Đã xong",nDone+" / "+pb.length],["Đang làm",cur?pb[cur-1].name:"Hoàn tất"]]});
+  slides.push({kind:"gen",tag:"Tổng quan",title:"Sơ đồ hành trình",html:'<div class="mapg">'+pb.map(function(b,k){var n=k+1,st=steps[n]?"done":(n===cur?"cur":"todo");
+    return rowHtml(k,esc(b.name),true,{num:n,cls:"mapr"+(st==="cur"?" cur":""),chip:'<span class="chip '+(st==="done"?"n":st==="cur"?"i":"")+'">'+(st==="done"?"Đã xong":st==="cur"?"Đang làm":"Sắp tới")+'</span>'})}).join("")+'</div>'});
   knowFor(mk,0,start).forEach(function(x){slides.push(knowSlide(x,"Tổng quan"))});
   /* Theo từng bước */
   pb.forEach(function(b,k){
     var n=k+1, ks=knowFor(mk,n,start); if(!ks.length) return;
     var st=steps[n]?"Đã xong":(n===cur?"Đang làm":"Sắp tới");
     open("Bước "+n+": "+b.name,n,n===cur);
-    slides.push({kind:"title",tag:"Bước "+n+" · "+st,title:"Bước "+n,html:"<p class=\"dk-lead\">"+esc(b.name)+"</p><p class=\"dk-n2\">"+ks.length+" slide kiến thức</p>"+(TRAIN[mk]&&TRAIN[mk][n]?"<p class=\"dk-n2\">Buổi train 30 phút: "+esc(TRAIN[mk][n].title)+"</p>":"")});
+    var tr=(TRAIN[mk]||{})[n];
+    slides.push({kind:"cover",tag:"Bước "+n+" · "+st,title:"Bước "+n,lead:b.name,
+      cells:[["Kiến thức",ks.length+" slide"],["Buổi train 30 phút",tr?tr.title:"Sẽ cập nhật"],["Đầu ra đạt khi",tr?tr.out[0]:"Sẽ cập nhật"]]});
     ks.forEach(function(x){slides.push(knowSlide(x,"Bước "+n+" · Kiến thức"))});
   });
   /* Của riêng bạn, theo tuần */
@@ -1154,33 +1190,45 @@ function buildDeck(s,mk,asn,ms,rs){
     var d=parse(m.date), nm=(d?DOW[d.getDay()]+" ":"")+fmt(m.date), W=wget(m.date);
     if(m.notes) W.s.push({kind:"mine",tag:"Buổi họp "+nm,title:"Nội dung mentor trao đổi",html:deckLines(m.notes)});
     if(m.edits) W.s.push({kind:"mine",tag:"Buổi họp "+nm,title:"Mentor sửa và nhận xét",html:deckLines(m.edits)});
-    if(m.actions) W.s.push({kind:"mine",hl:1,tag:"Buổi họp "+nm,title:"Việc tiếp theo",html:deckLines(m.actions)});
+    if(m.actions) W.s.push({kind:"mine",tag:"Buổi họp "+nm,title:"Việc tiếp theo",html:'<div class="card m"><div class="lbl">VIỆC TIẾP THEO</div>'+deckLines(m.actions)+'</div>'});
   });
   asn.filter(function(x){return x.status!=="Hủy"}).slice().sort(function(p,q){return (p.assignedOn||"")<(q.assignedOn||"")?-1:1}).forEach(function(x){
     wget(x.assignedOn||start).s.push({kind:"mine",tag:"Bài tập"+(x.due?", hạn "+fmt(x.due)+(x.dueTime?" "+x.dueTime:""):""),title:x.title,
-      html:((x.items||[]).length?rowsHtml(x.items.map(esc),true):"")+(x.note?"<p class=\"dk-n2\">"+inl(x.note)+"</p>":"")+"<p class=\"dk-n2\">Trạng thái: "+esc(x.status||"Đang làm")+"</p>"});
+      html:((x.items||[]).length?rowsHtml(x.items.map(esc),true):"")+(x.note?'<div class="ex">'+inl(x.note)+'</div>':'')+'<p style="margin-top:2mm"><span class="chip '+(x.status==="Đạt"?"n":"i")+'">'+esc(x.status||"Đang làm")+'</span></p>'});
   });
   var keys=Object.keys(wk).sort(), thisWk=mon(isoD(now));
   keys.forEach(function(k,i){
     var W=wk[k]; if(!W.s.length) return;
     open("Của riêng bạn · tuần "+(i+1)+" ("+fmt(k)+")",-1,k===thisWk);
-    slides.push({kind:"title",tag:"Của riêng bạn"+(k===thisWk?" · tuần này":""),title:"Tuần "+(i+1),html:"<p class=\"dk-lead\">"+fmt(k)+" đến "+fmt(isoD(addDays(parse(k),6)))+"</p><p class=\"dk-n2\">"+W.s.length+" slide</p>"});
+    slides.push({kind:"cover",tag:"Của riêng bạn",title:"Tuần "+(i+1),lead:"Buổi họp và bài tập của riêng bạn",
+      cells:[["Thời gian",fmt(k)+" đến "+fmt(isoD(addDays(parse(k),6)))],["Số slide",String(W.s.length)],["Trạng thái",k===thisWk?"Tuần này":(k<thisWk?"Đã qua":"Sắp tới")]]});
     W.s.forEach(function(z){slides.push(z)});
   });
   var curSec=0; sections.forEach(function(sc,j){if(sc.step===cur&&cur>0)curSec=j});
   return {slides:slides,weeks:sections,curSec:curSec};
 }
+function dkFit(){
+  var v=document.getElementById("dk-view"), pg=v&&v.querySelector(".page"); if(!pg) return;
+  var port=v.clientWidth<720; pg.classList.toggle("port",port);
+  var w=pg.offsetWidth,hh=pg.offsetHeight, s=v.clientWidth/w;
+  pg.style.transform="scale("+s+")"; v.style.height=(hh*s)+"px";
+  if(document.fullscreenElement){var st=document.getElementById("dk-stage"),av=st.clientHeight-st.querySelector(".dkctl").offsetHeight-st.querySelector(".dk-nav").offsetHeight-60;var s2=Math.min(v.clientWidth/w,av/hh);pg.style.transform="scale("+s2+")";v.style.height=(hh*s2)+"px"}
+}
 function dkShow(){
-  var el=document.getElementById("dk-slide"); if(!el||!DK.slides.length) return;
-  var z=DK.slides[DK.i];
-  el.className="dk-slide k-"+z.kind+(z.hl?" hl":"");
-  el.innerHTML='<div class="dk-st"><span class="dk-pill">'+esc(z.tag)+'</span><span class="dk-pn">'+(DK.i+1)+' / '+DK.slides.length+'</span></div>'
-    +(z.title?'<h3>'+esc(z.title)+'</h3><div class="dk-rule"></div>':'')+'<div class="dk-body">'+z.html+'</div>'
-    +'<div class="dk-foot"><span>Kiến thức · Huy Tim</span><span>huytim.com</span></div>';
+  var v=document.getElementById("dk-view"); if(!v||!DK.slides.length) return;
+  var z=DK.slides[DK.i], cover=z.kind==="cover";
+  var inner='<div class="top"><span class="pill'+(cover?' w':'')+'">'+esc(z.tag)+'</span><span style="font-size:10pt">Trang '+(DK.i+1)+' / '+DK.slides.length+'</span></div>';
+  if(cover) inner+='<div class="pbody"><div class="big">'+esc(z.title)+'</div><div class="rule" style="background:var(--mango);width:48mm"></div>'+(z.lead?'<p class="lead">'+esc(z.lead)+'</p>':'')+'<div class="sum">'+z.cells.map(function(c){return '<div><span class="lbl">'+esc(c[0])+'</span><span class="v">'+esc(c[1])+'</span></div>'}).join("")+'</div></div>';
+  else inner+='<h2>'+esc(z.title)+'</h2><div class="rule"></div><div class="pbody">'+z.html+'</div>';
+  inner+='<div class="foot"><span>Kiến thức — Huy Tim</span><span>huytim.com</span></div>';
+  v.innerHTML='<section class="page'+(cover?' blue':'')+'">'+inner+'</section>';
+  dkFit();
   var ct=document.getElementById("dk-ct"); if(ct) ct.textContent=(DK.i+1)+" / "+DK.slides.length;
   var wsel=document.getElementById("dk-wk"); if(wsel){var c=0;DK.weeks.forEach(function(w,j){if(w.at<=DK.i)c=j});wsel.value=String(c)}
   var pr=document.getElementById("dk-prev"), nx=document.getElementById("dk-next"); if(pr) pr.disabled=DK.i<=0; if(nx) nx.disabled=DK.i>=DK.slides.length-1;
 }
+window.addEventListener("resize",function(){dkFit()});
+document.addEventListener("fullscreenchange",function(){setTimeout(dkFit,50)});
 var DK={sid:"",slides:[],weeks:[],i:0};
 function dkGo(n){ if(!DK.slides.length) return; DK.i=Math.max(0,Math.min(DK.slides.length-1,n)); dkShow() }
 document.addEventListener("click",function(e){
@@ -1197,7 +1245,7 @@ document.addEventListener("click",function(e){
 });
 document.addEventListener("change",function(e){ if(e.target&&e.target.id==="dk-wk"){var w=DK.weeks[+e.target.value]; if(w) dkGo(w.at)} });
 document.addEventListener("keydown",function(e){
-  if(!document.getElementById("dk-slide")||/^(INPUT|TEXTAREA|SELECT)$/.test((e.target||{}).tagName||"")) return;
+  if(!document.getElementById("dk-view")||/^(INPUT|TEXTAREA|SELECT)$/.test((e.target||{}).tagName||"")) return;
   if(e.key==="ArrowRight"||e.key==="PageDown") {dkGo(DK.i+1);e.preventDefault()}
   else if(e.key==="ArrowLeft"||e.key==="PageUp") {dkGo(DK.i-1);e.preventDefault()}
 });
@@ -1210,8 +1258,8 @@ function deckView(s,mk,asn,ms,rs){
   setTimeout(dkShow,0);
   if(!d.slides.length) return '<section class="sec"><h2>Trình chiếu</h2><div class="empty">Chưa có nội dung để trình chiếu.</div></section>';
   return '<section class="sec"><h2>Kiến thức</h2><p class="hint">Tổng quan, kiến thức của từng bước, và phần riêng của bạn theo tuần (buổi họp, bài tập). Dùng phím mũi tên để chuyển slide.</p>'
-    +'<div class="dk" id="dk-stage"><div class="dk-top"><select id="dk-wk" aria-label="Chọn phần">'+d.weeks.map(function(w,j){return '<option value="'+j+'">'+esc(w.label)+(w.cur&&w.step>=0?' · đang làm':(w.cur?' · tuần này':''))+'</option>'}).join("")+'</select><span id="dk-ct" class="dk-ct"></span><button type="button" class="btn sm" data-dk="fs">Toàn màn hình</button></div>'
-    +'<div id="dk-slide" class="dk-slide" aria-live="polite"></div>'
+    +'<div class="dk" id="dk-stage"><div class="dkctl"><select id="dk-wk" aria-label="Chọn phần">'+d.weeks.map(function(w,j){return '<option value="'+j+'">'+esc(w.label)+(w.cur&&w.step>=0?' · đang làm':(w.cur?' · tuần này':''))+'</option>'}).join("")+'</select><span id="dk-ct" class="dkct"></span><button type="button" class="btn sm" data-dk="fs">Toàn màn hình</button></div>'
+    +'<div class="dkp"><div class="dkv" id="dk-view" aria-live="polite"></div></div>'
     +'<div class="dk-nav"><button type="button" class="btn" id="dk-prev" data-dk="prev">← Trước</button><button type="button" class="btn" id="dk-next" data-dk="next">Sau →</button></div></div></section>';
 }
 function assignView(asn,ms){
