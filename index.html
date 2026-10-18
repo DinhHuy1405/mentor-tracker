@@ -1035,6 +1035,10 @@ function mtgItem(m,open){
 /* ---------- Trình chiếu: kiến thức theo tuần (chung + riêng) ---------- */
 /* Kiến thức chung: market "US", "VN" hoặc "ALL"; date là ngày mentor dạy, slide hiện ở tuần đó (hoặc tuần bắt đầu của học viên nếu vào sau). */
 var KNOW=[
+{market:"US",date:"2026-10-18",title:"Mục tiêu và cách làm việc",pts:["Mục tiêu: trở thành **một seller thực thụ**","Mentor đồng hành đến khi **sản phẩm lên sàn** thì dừng họp","Trong quá trình có vấn đề cứ **chat trực tiếp** với mentor","Thường mất **2 đến 3 tháng** để tự vận hành được","US khó hơn: **giai đoạn đầu và setup nền tảng** là khó nhất, sau đó bạn tự vận hành"]},
+{market:"US",date:"2026-10-18",title:"Bán ở đâu: sàn TMĐT trước",pts:["Mentor hỗ trợ lên **sàn thương mại điện tử** trước","**Shopify** là phụ trợ, dùng về sau khi làm branding và chạy ads mạnh"]},
+{market:"US",date:"2026-10-18",title:"Trước khi bán cần chuẩn bị",pts:["**Giấy tờ** (LLC và các giấy tờ liên quan)","**Logistics**: đưa hàng từ Việt Nam sang US","**Đăng ký đơn vị fulfillment** và hiểu cách vận hành","Sau đó **lên sàn và nối vào fulfillment**","Giai đoạn đầu ưu tiên **sản phẩm giá rẻ** để đi được nhiều"]},
+{market:"US",date:"2026-10-18",from:"2026-10-18",title:"Bài đầu tiên: xác định 1 ngách",pts:["Ghép thông tin của 1 sản phẩm thành **1 ngách muốn bán**","Ví dụ: sản phẩm sức khỏe cho người đứng tuổi làm văn phòng 40 đến 65 tuổi, am hiểu công nghệ và linh động","Tìm keywords theo ngách trên **Instagram Reels**","Tìm sản phẩm tương tự trên **Shopee, TikTok** theo file sheet mentor gửi","Copy sheet ra file mới, chia sẻ và **gửi trước buổi họp**"]},
 {market:"US",date:"2026-10-17",title:"Cách tìm ngách US",pts:["Ngách = **đối tượng cụ thể tại US** + đặc tính của họ + nhóm sản phẩm","Viết lại thành **MỘT cụm từ ngách**","Ví dụ mentor đưa: cộng đồng người Việt tại US, 28 đến 35 tuổi, cà phê mật ong Việt (chỉ là ví dụ)","**5 câu hỏi lọc**: đối tượng, branding và rebranding, logistics (giá, kích thước, giấy tờ), thế mạnh của mình, dữ liệu kiểm chứng"]},
 {market:"US",date:"2026-10-17",title:"Ngách rủi ro và ngách có thể win",pts:["**Ngách rủi ro**: tác động trực tiếp tới con người, sức khỏe","**Ngách có thể win**: tự nhiên, dùng hằng ngày, dễ bảo quản, nhẹ","Tiêu chí hàng: giá rẻ ở Việt Nam, bán giá cao ở US; hàng dư thừa, sản xuất nhiều tại VN, US có nhu cầu","Sản phẩm tự nhiên không cần lo nhiều chuyện theo trend hay theo mùa"]},
 {market:"US",date:"2026-10-17",title:"Từ ngách đến 5 sản phẩm win và 5 sản phẩm vệ tinh",pts:["Tìm website và sản phẩm organic (nĩa lõi ngô, ly tre, kê đũa tre, khăn vải sợi tre)","Vào Facebook tìm sản phẩm xuất đi US, thủ công, organic","Thu thập dữ liệu, dùng AI (ChatGPT) để chọn **5 sản phẩm win và 5 sản phẩm vệ tinh**","Tìm nhà sản xuất có sẵn và đưa vào listing"]},
@@ -1057,7 +1061,7 @@ function buildDeck(s,mk,asn,ms,rs){
   var mon=function(ds){var d=parse(ds)||parse(s.start)||now,k=(d.getDay()+6)%7;return isoD(addDays(d,-k))};
   var wk={}, wget=function(ds){var k=mon(ds);return wk[k]=wk[k]||{k:k,s:[]}};
   var start=s.start||"";
-  KNOW.filter(function(x){return x.market==="ALL"||x.market===mk}).forEach(function(x){
+  KNOW.filter(function(x){return (x.market==="ALL"||x.market===mk)&&(!x.from||(start&&start>=x.from))}).forEach(function(x){
     wget(start&&start>x.date?start:x.date).s.push({kind:"gen",tag:"Kiến thức chung",title:x.title,html:"<ul>"+x.pts.map(function(p){return "<li>"+inl(p)+"</li>"}).join("")+"</ul>"});
   });
   ms.filter(function(m){return m.status==="Đã họp"}).slice().sort(function(p,q){return p.date<q.date?-1:1}).forEach(function(m){
