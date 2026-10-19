@@ -14,7 +14,53 @@ hr{border:0;border-top:1px solid #e9e9e7;margin:24px 0}
 </style></head><body><main>
 <a class="bk" href="javascript:history.back()">← Quay lại</a>
 <h1>Bộ prompt phân tích: từ sản phẩm đến ngách, đến giá nhập và giá bán</h1>
-<p>Dùng cho buổi hướng dẫn FastMoss. Cách dùng: copy prompt, thay phần trong ngoặc vuông [ ], dán vào ChatGPT (hoặc Claude). Lưu file này lại để dùng cho mọi ngách sau.</p>
+<p>Dùng cho buổi hướng dẫn FastMoss. Phần &quot;Quy trình tự động&quot; ngay bên dưới là cách nhanh nhất; các prompt chi tiết từng bước nằm phía sau. Cách dùng: copy prompt, thay phần trong ngoặc vuông [ ], dán vào ChatGPT (hoặc Claude). Lưu file này lại để dùng cho mọi ngách sau.</p>
+<h2>Quy trình tự động (khuyên dùng)</h2>
+<p>Chỉ cần 2 prompt. AI tự làm hết phần tìm ngách, chọn sản phẩm, lấy số FastMoss. Bước duy nhất cần thông tin của bạn là thông tin nhập hàng. Công thức tính giá nằm sẵn trong file tính giá (bản TinhGia_TuDong), không cần AI tính.</p>
+<p>Cần: Claude hoặc ChatGPT đã kết nối FastMoss MCP, và file tính giá.</p>
+<p>1. Chạy <b>Prompt Tự động</b> (bên dưới). Copy khối 2 dán vào sheet DỮ LIỆU FASTMOSS, ô A5.</p>
+<p>2. Làm việc với nhà cung cấp, rồi chạy <b>Prompt Nhập hàng</b>. Copy khối 1 dán vào sheet NHẬP HÀNG, ô C5.</p>
+<p>3. Mở sheet KẾT QUẢ: lợi nhuận, giá bán đề xuất, giá nhập tối đa, kết luận Làm, Cân nhắc, Bỏ cho từng sản phẩm.</p>
+<h3>Prompt Tự động: từ ý tưởng đến số FastMoss</h3>
+<div class="pr"><button type="button" class="cp">Sao chép</button><pre>VAI TRÒ: Bạn là chuyên gia chọn ngách và phân tích thị trường TikTok Shop cho người bán nhập hàng từ Việt Nam. Mọi con số lấy từ FastMoss MCP, không ước đoán.
+
+ĐẦU VÀO:
+- Thị trường: [US / VN]
+- Ý tưởng sản phẩm hoặc nhóm khách: [...]
+- Thế mạnh của tôi: [...]
+
+LÀM TUẦN TỰ, KHÔNG HỎI LẠI TÔI:
+BƯỚC 1. Viết 3 phương án ngách theo công thức [đối tượng cụ thể + độ tuổi + sở thích + nhóm sản phẩm]. Loại ngách tác động trực tiếp tới sức khỏe, thực phẩm, mỹ phẩm, đồ em bé. Chấm 5 câu lọc (đối tượng, branding, logistics, thế mạnh, kiểm chứng được bằng dữ liệu), chọn 1 ngách và viết thành một câu ngắn, bỏ tính từ thừa.
+BƯỚC 2. Gọi search_category_by_words rồi product_search (đúng thị trường, listing đang bán, sắp xếp theo số bán 28 ngày) để tìm sản phẩm trong ngách. Chọn 5 sản phẩm win (bán chính) và 5 sản phẩm vệ tinh (bán kèm, cùng nhóm khách). Ưu tiên nhẹ, nhỏ, dễ bảo quản, ít giấy tờ, giá thấp ở Việt Nam và bán giá cao ở thị trường đích. Mỗi sản phẩm đặt một từ khóa gọn để tra đối thủ.
+BƯỚC 3. Với MỖI sản phẩm: gọi product_search theo từ khóa, lấy tối đa 10 listing cùng loại (loại combo, phụ kiện, sản phẩm khác loại). Giá thực tế mỗi listing = GMV 28 ngày chia số bán 28 ngày (số bán bằng 0 thì dùng giá thấp nhất). Tính: giá thấp nhất, trung vị, cao nhất, giá của listing bán chạy nhất, tổng số bán 28 ngày, số đối thủ, trung vị tỷ lệ hoa hồng (commission_rate_percent). Gọi product_overview (28 ngày) CHỈ cho listing bán chạy nhất và chỉ đọc tỷ lệ GMV từ affiliate (channel_distribution) và từ quảng cáo (ads_distribution, ad_traffic), bỏ qua daily_trend.
+BƯỚC 4. Nhận định thị trường cho từng sản phẩm bằng một từ: Làm, Cân nhắc hoặc Bỏ, dựa trên số bán 28 ngày, số creator liên kết và mức cạnh tranh.
+
+ĐẦU RA, CHỈ 3 KHỐI:
+KHỐI 1. Ngách đã chọn (một câu) và một dòng lý do.
+KHỐI 2. Bảng 10 dòng, không tiêu đề, các cột ngăn cách bằng dấu Tab, đặt trong khối code để copy. Đúng 14 cột theo thứ tự: Mã SP (SP1 đến SP10) | Loại (Win hoặc Vệ tinh) | Tên sản phẩm | Giá thấp nhất | Giá trung vị | Giá cao nhất | Giá listing bán chạy nhất | Tổng số bán 28 ngày | Hoa hồng affiliate (số %, ví dụ 10) | % GMV từ affiliate (số) | % GMV từ quảng cáo (số) | Số đối thủ | Nhận định | Link FastMoss của listing bán chạy nhất. Các cột số chỉ ghi số, dùng dấu chấm thập phân, không ký hiệu tiền.
+KHỐI 3. Giới hạn dữ liệu: tìm theo từ khóa có thể sót listing, số listing đã loại và lý do, đơn vị tiền, sản phẩm nào thiếu dữ liệu.
+
+RÀNG BUỘC: Chỉ dùng số FastMoss trả về. Thiếu số nào thì để ô trống và ghi vào khối 3.</pre></div>
+<p>Nếu FastMoss giới hạn lượt gọi: chạy lần 1 cho 5 sản phẩm win, lần 2 cho 5 sản phẩm vệ tinh, rồi dán nối tiếp vào sheet.</p>
+<h3>Prompt Nhập hàng: biến thông tin nhà cung cấp thành dữ liệu</h3>
+<p>Đây là bước duy nhất cần thông tin của bạn.</p>
+<div class="pr"><button type="button" class="cp">Sao chép</button><pre>VAI TRÒ: Bạn là trợ lý nhập hàng. Bạn chuyển thông tin nhà cung cấp thành dòng dữ liệu để dán vào bảng tính.
+
+DỮ LIỆU:
+- Danh sách sản phẩm (dán cột Mã SP và Tên sản phẩm từ sheet NHẬP HÀNG): [...]
+- Số lượng nhập thử dự kiến mỗi sản phẩm: [số]
+- Tỷ giá nếu nhà cung cấp báo bằng tiền khác (đổi ra [VND / USD]): [tỷ giá]
+- Thông tin nhà cung cấp cho từng sản phẩm (dán tin nhắn, listing 1688, báo giá; ghi mã SP trước mỗi đoạn): [...]
+- Chi phí vận chuyển (bỏ trống nếu chưa có): giá ship quốc tế mỗi kg [...], fulfillment mỗi đơn [...], logistics đầu thị trường đích mỗi đơn [...], logistics Việt Nam mỗi đơn [...], packing mỗi đơn [...]
+
+NHIỆM VỤ: Với mỗi mã SP, trích giá nhập mỗi cái theo mức giá bậc thang phù hợp số lượng dự kiến, cân nặng mỗi cái (kg), MOQ, tên nhà cung cấp.
+
+ĐẦU RA:
+KHỐI 1. Bảng 10 dòng, không tiêu đề, ngăn cách bằng dấu Tab, đặt trong khối code, theo đúng thứ tự mã SP1 đến SP10. Đúng 10 cột: Giá nhập | Cân nặng (kg) | Ship quốc tế mỗi kg | Fulfillment | Logistics đầu đích | Logistics VN | Packing | MOQ | Nhà cung cấp | Giá bán dự kiến (để trống). Sản phẩm không có thông tin thì để dòng trống. Chỉ ghi số cho các cột số, dấu chấm thập phân.
+KHỐI 2. Danh sách thông tin còn thiếu cho từng nhà cung cấp, kèm một tin nhắn ngắn, lịch sự để hỏi (giá theo mức số lượng, MOQ, hàng mẫu, cân nặng, quy cách đóng gói, khả năng không in tên thương hiệu).
+
+RÀNG BUỘC: Chỉ lấy số có trong dữ liệu, thiếu thì để ô trống, không đoán. Nếu có nhiều mức giá, ghi mức đang dùng ở khối 2.</pre></div>
+<hr>
 <h2>Quy tắc chung (áp dụng cho mọi prompt)</h2>
 <ul>
 <li>Luôn có 6 khối: VAI TRÒ, BỐI CẢNH, DỮ LIỆU, NHIỆM VỤ, ĐỊNH DẠNG, RÀNG BUỘC.</li>
