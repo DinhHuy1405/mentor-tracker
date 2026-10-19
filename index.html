@@ -550,6 +550,7 @@ details.more>summary{font-weight:600}
 .ntn-ah{font-size:16px;margin-bottom:2px}.ntn-ah b{font-weight:600;margin-right:6px}
 .ntn-mt{margin:8px 0 12px;padding-left:12px;border-left:3px solid #37352F}
 .ntn-mh{font-weight:600;font-size:16px;margin-bottom:2px}
+.ntn-pr{margin:8px 0;border:1px solid rgba(55,53,47,.16);border-radius:4px;padding:6px 12px}.ntn-pr summary{cursor:pointer;font-weight:600;font-size:15px}.ntn-pr pre{white-space:pre-wrap;word-wrap:break-word;background:#F7F6F3;border-radius:4px;padding:12px;font:13px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;margin:8px 0}
 .ntn-bt{font:inherit;font-size:14.5px;border:1px solid rgba(55,53,47,.16);background:#fff;border-radius:4px;padding:4px 12px;cursor:pointer;color:#37352F;box-shadow:rgba(15,15,15,.05) 0 1px 2px}
 .ntn-bt:hover{background:rgba(55,53,47,.06)}
 .ntn .sec{border-top:0;padding-top:0}.ntn .sec>h2{font-family:inherit;font-size:24px;font-weight:600;border-bottom:1px solid rgba(55,53,47,.09);padding-bottom:4px;margin:30px 0 10px}
@@ -1191,6 +1192,8 @@ function ntnStepOf(date,steps,ns,cur){
   for(var n=1;n<=ns;n++){var e=parse(steps[n]); if(e&&d<=e) return n; if(!e) return n}
   return ns;
 }
+var AIPR={t:{name:"Prompt Tự động: từ ý tưởng đến số FastMoss",text:"VAI TRÒ: Bạn là chuyên gia chọn ngách và phân tích thị trường TikTok Shop cho người bán nhập hàng từ Việt Nam. Mọi con số lấy từ FastMoss MCP, không ước đoán.\n\nĐẦU VÀO:\n- Thị trường: [US / VN]\n- Ý tưởng sản phẩm hoặc nhóm khách: [...]\n- Thế mạnh của tôi: [...]\n\nLÀM TUẦN TỰ, KHÔNG HỎI LẠI TÔI:\nBƯỚC 1. Viết 3 phương án ngách theo công thức [đối tượng cụ thể + độ tuổi + sở thích + nhóm sản phẩm]. Loại ngách tác động trực tiếp tới sức khỏe, thực phẩm, mỹ phẩm, đồ em bé. Chấm 5 câu lọc (đối tượng, branding, logistics, thế mạnh, kiểm chứng được bằng dữ liệu), chọn 1 ngách và viết thành một câu ngắn, bỏ tính từ thừa.\nBƯỚC 2. Gọi search_category_by_words rồi product_search (đúng thị trường, listing đang bán, sắp xếp theo số bán 28 ngày) để tìm sản phẩm trong ngách. Chọn 5 sản phẩm win (bán chính) và 5 sản phẩm vệ tinh (bán kèm, cùng nhóm khách). Ưu tiên nhẹ, nhỏ, dễ bảo quản, ít giấy tờ, giá thấp ở Việt Nam và bán giá cao ở thị trường đích. Mỗi sản phẩm đặt một từ khóa gọn để tra đối thủ.\nBƯỚC 3. Với MỖI sản phẩm: gọi product_search theo từ khóa, lấy tối đa 10 listing cùng loại (loại combo, phụ kiện, sản phẩm khác loại). Giá thực tế mỗi listing = GMV 28 ngày chia số bán 28 ngày (số bán bằng 0 thì dùng giá thấp nhất). Tính: giá thấp nhất, trung vị, cao nhất, giá của listing bán chạy nhất, tổng số bán 28 ngày, số đối thủ, trung vị tỷ lệ hoa hồng (commission_rate_percent). Gọi product_overview (28 ngày) CHỈ cho listing bán chạy nhất và chỉ đọc tỷ lệ GMV từ affiliate (channel_distribution) và từ quảng cáo (ads_distribution, ad_traffic), bỏ qua daily_trend.\nBƯỚC 4. Nhận định thị trường cho từng sản phẩm bằng một từ: Làm, Cân nhắc hoặc Bỏ, dựa trên số bán 28 ngày, số creator liên kết và mức cạnh tranh.\n\nĐẦU RA, CHỈ 3 KHỐI:\nKHỐI 1. Ngách đã chọn (một câu) và một dòng lý do.\nKHỐI 2. Bảng 10 dòng, không tiêu đề, các cột ngăn cách bằng dấu Tab, đặt trong khối code để copy. Đúng 14 cột theo thứ tự: Mã SP (SP1 đến SP10) | Loại (Win hoặc Vệ tinh) | Tên sản phẩm | Giá thấp nhất | Giá trung vị | Giá cao nhất | Giá listing bán chạy nhất | Tổng số bán 28 ngày | Hoa hồng affiliate (số %, ví dụ 10) | % GMV từ affiliate (số) | % GMV từ quảng cáo (số) | Số đối thủ | Nhận định | Link FastMoss của listing bán chạy nhất. Các cột số chỉ ghi số, dùng dấu chấm thập phân, không ký hiệu tiền.\nKHỐI 3. Giới hạn dữ liệu: tìm theo từ khóa có thể sót listing, số listing đã loại và lý do, đơn vị tiền, sản phẩm nào thiếu dữ liệu.\n\nRÀNG BUỘC: Chỉ dùng số FastMoss trả về. Thiếu số nào thì để ô trống và ghi vào khối 3."},n:{name:"Prompt Nhập hàng: biến báo giá nhà cung cấp thành dữ liệu",text:"VAI TRÒ: Bạn là trợ lý nhập hàng. Bạn chuyển thông tin nhà cung cấp thành dòng dữ liệu để dán vào bảng tính.\n\nDỮ LIỆU:\n- Danh sách sản phẩm (dán cột Mã SP và Tên sản phẩm từ sheet NHẬP HÀNG): [...]\n- Số lượng nhập thử dự kiến mỗi sản phẩm: [số]\n- Tỷ giá nếu nhà cung cấp báo bằng tiền khác (đổi ra [VND / USD]): [tỷ giá]\n- Thông tin nhà cung cấp cho từng sản phẩm (dán tin nhắn, listing 1688, báo giá; ghi mã SP trước mỗi đoạn): [...]\n- Chi phí vận chuyển (bỏ trống nếu chưa có): giá ship quốc tế mỗi kg [...], fulfillment mỗi đơn [...], logistics đầu thị trường đích mỗi đơn [...], logistics Việt Nam mỗi đơn [...], packing mỗi đơn [...]\n\nNHIỆM VỤ: Với mỗi mã SP, trích giá nhập mỗi cái theo mức giá bậc thang phù hợp số lượng dự kiến, cân nặng mỗi cái (kg), MOQ, tên nhà cung cấp.\n\nĐẦU RA:\nKHỐI 1. Bảng 10 dòng, không tiêu đề, ngăn cách bằng dấu Tab, đặt trong khối code, theo đúng thứ tự mã SP1 đến SP10. Đúng 10 cột: Giá nhập | Cân nặng (kg) | Ship quốc tế mỗi kg | Fulfillment | Logistics đầu đích | Logistics VN | Packing | MOQ | Nhà cung cấp | Giá bán dự kiến (để trống). Sản phẩm không có thông tin thì để dòng trống. Chỉ ghi số cho các cột số, dấu chấm thập phân.\nKHỐI 2. Danh sách thông tin còn thiếu cho từng nhà cung cấp, kèm một tin nhắn ngắn, lịch sự để hỏi (giá theo mức số lượng, MOQ, hàng mẫu, cân nặng, quy cách đóng gói, khả năng không in tên thương hiệu).\n\nRÀNG BUỘC: Chỉ lấy số có trong dữ liệu, thiếu thì để ô trống, không đoán. Nếu có nhiều mức giá, ghi mức đang dùng ở khối 2."}};
+var AIPR_AT={"US":{1:["t"],2:["n"]},"VN":{2:["t","n"]}};
 function ntnView(s,a,asn,ms,rs,tab){
   var mk=a.mk, ns=a.ns, model=stepModel(a), now=new Date(), nm=a.nextM, openN=a.cur<=ns?a.cur:0, MN=!window.STUDENT_MODE;
   var TB=[["tien-do","Quá trình"],["bai-tap","Bài tập"],["trinh-chieu","Slide"]].concat(MN?[["nhat-ky","Nhật ký"]]:[]);
@@ -1247,6 +1250,8 @@ function ntnView(s,a,asn,ms,rs,tab){
     var body='<p class="ntn-p">'+inl(m.pb.task[mk])+'</p>';
     if(m.sub.length) body+='<ul class="nck">'+m.sub.map(function(x,i){var y=m.st==="done"||m.ck.indexOf(i)>=0;return '<li class="'+(y?'y':'')+'"><i></i><span>'+esc(x)+'</span></li>'}).join("")+'</ul>';
     if(t) body+='<p class="ntn-lb">Xong bước này khi</p><ul class="nb">'+t.out.map(function(x){return '<li>'+esc(x)+'</li>'}).join("")+'</ul>';
+    ((AIPR_AT[mk]||{})[n]||[]).forEach(function(k){body+='<details class="ntn-pr"><summary>Câu lệnh AI: '+esc(AIPR[k].name)+'</summary><pre>'+esc(AIPR[k].text)+'</pre><p><button type="button" class="ntn-bt" data-copypr="'+k+'">Sao chép câu lệnh</button></p></details>'});
+    if(((AIPR_AT[mk]||{})[n]||[]).length) body+='<p class="ntn-mu"><a href="files/bo-prompt-fastmoss.html" target="_blank" rel="noopener">Xem đầy đủ các câu lệnh</a></p>';
     if(MN){
       if(m.pb.help&&m.pb.help[mk]) body+='<p class="ntn-lb">Mentor cần support</p><p class="ntn-p">'+inl(m.pb.help[mk])+'</p>';
       if(m.st!=="done"&&m.pb.risk) body+='<p class="ntn-lb">Rủi ro hay gặp</p><p class="ntn-p">'+esc(m.pb.risk)+'</p>';
@@ -1712,10 +1717,10 @@ function safeRender(){
 var toastT=null;
 function toast(msg){var t=$("#toast");t.textContent=msg;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove("show")},1800)}
 
-async function copyMsg(msg){
-  try{await navigator.clipboard.writeText(msg);toast("Đã sao chép, dán vào Zalo hoặc email")}catch(_){
+async function copyMsg(msg,note){
+  try{await navigator.clipboard.writeText(msg);toast(note||"Đã sao chép, dán vào Zalo hoặc email")}catch(_){
     var ta=document.createElement("textarea");ta.value=msg;ta.style.cssText="position:fixed;left:-9999px";document.body.appendChild(ta);ta.select();
-    var ok=false;try{ok=document.execCommand("copy")}catch(__){} document.body.removeChild(ta);toast(ok?"Đã sao chép, dán vào Zalo hoặc email":"Trình duyệt chặn sao chép")}
+    var ok=false;try{ok=document.execCommand("copy")}catch(__){} document.body.removeChild(ta);toast(ok?(note||"Đã sao chép, dán vào Zalo hoặc email"):"Trình duyệt chặn sao chép")}
 }
 function openStep(e){
   var nd=e.target.closest&&e.target.closest(".nd[data-step]"); if(!nd) return false;
@@ -1737,6 +1742,7 @@ document.addEventListener("click",async function(e){
       +(sb.length?"\n\nĐầu việc:\n"+sb.map(function(it,i){return (i+1)+". "+it}).join("\n"):"")
       +"\n\nXong bước này khi: "+p1.done+"\n\nLịch họp: "+a1.meet+"\n\nVướng chỗ nào, nhắn mình trước buổi họp nhé.");
   }
+  if(d.copypr){ if(AIPR[d.copypr]) return copyMsg(AIPR[d.copypr].text,"Đã sao chép câu lệnh, dán vào Claude hoặc ChatGPT"); return }
   if(d.copyass){
     var x2=assignments.filter(function(x){return x.id===d.copyass})[0]; if(!x2)return;
     var s2=students.filter(function(x){return x.id===x2.studentId})[0]||{name:""};
