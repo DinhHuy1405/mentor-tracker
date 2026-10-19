@@ -565,6 +565,9 @@ details.more>summary{font-weight:600}
 .ntn-tg[open]>summary .ar{transform:rotate(180deg)}
 .ntn-p{margin:2px 0 8px;color:rgba(55,53,47,.85)}
 .ntn-mu{color:rgba(55,53,47,.65);font-size:15px}
+.ntn-bk{display:inline-block;font-size:14px;color:rgba(55,53,47,.65);text-decoration:none;margin:6px 0 10px}.ntn-bk:hover{color:#37352F}
+.ntn-props code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13.5px;background:rgba(135,131,120,.15);padding:1px 6px;border-radius:4px}
+.ntn-props>div>div{min-width:0;overflow-wrap:anywhere}
 .rp{border-top:1px solid var(--line);padding:14px 0}
 .rp:first-of-type{border-top:0;padding-top:0}
 .rp>summary{font-family:var(--serif);font-weight:700;font-size:17px}
@@ -1189,32 +1192,50 @@ function ntnStepOf(date,steps,ns,cur){
   return ns;
 }
 function ntnView(s,a,asn,ms,rs,tab){
-  var mk=a.mk, ns=a.ns, model=stepModel(a), now=new Date(), nm=a.nextM, openN=a.cur<=ns?a.cur:0;
-  var TB=[["tien-do","Quá trình"],["bai-tap","Bài tập"],["trinh-chieu","Slide"]];
-  var head='<h1 class="ntn-h1">'+esc(s.name)+'</h1>'
-    +'<div class="ntn-props">'
+  var mk=a.mk, ns=a.ns, model=stepModel(a), now=new Date(), nm=a.nextM, openN=a.cur<=ns?a.cur:0, MN=!window.STUDENT_MODE;
+  var TB=[["tien-do","Quá trình"],["bai-tap","Bài tập"],["trinh-chieu","Slide"]].concat(MN?[["nhat-ky","Nhật ký"]]:[]);
+  var mnProps='';
+  if(MN){
+    var ac=s.account, hasAc=ac&&ac.password&&s.email, al=a.attn.slice().sort(function(p,q){return q.sev-p.sev}).filter(function(x){return x.sev>=2});
+    mnProps='<div><span>Gói</span><b>'+esc([s.pkg,s.platform].filter(Boolean).join(" · "))+'</b></div>'
+      +(s.email||s.phone?'<div><span>Liên hệ</span><b>'+esc([s.phone,s.email].filter(Boolean).join(" · "))+'</b></div>':'')
+      +(s.start?'<div><span>Bắt đầu</span><b>'+fmt(s.start)+'</b></div>':'')
+      +'<div><span>Tình trạng</span><div><i class="tg '+(s.flag&&s.flag!=="ok"?"y":"gr")+'">'+esc(FLAGS[s.flag||"ok"]||"Bình thường")+'</i>'+(a.risk>=3?' <i class="tg r">Cần can thiệp</i>':(a.risk===2?' <i class="tg y">Theo dõi</i>':''))+'</div></div>'
+      +(s.blocker?'<div><span>Đang vướng</span><b>'+esc(s.blocker)+'</b></div>':'')
+      +(s.mentorNext?'<div><span>Mentor sẽ làm</span><b>'+esc(s.mentorNext)+'</b></div>':'')
+      +(s.niche?'<div><span>Ngách</span><b>'+esc(s.niche)+'</b></div>':'')
+      +(s.note?'<div><span>Ghi chú</span><b>'+esc(s.note)+'</b></div>':'')
+      +'<div><span>Tài khoản</span><div>'+(hasAc?'<b>'+esc(s.email)+'</b> · <code>'+esc(ac.password)+'</code> <button type="button" class="ntn-bt" data-copyacct="'+esc(s.id)+'">Sao chép gửi học viên</button>':'<b>Chưa có'+(s.email?'':', thiếu email học viên')+'</b>')+' <a href="#/'+esc(s.id)+'/tien-do?xem">Xem như học viên</a></div></div>'
+      +(al.length?'<div><span>Cần xử lý</span><div>'+al.map(function(x){return '<div>'+esc(x.t)+'</div>'}).join("")+'</div></div>':'');
+  }
+  var head=(MN?'<a class="ntn-bk" href="#/hoc-vien">← Danh sách học viên</a>':'')+'<h1 class="ntn-h1">'+esc(s.name)+'</h1>'
+    +'<div class="ntn-props">'+mnProps
     +'<div><span>Tiến độ</span><b>'+a.done+' / '+ns+' bước</b></div>'
     +(nm?'<div><span>Họp tiếp</span><div><b>'+DOW[parse(nm.date).getDay()]+' '+fmt(nm.date)+(nm.time?', '+esc(nm.time):'')+'</b>'+(/^https:\/\//.test(nm.link||"")?' <a href="'+esc(nm.link)+'" target="_blank" rel="noopener">Link họp</a>':'')+'</div></div>':'')
     +'</div>'
     +'<nav class="ntn-tabs" aria-label="Mục">'+TB.map(function(t){return '<a href="#/'+esc(s.id)+'/'+t[0]+(window.PREVIEW?'?xem':'')+'"'+(t[0]===tab?' aria-current="page"':'')+'>'+t[1]+'</a>'}).join("")+'</nav>';
   function tag(st,raw){return st==="done"?'<i class="tg gr">Đã xong'+(raw?' '+fmt(raw):'')+'</i>':(st==="cur"?'<i class="tg y">Đang làm</i>':'<i class="tg">Chưa tới</i>')}
+  if(MN&&tab==="nhat-ky") return '<div class="ntn">'+head+secActivity(a)+'</div>';
   if(tab==="trinh-chieu") return '<div class="ntn">'+head+deckView(s,mk,asn,ms,rs)+'</div>';
   if(tab==="bai-tap"){
-    var live=asn.filter(function(x){return x.status!=="Đạt"&&x.status!=="Hủy"}), done=asn.filter(function(x){return x.status==="Đạt"});
+    var live=asn.filter(function(x){return x.status!=="Đạt"&&x.status!=="Hủy"}), done=asn.filter(function(x){return x.status==="Đạt"||(MN&&x.status==="Hủy")});
     function card(x){
       var late=false;if(x.status!=="Đạt"&&x.status!=="Đã nộp"){var dd=parse(x.due);late=!!dd&&new Date(dd.getFullYear(),dd.getMonth(),dd.getDate(),23,59)<now}
       var tg=x.status==="Đạt"?'<i class="tg gr">Đạt</i>':(x.status==="Đã nộp"?'<i class="tg b">Đã nộp, chờ nhận xét</i>':(late?'<i class="tg r">Quá hạn '+fmt(x.due)+'</i>':'<i class="tg y">'+(x.due?'Hạn '+fmt(x.due)+(x.dueTime?' '+esc(x.dueTime):''):'Đang làm')+'</i>'));
       return '<div class="ntn-as"><div class="ntn-ah"><b>'+esc(x.title)+'</b> '+tg+'</div>'
         +((x.items||[]).length?'<ul class="nb">'+x.items.map(function(i){return '<li>'+esc(i)+'</li>'}).join("")+'</ul>':'')
-        +(x.note?'<div class="ntn-co y">'+inl(x.note)+'</div>':'')
-        +(x.reviews||[]).map(function(r){return '<div class="ntn-co y"><b>Nhận xét '+fmt(r.date)+'.</b> '+esc(r.text)+'</div>'}).join("")+'</div>';
+        +(MN&&x.pubnote?'<div class="ntn-co y"><b>Học viên thấy.</b> '+inl(x.pubnote)+'</div>':'')
+        +(x.note?'<div class="ntn-co'+(MN?'':' y')+'">'+(MN?'<b>Nội bộ.</b> ':'')+inl(x.note)+'</div>':'')
+        +(MN&&x.submission&&(x.submission.link||x.submission.text)?'<div class="ntn-co"><b>Bài nộp '+fmt(x.submission.date)+'.</b> '+esc(x.submission.text||"")+' '+(/^https:\/\//.test(x.submission.link||"")?'<a href="'+esc(x.submission.link)+'" target="_blank" rel="noopener">Mở file</a>':'')+'</div>':'')
+        +(x.reviews||[]).map(function(r){return '<div class="ntn-co y"><b>Nhận xét '+fmt(r.date)+'.</b> '+esc(r.text)+'</div>'}).join("")
+        +(MN&&x.status!=="Đạt"&&x.status!=="Hủy"?'<p><button type="button" class="ntn-bt" data-copyass="'+esc(x.id)+'">Sao chép tin nhắn giao bài này</button></p>':'')+'</div>';
     }
     var o='<h2 class="ntn-h2">Bài đang giao</h2>'+(live.length?live.map(card).join(""):'<p class="ntn-mu">Chưa có bài đang giao. Chờ mentor giao bài.</p>');
     function acc(title,body,n){return '<details class="ntn-tg"><summary><span class="nt">'+title+'</span><span class="ar"></span></summary><div class="ntn-bd">'+body+'</div></details>'}
-    var held=ms.filter(function(m){return m.status==="Đã họp"}).sort(function(p,q){return p.date<q.date?1:-1});
+    var held=ms.filter(function(m){return MN?m.status!=="Hủy":m.status==="Đã họp"}).sort(function(p,q){return p.date<q.date?1:-1});
     if(done.length) o+=acc('Bài đã đạt <i class="tg">'+done.length+'</i>',done.map(card).join(""));
     if(held.length) o+=acc('Ghi chú các buổi họp <i class="tg">'+held.length+'</i>',held.map(function(m2){var d=parse(m2.date);
-      return '<div class="ntn-mt"><div class="ntn-mh">'+(d?DOW[d.getDay()]+' ':'')+fmt(m2.date)+(m2.time?', '+esc(m2.time):'')+'</div>'+(m2.notes?ntnLines(m2.notes):'')
+      return '<div class="ntn-mt"><div class="ntn-mh">'+(d?DOW[d.getDay()]+' ':'')+fmt(m2.date)+(m2.time?', '+esc(m2.time):'')+(MN?' <i class="tg '+(m2.status==="Đã họp"?"gr":"y")+'">'+esc(m2.status)+'</i>'+(/^https:\/\//.test(m2.link||"")?' <a href="'+esc(m2.link)+'" target="_blank" rel="noopener">Link họp</a>':''):'')+'</div>'+(m2.notes?ntnLines(m2.notes):'')
         +(m2.edits?'<div class="ntn-co"><b>Mentor nhận xét.</b> '+inl(m2.edits)+'</div>':'')+(m2.actions?'<div class="ntn-co y"><b>Việc tiếp theo.</b> '+inl(m2.actions)+'</div>':'')+'</div>'}).join(""));
     if(rs.some(function(r){return (r.charts||[]).length})) o+=acc('Phân tích <i class="tg">'+rs.filter(function(r){return (r.charts||[]).length}).length+'</i>',analysisView(rs).replace('<h2>Phân tích</h2>',''));
     return '<div class="ntn">'+head+o+'</div>';
@@ -1225,7 +1246,13 @@ function ntnView(s,a,asn,ms,rs,tab){
     var body='<p class="ntn-p">'+inl(m.pb.task[mk])+'</p>';
     if(m.sub.length) body+='<ul class="nck">'+m.sub.map(function(x,i){var y=m.st==="done"||m.ck.indexOf(i)>=0;return '<li class="'+(y?'y':'')+'"><i></i><span>'+esc(x)+'</span></li>'}).join("")+'</ul>';
     if(t) body+='<p class="ntn-lb">Xong bước này khi</p><ul class="nb">'+t.out.map(function(x){return '<li>'+esc(x)+'</li>'}).join("")+'</ul>';
-    return '<details class="ntn-tg st-'+m.st+'" id="stp-'+n+'"'+(n===openN?' open':'')+'><summary><span class="nn">'+n+'</span><span class="nt">'+esc(m.pb.name)+'</span>'+tag(m.st,m.raw)+'<span class="ar"></span></summary><div class="ntn-bd">'+body+'</div></details>';
+    if(MN){
+      if(m.pb.help&&m.pb.help[mk]) body+='<p class="ntn-lb">Mentor cần support</p><p class="ntn-p">'+inl(m.pb.help[mk])+'</p>';
+      if(m.st!=="done"&&m.pb.risk) body+='<p class="ntn-lb">Rủi ro hay gặp</p><p class="ntn-p">'+esc(m.pb.risk)+'</p>';
+      if(t) body+='<p class="ntn-lb">Buổi train 30 phút</p><p class="ntn-p">'+esc(t.title)+'. Chuẩn bị: '+esc(t.prep)+'</p>';
+      if(m.st!=="done") body+='<p><button type="button" class="ntn-bt" data-copystep="'+esc(s.id)+':'+n+'">Sao chép tin nhắn giao bước này</button></p>';
+    }
+    return '<details class="ntn-tg st-'+m.st+'" id="stp-'+n+'"'+(n===openN?' open':'')+'><summary><span class="nn">'+n+'</span><span class="nt">'+esc(m.pb.name)+'</span>'+(MN&&m.st==="cur"&&m.days!=null?'<i class="tg'+(a.risk>=3?' r':(a.risk===2?' y':''))+'">'+m.days+'/'+m.std+' ngày</i>':'')+tag(m.st,m.raw)+'<span class="ar"></span></summary><div class="ntn-bd">'+body+'</div></details>';
   }).join("");
   return '<div class="ntn">'+head+'<div class="ntn-acc">'+pages+'</div></div>';
 }
@@ -1484,8 +1511,8 @@ function analysisView(rs){
 }
 var STABS=[["tien-do","Tiến độ"],["trinh-chieu","Trình chiếu"],["bai-tap","Theo tuần"],["lich-hop","Lịch họp"],["bao-cao","Báo cáo"],["nhat-ky","Nhật ký"]];
 function viewStudent(id,tab){
-  var SM=!!window.STUDENT_MODE, TABS=SM?[["tien-do","Quá trình"],["bai-tap","Bài tập"],["trinh-chieu","Slide"]]:STABS;
-  if(SM&&tab==="phan-tich") tab="bai-tap";
+  var SM=!!window.STUDENT_MODE, TABS=SM?[["tien-do","Quá trình"],["bai-tap","Bài tập"],["trinh-chieu","Slide"]]:[["tien-do","Quá trình"],["bai-tap","Bài tập"],["trinh-chieu","Slide"],["nhat-ky","Nhật ký"]];
+  if((SM&&tab==="phan-tich")||(!SM&&(tab==="lich-hop"||tab==="bao-cao"||tab==="phan-tich"))) tab="bai-tap";
   tab=TABS.some(function(x){return x[0]===tab})?tab:"tien-do";
   var back=SM?'':'<a class="back" href="#/hoc-vien">← Danh sách học viên</a>';
   var s=students.filter(function(x){return x.id===id})[0];
@@ -1499,7 +1526,7 @@ function viewStudent(id,tab){
   var sub=(SM?[MK[a.mk]]:[s.pkg,s.platform,MK[a.mk]]).filter(Boolean).map(function(x){return '<span>'+esc(x)+'</span>'}).join("");
   var contact=SM?[]:[s.phone,s.email].filter(Boolean);
   var nm=a.nextM;
-  if(SM) return ntnView(s,a,asn,ms,rs,tab);
+  return ntnView(s,a,asn,ms,rs,tab);
   var out=back+'<div class="sp-h"><div><h2>'+esc(s.name)+'</h2><p class="sp-sub">'+sub+(contact.length?'<br>'+esc(contact.join(" · ")):'')+(s.start&&!SM?'<br>Bắt đầu '+fmt(s.start):'')+'</p></div></div>';
   if(SM&&nm) out+='<p class="nextm">Họp tiếp: <b>'+DOW[parse(nm.date).getDay()]+' '+fmt(nm.date)+(nm.time?', '+esc(nm.time):'')+'</b>'+(/^https:\/\//.test(nm.link||"")?' · <a href="'+esc(nm.link)+'" target="_blank" rel="noopener">Link họp</a>':'')+'</p>';
   if(!SM) (function(){
