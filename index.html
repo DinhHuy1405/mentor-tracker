@@ -1198,6 +1198,7 @@ var AIFILLED={};
 function aiFill(k,s){
   var t=AIPR[k].text, nv=(s.niche||"").trim(), ok=nv.length>=8&&!/^(chưa|đang|biết)/i.test(nv), f=false;
   if(ok){var a="- Ý tưởng sản phẩm hoặc nhóm khách: [...]"; if(t.indexOf(a)>=0){t=t.replace(a,"- Ý tưởng sản phẩm hoặc nhóm khách: "+nv);f=true}}
+  var sg=(s.strength||"").trim(), b="- Thế mạnh của tôi: [...]"; if(sg&&t.indexOf(b)>=0){t=t.replace(b,"- Thế mạnh của tôi: "+sg);f=true}
   AIFILLED[k]=t; return {text:t,filled:f};
 }
 function ntnView(s,a,asn,ms,rs,tab){
@@ -1213,6 +1214,7 @@ function ntnView(s,a,asn,ms,rs,tab){
       +(s.blocker?'<div><span>Đang vướng</span><b>'+esc(s.blocker)+'</b></div>':'')
       +(s.mentorNext?'<div><span>Mentor sẽ làm</span><b>'+esc(s.mentorNext)+'</b></div>':'')
       +(s.niche?'<div><span>Ngách</span><b>'+esc(s.niche)+'</b></div>':'')
+      +(s.strength?'<div><span>Thế mạnh</span><b>'+esc(s.strength)+'</b></div>':'')
       +(s.note?'<div><span>Ghi chú</span><b>'+esc(s.note)+'</b></div>':'')
       +'<div><span>Tài khoản</span><div>'+(hasAc?'<b>'+esc(s.email)+'</b> · <code>'+esc(ac.password)+'</code> <button type="button" class="ntn-bt" data-copyacct="'+esc(s.id)+'">Sao chép gửi học viên</button>':'<b>Chưa có'+(s.email?'':', thiếu email học viên')+'</b>')+' <a href="#/'+esc(s.id)+'/tien-do?xem">Xem như học viên</a></div></div>'
       +(al.length?'<div><span>Cần xử lý</span><div>'+al.map(function(x){return '<div>'+esc(x.t)+'</div>'}).join("")+'</div></div>':'');
@@ -1256,7 +1258,7 @@ function ntnView(s,a,asn,ms,rs,tab){
     var body='<p class="ntn-p">'+inl(m.pb.task[mk])+'</p>';
     if(m.sub.length) body+='<ul class="nck">'+m.sub.map(function(x,i){var y=m.st==="done"||m.ck.indexOf(i)>=0;return '<li class="'+(y?'y':'')+'"><i></i><span>'+esc(x)+'</span></li>'}).join("")+'</ul>';
     if(t) body+='<p class="ntn-lb">Xong bước này khi</p><ul class="nb">'+t.out.map(function(x){return '<li>'+esc(x)+'</li>'}).join("")+'</ul>';
-    ((AIPR_AT[mk]||{})[n]||[]).forEach(function(k){var tx=aiFill(k,s);body+='<details class="ntn-pr"><summary>Câu lệnh AI: '+esc(AIPR[k].name)+(tx.filled?' <i class="tg gr">Đã điền sẵn ngách của bạn</i>':'')+'</summary><pre>'+esc(tx.text)+'</pre><p><button type="button" class="ntn-bt" data-copypr="'+k+'">Sao chép câu lệnh</button></p></details>'});
+    ((AIPR_AT[mk]||{})[n]||[]).forEach(function(k){var tx=aiFill(k,s);body+='<details class="ntn-pr"><summary>Câu lệnh AI: '+esc(AIPR[k].name)+(tx.filled?' <i class="tg gr">Đã điền sẵn thông tin của bạn</i>':'')+'</summary><pre>'+esc(tx.text)+'</pre><p><button type="button" class="ntn-bt" data-copypr="'+k+'">Sao chép câu lệnh</button></p></details>'});
     if(((AIPR_AT[mk]||{})[n]||[]).length) body+='<p class="ntn-mu"><a href="files/bo-prompt-fastmoss.html" target="_blank" rel="noopener">Xem đầy đủ các câu lệnh</a></p>';
     if(MN){
       if(m.pb.help&&m.pb.help[mk]) body+='<p class="ntn-lb">Mentor cần support</p><p class="ntn-p">'+inl(m.pb.help[mk])+'</p>';
@@ -1690,7 +1692,7 @@ function render(){
   if(m&&m[3]&&!window.STUDENT_MODE&&students.some(function(x){return x.id===m[1]})){
     var id0=m[1], keep=[students,assignments,meetings,reports];
     var st0=students.filter(function(x){return x.id===id0})[0];
-    students=[{id:st0.id,name:st0.name,market:st0.market,pkg:st0.pkg,niche:st0.niche,goal:st0.goal,start:st0.start,steps:st0.steps||{},checks:st0.checks||{},status:st0.status,firstOrder:st0.firstOrder}];
+    students=[{id:st0.id,name:st0.name,market:st0.market,pkg:st0.pkg,niche:st0.niche,strength:st0.strength,goal:st0.goal,start:st0.start,steps:st0.steps||{},checks:st0.checks||{},status:st0.status,firstOrder:st0.firstOrder}];
     assignments=keep[1].filter(function(x){return x.studentId===id0}).map(function(x){return {id:x.id,studentId:id0,title:x.title,items:x.items,assignedOn:x.assignedOn,due:x.due,dueTime:x.dueTime,status:x.status,note:x.pubnote,submission:x.submission,reviews:x.reviews}});
     meetings=keep[2].filter(function(x){return x.studentId===id0&&x.status!=="Hủy"}).map(function(x){var h=x.status==="Đã họp";return {id:x.id,studentId:id0,date:x.date,time:x.time,status:x.status,link:x.link,notes:h?x.notes:null,edits:h?x.edits:null,actions:h?x.actions:null,links:h?x.links:null}});
     reports=keep[3].filter(function(x){return x.studentId===id0}).map(function(x){return {id:x.id,studentId:id0,date:x.date,title:x.title,source:x.source,summary:x.summary,verdict:x.verdict,charts:x.charts,body:x.body}});
