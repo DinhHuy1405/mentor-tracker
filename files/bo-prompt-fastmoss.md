@@ -99,6 +99,34 @@ Chỉ trả bảng và 3 dòng kết luận. Cuối bài ghi Giới hạn dữ l
 
 Lấy số liệu từ FastMoss, Kalodata cho từng sản phẩm đã chọn, ghi vào bảng theo 8 chỉ số: GMV 28 ngày, số bán 28 ngày, giá bán, số creator liên kết, số creator mới, tỷ lệ doanh thu từ quảng cáo, đánh giá sao, ngày lên sàn.
 
+### Prompt 3.0. FastMoss MCP in sẵn số để điền vào file tính giá
+
+Dùng sau khi đã kết nối FastMoss MCP. Kết quả có thể copy dán thẳng vào sheet NHẬP của file tính giá.
+
+```
+Dùng FastMoss MCP, thị trường [US / VN], chỉ lấy listing đang bán.
+Sản phẩm cần tra: "[từ khóa tiếng Anh hoặc tiếng Việt của sản phẩm]".
+
+Làm theo thứ tự:
+1) Gọi product_search với từ khóa trên, sắp xếp theo số bán 28 ngày giảm dần, lấy 10 listing cùng loại sản phẩm (gọi thêm trang nếu cần). Loại listing là combo, phụ kiện hoặc sản phẩm khác loại.
+2) Với mỗi listing, lấy: tên shop, giá bán thực tế bình quân = GMV 28 ngày chia số bán 28 ngày (nếu số bán bằng 0 thì dùng giá thấp nhất và ghi chú), số bán 28 ngày, tỷ lệ hoa hồng, số creator liên kết, link FastMoss.
+3) Gọi product_overview (28 ngày) cho 3 listing bán chạy nhất. Chỉ đọc tỷ lệ GMV từ quảng cáo (ad_traffic) và từ affiliate (channel_distribution), bỏ qua daily_trend.
+
+In ra đúng 4 khối, không giải thích dài:
+
+KHỐI A. Bảng 10 dòng để dán vào phần 6 của sheet NHẬP. 3 cột ngăn cách bằng dấu Tab, không có dòng tiêu đề, theo thứ tự: tên shop | giá bán thực tế bình quân | số bán 28 ngày.
+
+KHỐI B. Số tham khảo cho phần 4 của sheet NHẬP:
+- Hoa hồng affiliate (% giá bán): trung vị tỷ lệ hoa hồng của 10 listing.
+- Tỷ lệ GMV từ affiliate và từ quảng cáo của 3 listing bán chạy nhất (cho từng listing và trung bình).
+
+KHỐI C. Giá bán tham khảo: thấp nhất, trung vị, cao nhất, giá của listing bán chạy nhất (theo giá thực tế bình quân).
+
+KHỐI D. Giới hạn dữ liệu: tìm theo từ khóa có thể sót listing; ghi số listing đã loại và lý do; ghi đơn vị tiền.
+
+RÀNG BUỘC: Chỉ dùng số FastMoss trả về, không ước đoán. Giá nhập, ship, fulfillment, logistics, packing và chi phí cố định không có trong FastMoss: ghi "tự nhập".
+```
+
 ### Prompt 3.1. Phân tích vùng giá đối thủ
 
 ```
