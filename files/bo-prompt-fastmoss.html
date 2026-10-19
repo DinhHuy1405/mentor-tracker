@@ -64,37 +64,41 @@ RÀNG BUỘC: Chỉ dùng số FastMoss trả về. Thiếu số nào thì để
 <p>Nếu FastMoss giới hạn lượt gọi: chạy lần 1 cho 5 sản phẩm win, lần 2 cho 5 sản phẩm vệ tinh, rồi dán nối tiếp vào sheet.</p>
 <h3>Prompt Nhập hàng cho thị trường US</h3>
 <p>Đây là bước duy nhất cần thông tin của bạn.</p>
-<div class="pr"><button type="button" class="cp">Sao chép</button><pre>VAI TRÒ: Bạn là trợ lý nhập hàng. Bạn chuyển thông tin nhà cung cấp thành dòng dữ liệu để dán vào bảng tính. Thị trường bán: US, bảng tính tính bằng USD.
+<div class="pr"><button type="button" class="cp">Sao chép</button><pre>VAI TRÒ: Bạn là trợ lý nhập hàng. Bạn chuyển thông tin nhà cung cấp và chi phí của tôi thành dòng dữ liệu để dán vào bảng tính. Thị trường bán: US, bảng tính tính bằng USD.
 
 DỮ LIỆU:
 - Danh sách sản phẩm (dán cột Mã SP và Tên sản phẩm từ sheet NHẬP HÀNG): [...]
-- Số lượng nhập thử dự kiến mỗi sản phẩm: [số]
-- Tỷ giá VND sang USD (nhà cung cấp Việt Nam báo bằng VND, phải đổi ra USD): [tỷ giá]
-- Thông tin nhà cung cấp cho từng sản phẩm (dán tin nhắn, listing 1688, báo giá; ghi mã SP trước mỗi đoạn): [...]
-- Chi phí vận chuyển (bỏ trống nếu chưa có): giá ship quốc tế Việt Nam sang Mỹ mỗi kg [...], fulfillment mỗi đơn [...], logistics đầu thị trường đích mỗi đơn [...], logistics Việt Nam mỗi đơn [...], packing mỗi đơn [...]
+- Số lượng nhập thử mỗi sản phẩm: [...]
+- Tỷ giá VND sang USD (nhà cung cấp Việt Nam báo bằng VND, phải đổi ra USD): [...]
+- Thông tin nhà cung cấp cho từng sản phẩm (dán tin nhắn, báo giá; ghi mã SP trước mỗi đoạn): [...]
+- Kích thước đóng gói (dài x rộng x cao, cm) và cân nặng mỗi cái, nếu nhà cung cấp chưa ghi: [...]
+- Chi phí dịch vụ bằng USD (bỏ trống nếu chưa có): fulfillment mỗi đơn [...], logistics đầu US mỗi đơn [...], logistics Việt Nam mỗi đơn [...], packing mỗi đơn [...]
 
-NHIỆM VỤ: Với mỗi mã SP, trích giá nhập mỗi cái theo mức giá bậc thang phù hợp số lượng dự kiến, cân nặng mỗi cái (kg), MOQ, tên nhà cung cấp.
+LƯU Ý: Không cần điền cước vận chuyển quốc tế đi US. File tính giá tự tra bảng cước VPS và AM từ cân nặng, kích thước và số lượng.
+
+NHIỆM VỤ: Với mỗi mã SP, trích giá nhập mỗi cái theo mức giá bậc thang phù hợp số lượng nhập thử (đổi ra USD), cân nặng mỗi cái (kg), kích thước đóng gói, MOQ, tên nhà cung cấp. Nếu thiếu cân nặng, kích thước hoặc số lượng của sản phẩm nào thì hỏi tôi MỘT LẦN, liệt kê hết những gì còn thiếu, rồi mới in kết quả.
 
 ĐẦU RA:
-KHỐI 1. Bảng 10 dòng, không tiêu đề, ngăn cách bằng dấu Tab, đặt trong khối code, theo đúng thứ tự mã SP1 đến SP10. Đúng 10 cột: Giá nhập | Cân nặng (kg) | Ship quốc tế mỗi kg | Fulfillment | Logistics đầu đích | Logistics VN | Packing | MOQ | Nhà cung cấp | Giá bán dự kiến (để trống). Sản phẩm không có thông tin thì để dòng trống. Chỉ ghi số cho các cột số, dấu chấm thập phân.
-KHỐI 2. Danh sách thông tin còn thiếu cho từng nhà cung cấp, kèm một tin nhắn ngắn, lịch sự để hỏi (giá theo mức số lượng, MOQ, hàng mẫu, cân nặng, quy cách đóng gói, khả năng không in tên thương hiệu).
+KHỐI 1. Bảng 10 dòng, không tiêu đề, ngăn cách bằng dấu Tab, đặt trong khối code, theo đúng thứ tự mã SP1 đến SP10. Đúng 14 cột: Giá nhập | Cân nặng (kg) | Dài (cm) | Rộng (cm) | Cao (cm) | Số lượng nhập thử | (để trống: giá ship mỗi kg) | Fulfillment | Logistics đầu US | Logistics Việt Nam | Packing | MOQ | Nhà cung cấp | (để trống: giá bán dự kiến). Sản phẩm không có thông tin thì để dòng trống. Chỉ ghi số cho các cột số, dùng dấu chấm thập phân.
+KHỐI 2. Thông tin còn thiếu cho từng nhà cung cấp, kèm một tin nhắn ngắn, lịch sự để hỏi (giá theo mức số lượng, MOQ, hàng mẫu, cân nặng, kích thước thùng, quy cách đóng gói, khả năng không in tên thương hiệu).
 
 RÀNG BUỘC: Chỉ lấy số có trong dữ liệu, thiếu thì để ô trống, không đoán. Nếu có nhiều mức giá, ghi mức đang dùng ở khối 2.</pre></div>
 <h3>Prompt Nhập hàng cho thị trường VN</h3>
-<div class="pr"><button type="button" class="cp">Sao chép</button><pre>VAI TRÒ: Bạn là trợ lý nhập hàng. Bạn chuyển thông tin nhà cung cấp thành dòng dữ liệu để dán vào bảng tính. Thị trường bán: VN, bảng tính tính bằng VND.
+<div class="pr"><button type="button" class="cp">Sao chép</button><pre>VAI TRÒ: Bạn là trợ lý nhập hàng. Bạn chuyển thông tin nhà cung cấp và chi phí của tôi thành dòng dữ liệu để dán vào bảng tính. Thị trường bán: VN, bảng tính tính bằng VND.
 
 DỮ LIỆU:
 - Danh sách sản phẩm (dán cột Mã SP và Tên sản phẩm từ sheet NHẬP HÀNG): [...]
-- Số lượng nhập thử dự kiến mỗi sản phẩm: [số]
-- Tỷ giá tệ (CNY) sang VND nếu nhập từ 1688, Taobao: [tỷ giá]
+- Số lượng nhập thử mỗi sản phẩm: [...]
+- Tỷ giá tệ (CNY) sang VND nếu nhập từ 1688, Taobao: [...]
 - Thông tin nhà cung cấp cho từng sản phẩm (dán tin nhắn, listing 1688, báo giá; ghi mã SP trước mỗi đoạn): [...]
-- Chi phí vận chuyển (bỏ trống nếu chưa có): phí vận chuyển Trung Quốc về Việt Nam mỗi kg (điền vào cột Ship quốc tế mỗi kg) [...], logistics Việt Nam mỗi đơn (ship về kho, ship nội địa) [...], packing mỗi đơn [...]. Hàng bán tại Việt Nam không có fulfillment và logistics đầu đích, để trống hai cột này.
+- Cân nặng mỗi cái (kg), nếu nhà cung cấp chưa ghi: [...]
+- Chi phí bằng VND (bỏ trống nếu chưa có): phí vận chuyển Trung Quốc về Việt Nam mỗi kg [...], logistics Việt Nam mỗi đơn (ship về kho, ship nội địa) [...], packing mỗi đơn [...]. Hàng bán tại Việt Nam không có fulfillment và logistics đầu đích, để trống hai cột này.
 
-NHIỆM VỤ: Với mỗi mã SP, trích giá nhập mỗi cái theo mức giá bậc thang phù hợp số lượng dự kiến, cân nặng mỗi cái (kg), MOQ, tên nhà cung cấp.
+NHIỆM VỤ: Với mỗi mã SP, trích giá nhập mỗi cái theo mức giá bậc thang phù hợp số lượng nhập thử (đổi ra VND), cân nặng mỗi cái (kg), MOQ, tên nhà cung cấp. Nếu thiếu cân nặng hoặc số lượng của sản phẩm nào thì hỏi tôi MỘT LẦN, liệt kê hết những gì còn thiếu, rồi mới in kết quả.
 
 ĐẦU RA:
-KHỐI 1. Bảng 10 dòng, không tiêu đề, ngăn cách bằng dấu Tab, đặt trong khối code, theo đúng thứ tự mã SP1 đến SP10. Đúng 10 cột: Giá nhập | Cân nặng (kg) | Ship quốc tế mỗi kg | Fulfillment | Logistics đầu đích | Logistics VN | Packing | MOQ | Nhà cung cấp | Giá bán dự kiến (để trống). Sản phẩm không có thông tin thì để dòng trống. Chỉ ghi số cho các cột số, dấu chấm thập phân.
-KHỐI 2. Danh sách thông tin còn thiếu cho từng nhà cung cấp, kèm một tin nhắn ngắn, lịch sự để hỏi (giá theo mức số lượng, MOQ, hàng mẫu, cân nặng, quy cách đóng gói, khả năng không in tên thương hiệu).
+KHỐI 1. Bảng 10 dòng, không tiêu đề, ngăn cách bằng dấu Tab, đặt trong khối code, theo đúng thứ tự mã SP1 đến SP10. Đúng 14 cột: Giá nhập | Cân nặng (kg) | (để trống: dài) | (để trống: rộng) | (để trống: cao) | Số lượng nhập thử | Phí vận chuyển Trung Quốc về Việt Nam mỗi kg | (để trống: fulfillment) | (để trống: logistics đầu đích) | Logistics Việt Nam | Packing | MOQ | Nhà cung cấp | (để trống: giá bán dự kiến). Sản phẩm không có thông tin thì để dòng trống. Chỉ ghi số cho các cột số, dùng dấu chấm thập phân.
+KHỐI 2. Thông tin còn thiếu cho từng nhà cung cấp, kèm một tin nhắn ngắn, lịch sự để hỏi (giá theo mức số lượng, MOQ, hàng mẫu, cân nặng, quy cách đóng gói, khả năng không in tên thương hiệu).
 
 RÀNG BUỘC: Chỉ lấy số có trong dữ liệu, thiếu thì để ô trống, không đoán. Nếu có nhiều mức giá, ghi mức đang dùng ở khối 2.</pre></div>
 <hr>
