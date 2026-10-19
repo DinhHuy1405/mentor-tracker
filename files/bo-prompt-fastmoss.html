@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bộ prompt FastMoss</title>
+<style>
+body{margin:0;background:#fff;color:#37352f;font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+main{max-width:760px;margin:0 auto;padding:32px 16px 80px}
+h1{font-size:30px;line-height:1.25;margin:0 0 16px}h2{font-size:22px;margin:36px 0 8px;padding-top:8px;border-top:1px solid #e9e9e7}h3{font-size:17px;margin:24px 0 6px}
+p,li{margin:6px 0}code{background:#f1f1ef;border-radius:4px;padding:1px 5px;font-size:.9em}
+hr{border:0;border-top:1px solid #e9e9e7;margin:24px 0}
+.pr{position:relative;margin:10px 0}.pr pre{margin:0;background:#f7f6f3;border:1px solid #e9e9e7;border-radius:6px;padding:14px 14px 14px;white-space:pre-wrap;word-wrap:break-word;font:13.5px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.cp{position:absolute;top:8px;right:8px;background:#fff;border:1px solid #d3d1cb;border-radius:4px;padding:3px 10px;font:13px inherit;cursor:pointer;color:#37352f}
+.cp:hover{background:#f1f1ef}
+.bk{font-size:14px;color:#787774;text-decoration:none}
+</style></head><body><main>
+<a class="bk" href="javascript:history.back()">← Quay lại</a>
+<h1>Bộ prompt phân tích: từ sản phẩm đến ngách, đến giá nhập và giá bán</h1>
+<p>Dùng cho buổi hướng dẫn FastMoss. Cách dùng: copy prompt, thay phần trong ngoặc vuông [ ], dán vào ChatGPT (hoặc Claude). Lưu file này lại để dùng cho mọi ngách sau.</p>
+<h2>Quy tắc chung (áp dụng cho mọi prompt)</h2>
+<ul>
+<li>Luôn có 6 khối: VAI TRÒ, BỐI CẢNH, DỮ LIỆU, NHIỆM VỤ, ĐỊNH DẠNG, RÀNG BUỘC.</li>
+<li>Dán số liệu thật vào phần DỮ LIỆU. AI không có dữ liệu thì sẽ đoán, nên luôn giữ dòng ràng buộc này:</li>
+</ul>
+<p>  <code>Chỉ dùng số trong phần DỮ LIỆU. Thiếu dữ liệu thì ghi &quot;chưa có dữ liệu&quot;, không ước đoán. Cuối bài ghi mục Giới hạn dữ liệu.</code></p>
+<ul>
+<li>Mỗi bước ra một kết quả để dán sang bước sau. Lưu từng kết quả vào Google Sheet.</li>
+<li>FastMoss tìm theo từ khóa có thể sót listing. Luôn đối chiếu thêm bằng lọc giá và xem từng shop.</li>
+<li>Quyết định cuối là của bạn, dựa trên dữ liệu thật.</li>
+</ul>
+<p>Thứ tự: <b>Bước 1</b> xác định ngách, <b>Bước 2</b> tìm sản phẩm vào ngách, <b>Bước 3</b> phân tích giá đối thủ, <b>Bước 4</b> tính giá nhập tối đa và giá bán để có lời.</p>
+<hr>
+<h2>Bước 1. Xác định ngách từ sản phẩm bạn đã chọn</h2>
+<h3>Prompt 1.1. Từ sản phẩm ra 3 phương án ngách</h3>
+<div class="pr"><button type="button" class="cp">Sao chép</button><pre>VAI TRÒ: Bạn là chuyên gia chọn ngách bán hàng thương mại điện tử sang [US / VN].
+BỐI CẢNH: Tôi bán từ Việt Nam. Thế mạnh của tôi: [kiến thức, người quen, nguồn hàng]. Sản phẩm tôi đang quan tâm: [danh sách 3 đến 10 sản phẩm hoặc dán link].
+NHIỆM VỤ: Tìm điểm chung của các sản phẩm này, rồi viết 3 phương án ngách theo công thức:
+[đối tượng cụ thể] + [độ tuổi] + [sở thích, đặc tính] + [nhóm sản phẩm]
+Với mỗi phương án nêu: lý do, rủi ro sức khỏe hoặc pháp lý (FDA, kiểm định), khả năng branding hoặc rebranding, khó khăn logistics (giá, kích thước, cân nặng, giấy tờ).
+ĐỊNH DẠNG: Bảng 3 dòng; cột: cụm ngách, lý do, rủi ro, branding, logistics.
+RÀNG BUỘC: Loại ngách tác động trực tiếp tới sức khỏe. Ưu tiên tự nhiên, dùng hằng ngày, dễ bảo quản, nhẹ. Mỗi cụm ngách chỉ 1 câu, bỏ hết tính từ thừa.</pre></div>
+<h3>Prompt 1.2. Chấm 5 câu hỏi lọc ngách</h3>
+<div class="pr"><button type="button" class="cp">Sao chép</button><pre>VAI TRÒ: Bạn là cố vấn kiểm tra ngách trước khi nhập hàng.
+DỮ LIỆU: Ngách ứng viên: &quot;[cụm ngách]&quot;.
+NHIỆM VỤ: Chấm từ 1 đến 5 và giải thích một câu cho từng câu hỏi:
+1) Đối tượng: khách là ai, tuổi, cộng đồng, sở thích rõ chưa?
+2) Branding: gắn được câu chuyện, đổi bao bì, đặt tên riêng không?
+3) Logistics: giá, kích thước, cân nặng, giấy tờ có dễ không?
+4) Thế mạnh của tôi: [thế mạnh] có hỗ trợ ngách này không?
+5) Dữ liệu: có kiểm chứng được bằng FastMoss, Kalodata, Facebook, Instagram không?
+ĐỊNH DẠNG: bảng điểm + 1 câu kết luận Làm, Cân nhắc hoặc Bỏ.
+RÀNG BUỘC: Nếu ngách có sản phẩm bôi lên da, ăn uống, thực phẩm chức năng hoặc đồ em bé thì ghi rõ là ngách rủi ro.</pre></div>
+<h3>Prompt 1.3. Rút gọn thành một cụm ngách</h3>
+<div class="pr"><button type="button" class="cp">Sao chép</button><pre>Rút gọn ngách sau thành một câu duy nhất, bỏ hết tính từ không cần thiết, giữ đủ 4 phần: đối tượng, độ tuổi, sở thích, nhóm sản phẩm.
+Ngách: &quot;[dán ngách dài]&quot;</pre></div>
+<h3>Prompt 1.4. Bộ keyword để kiểm chứng ngách</h3>
+<div class="pr"><button type="button" class="cp">Sao chép</button><pre>Từ ngách &quot;[cụm ngách]&quot;, tạo 20 keywords:
+- 10 tiếng Anh để tìm trên Instagram Reels, TikTok Shop, Amazon.
+- 10 tiếng Trung giản thể để tìm trên 1688.
+Xếp theo mức độ cụ thể từ rộng đến hẹp. Chỉ trả bảng: keyword, ngôn ngữ, nơi dùng.</pre></div>
+<hr>
+<h2>Bước 2. Tìm các sản phẩm có thể vào ngách</h2>
+<h3>Prompt 2.1. Danh sách sản phẩm ứng viên</h3>
+<div class="pr"><button type="button" class="cp">Sao chép</button><pre>VAI TRÒ: Bạn là chuyên gia chọn sản phẩm cho ngách &quot;[cụm ngách]&quot;.
+BỐI CẢNH: Tôi nhập hàng từ Việt Nam sang [US / VN], giai đoạn test vốn ít.
+NHIỆM VỤ: Đề xuất 20 loại sản phẩm phù hợp ngách. Ưu tiên: giá rẻ ở Việt Nam nhưng bán giá cao ở thị trường đích; hàng dư thừa, sản xuất nhiều tại Việt Nam; nhẹ, mỏng, dễ bảo quản; ít giấy tờ.
+ĐỊNH DẠNG: Bảng; cột: sản phẩm, vì sao hợp ngách, nơi tìm nhà cung cấp, rủi ro giấy tờ, ước lượng nhẹ hay nặng.
+RÀNG BUỘC: Không đề xuất thực phẩm, mỹ phẩm, đồ em bé. Điều gì không chắc thì ghi rõ &quot;cần xác nhận lại&quot;.</pre></div>
+<h3>Prompt 2.2. Chấm điểm và chọn 5 win, 5 vệ tinh</h3>
+<div class="pr"><button type="button" class="cp">Sao chép</button><pre>DỮ LIỆU: [dán bảng 10 đến 20 sản phẩm: tên, giá bán, link, cân nặng nếu biết, doanh số nếu có]
+NHIỆM VỤ: Chấm mỗi sản phẩm từ 1 đến 5 theo: nhẹ, mỏng, giá thành tốt, dễ bảo quản, ít giấy tờ, hợp ngách. Chọn 5 sản phẩm win (bán chính) và 5 sản phẩm vệ tinh (bán kèm, cùng nhóm khách).
+ĐỊNH DẠNG: bảng điểm + 1 câu lý do cho mỗi sản phẩm.
+RÀNG BUỘC: Không thêm sản phẩm ngoài danh sách. Sản phẩm vệ tinh phải bán kèm được với sản phẩm win.</pre></div>
+<h3>Prompt 2.3. Hỏi FastMoss MCP để tìm sản phẩm theo ngách (dùng sau khi đã kết nối FastMoss MCP)</h3>
+<div class="pr"><button type="button" class="cp">Sao chép</button><pre>Dùng dữ liệu FastMoss, thị trường [US], 28 ngày gần nhất.
+1) Tìm danh mục phù hợp với &quot;[ngách / sản phẩm]&quot;.
+2) Liệt kê các sản phẩm bán chạy và sản phẩm mới lên sàn trong danh mục đó: tên, giá bán, số bán 28 ngày, GMV 28 ngày, số creator liên kết, link FastMoss.
+3) Đánh dấu sản phẩm có số creator mới tăng gần đây.
+Chỉ trả bảng và 3 dòng kết luận. Cuối bài ghi Giới hạn dữ liệu (từ khóa có thể sót listing).</pre></div>
+<hr>
+<h2>Bước 3. Phân tích giá đối thủ đang bán</h2>
+<p>Lấy số liệu từ FastMoss, Kalodata cho từng sản phẩm đã chọn, ghi vào bảng theo 8 chỉ số: GMV 28 ngày, số bán 28 ngày, giá bán, số creator liên kết, số creator mới, tỷ lệ doanh thu từ quảng cáo, đánh giá sao, ngày lên sàn.</p>
+<h3>Prompt 3.1. Phân tích vùng giá đối thủ</h3>
+<div class="pr"><button type="button" class="cp">Sao chép</button><pre>VAI TRÒ: Bạn là chuyên gia phân tích giá thị trường thương mại điện tử.
+DỮ LIỆU: [dán bảng các listing đối thủ cùng loại sản phẩm &quot;[tên sản phẩm]&quot;: shop, giá bán, số bán 28 ngày, GMV 28 ngày, đánh giá sao, ngày lên sàn]
+NHIỆM VỤ:
+(1) Tính giá thấp nhất, giá trung vị, giá cao nhất.
+(2) Chia thành 3 vùng giá: rẻ, trung bình, cao; cho biết vùng nào bán được nhiều nhất theo số bán 28 ngày.
+(3) Nêu mức giá bán đề xuất để vào thị trường (một con số hoặc khoảng hẹp) và lý do.
+(4) Một câu kết luận: sản phẩm này có nên vào hay không.
+ĐỊNH DẠNG: bảng vùng giá + 4 gạch đầu dòng.
+RÀNG BUỘC: Chỉ dùng số trong DỮ LIỆU. Cuối bài ghi Giới hạn dữ liệu.</pre></div>
+<h3>Prompt 3.2. Đánh giá cầu và cạnh tranh</h3>
+<div class="pr"><button type="button" class="cp">Sao chép</button><pre>DỮ LIỆU: [dán số liệu FastMoss, Kalodata của từng sản phẩm đã chọn]
+NHIỆM VỤ: Với mỗi sản phẩm: (1) cầu đang tăng hay giảm (dựa vào creator mới và GMV), (2) mức phụ thuộc quảng cáo, (3) mức cạnh tranh (ít, vừa, cao), (4) một câu kết luận Làm, Cân nhắc hoặc Bỏ.
+ĐỊNH DẠNG: bảng + 3 gạch đầu dòng &quot;Vấn đề cần chú ý&quot;.
+RÀNG BUỘC: Chỉ dùng số đã dán. Cuối bài ghi Giới hạn dữ liệu.</pre></div>
+<hr>
+<h2>Bước 4. Giá nhập tối đa và giá bán để có lời</h2>
+<p>Điền trước các khoản chi phí thật vào Google Sheet bảng tính giá (lấy từ nhà cung cấp, đơn vị fulfillment, logistics). Đơn vị USD cho thị trường US.</p>
+<p>Công thức tính ngược:</p>
+<p><code>Giá nhập tối đa = Giá bán - Phí sàn - Hoa hồng - Phí fulfillment - Logistics US - Shipping VN sang US - Logistics VN - Packing - Chi phí marketing - Lãi mục tiêu</code></p>
+<h3>Prompt 4.1. Tính giá nhập tối đa từ giá đối thủ</h3>
+<div class="pr"><button type="button" class="cp">Sao chép</button><pre>VAI TRÒ: Bạn là chuyên gia tính giá thành cho hàng nhập từ Việt Nam bán sang [US / VN].
+DỮ LIỆU:
+- Giá bán đề xuất (từ bước 3): [số]
+- Phí sàn và hoa hồng: [%]
+- Fulfillment mỗi đơn: [số]
+- Logistics đầu thị trường đích: [số]
+- Shipping Việt Nam sang đích: [số / kg] và cân nặng mỗi cái [kg]
+- Logistics Việt Nam và packing: [số]
+- Chi phí marketing dự kiến mỗi đơn: [số]
+- Lãi mục tiêu: [số hoặc %]
+NHIỆM VỤ:
+(1) Tính giá nhập tối đa mỗi cái để vẫn đạt lãi mục tiêu.
+(2) Tính giá bán tối thiểu để biên đạt [x]% nếu giá nhập là [giá nhà cung cấp báo].
+(3) Chỉ ra khoản chi phí lớn nhất.
+ĐỊNH DẠNG: bảng từng bước tính (ghi rõ số, phép tính, kết quả) + 3 gạch đầu dòng kết luận.
+RÀNG BUỘC: Chỉ dùng số trong DỮ LIỆU. Thiếu số nào thì ghi &quot;chưa có dữ liệu&quot; và hỏi tôi, không ước đoán.</pre></div>
+<h3>Prompt 4.2. So giá nhà cung cấp với giá nhập tối đa</h3>
+<div class="pr"><button type="button" class="cp">Sao chép</button><pre>DỮ LIỆU: [dán bảng: sản phẩm, giá nhà cung cấp 1688 / VN báo, MOQ, giá nhập tối đa đã tính ở prompt 4.1]
+NHIỆM VỤ: Đánh dấu từng sản phẩm: Vào (giá nhà cung cấp thấp hơn giá nhập tối đa), Đàm phán (cao hơn không quá 15%), Bỏ (cao hơn nhiều). Với sản phẩm Đàm phán, nêu mức giá cần đạt.
+ĐỊNH DẠNG: bảng + 1 câu kết luận cho mỗi sản phẩm.</pre></div>
+<h3>Prompt 4.3. Diễn giải lợi nhuận toàn bộ bảng giá</h3>
+<div class="pr"><button type="button" class="cp">Sao chép</button><pre>DỮ LIỆU: [dán bảng giá: giá nhập, ship, fulfillment, logistics, packing, phí sàn, hoa hồng, giá bán, lãi mỗi cái, biên %]
+NHIỆM VỤ: Chỉ ra khoản chi phí lớn nhất, giá bán tối thiểu để biên đạt [x]%, và sản phẩm nên bỏ.
+ĐỊNH DẠNG: 5 gạch đầu dòng, mỗi dòng một con số và một kết luận.</pre></div>
+<h3>Prompt 4.4. Hỏi nhà cung cấp</h3>
+<div class="pr"><button type="button" class="cp">Sao chép</button><pre>Soạn tin nhắn hỏi nhà cung cấp [tiếng Việt / tiếng Trung] về sản phẩm [tên]: giá theo mức số lượng, MOQ, thời gian sản xuất, hàng mẫu, quy cách đóng gói, cân nặng mỗi cái, khả năng không in tên thương hiệu bên trong sản phẩm. Ngắn, lịch sự, dưới 8 dòng.</pre></div>
+</main>
+<script>
+document.addEventListener("click",function(e){var b=e.target.closest(".cp");if(!b)return;var t=b.parentNode.querySelector("pre").textContent;
+function ok(){b.textContent="Đã chép";setTimeout(function(){b.textContent="Sao chép"},1500)}
+if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(ok,function(){fb()})}else fb();
+function fb(){var a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();try{document.execCommand("copy");ok()}catch(x){}document.body.removeChild(a)}});
+</script></body></html>
