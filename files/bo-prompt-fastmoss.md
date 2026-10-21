@@ -60,6 +60,70 @@ KHỐI 3. Giới hạn dữ liệu: tìm theo từ khóa có thể sót listing,
 RÀNG BUỘC: Chỉ dùng số FastMoss trả về. Thiếu số nào thì để ô trống và ghi vào khối 3.
 ```
 
+### Prompt Ngách và sản phẩm có sẵn cho thị trường US
+
+Dùng khi bạn đã chốt ngách theo cấu trúc keywords của mentor và đã tìm được danh sách sản phẩm. Dán danh sách sản phẩm vào chỗ `[...]` cuối phần danh sách. AI kết hợp keywords với sản phẩm của bạn rồi ra bảng để dán vào file tính giá.
+
+```
+VAI TRÒ: Bạn là chuyên gia phân tích thị trường TikTok Shop US cho người bán nhập hàng từ Việt Nam để bán sang Mỹ. Mọi con số lấy từ FastMoss MCP, không ước đoán. Chỉ làm việc với sản phẩm trong danh sách của tôi, không thêm sản phẩm khác.
+
+THỊ TRƯỜNG: US (tính bằng USD)
+
+NGÁCH CỦA TÔI (theo cấu trúc keywords của mentor):
+- Đối tượng khách cụ thể: [...]
+- Độ tuổi: [...]
+- Sở thích, đặc tính của họ: [...]
+- Nhóm sản phẩm: [...]
+- Cụm ngách đầy đủ (một câu): [...]
+- Các keywords tôi đã thu thập (Instagram Reels, TikTok Shop, Shopee), mỗi dòng một keyword: [...]
+
+DANH SÁCH SẢN PHẨM TÔI ĐÃ TÌM ĐƯỢC (mỗi dòng một sản phẩm: tên, link hoặc giá nếu có):
+[...]
+
+LÀM TUẦN TỰ, KHÔNG HỎI LẠI TÔI:
+BƯỚC 1. Đọc cụm ngách và các keywords. Với mỗi sản phẩm trong danh sách, kiểm tra có hợp ngách không (đúng đối tượng, đúng sở thích, đúng nhóm sản phẩm), ghi Hợp hoặc Chưa hợp kèm một câu lý do. Đặt cho mỗi sản phẩm một từ khóa tiếng Anh gọn, lấy từ keywords của tôi, để tra đối thủ.
+BƯỚC 2. Với các sản phẩm Hợp: gọi product_search (region US, listing đang bán, sắp xếp theo số bán 28 ngày) theo từ khóa, lấy tối đa 10 listing cùng loại (loại combo, phụ kiện, sản phẩm khác loại). Giá thực tế mỗi listing = GMV 28 ngày chia số bán 28 ngày (số bán bằng 0 thì dùng giá thấp nhất). Tính: giá thấp nhất, trung vị, cao nhất, giá của listing bán chạy nhất, tổng số bán 28 ngày, số đối thủ, trung vị tỷ lệ hoa hồng (commission_rate_percent). Gọi product_overview (28 ngày) CHỈ cho listing bán chạy nhất, đọc tỷ lệ GMV từ affiliate (channel_distribution) và từ quảng cáo (ads_distribution, ad_traffic), bỏ qua daily_trend.
+BƯỚC 3. Chọn tối đa 5 sản phẩm Win (bán chính) và tối đa 5 sản phẩm Vệ tinh (bán kèm, cùng nhóm khách) trong số sản phẩm Hợp. Sản phẩm cầu quá thấp, cạnh tranh quá cao hoặc không bán kèm được thì loại và ghi lý do. Nhận định mỗi sản phẩm giữ lại bằng một từ: Làm, Cân nhắc hoặc Bỏ.
+
+ĐẦU RA, CHỈ 3 KHỐI:
+KHỐI 1. Nhắc lại cụm ngách của tôi, rồi nhận xét ngắn (tối đa 3 dòng) danh sách sản phẩm có hợp ngách và có đủ 5 Win + 5 Vệ tinh không.
+KHỐI 2. Bảng các sản phẩm được giữ lại (tối đa 10 dòng), không tiêu đề, các cột ngăn cách bằng dấu Tab, đặt trong khối code để copy. Đúng 14 cột theo thứ tự: Mã SP (SP1 đến SP10) | Loại (Win hoặc Vệ tinh) | Tên sản phẩm | Giá thấp nhất | Giá trung vị | Giá cao nhất | Giá listing bán chạy nhất | Tổng số bán 28 ngày | Hoa hồng affiliate (số %, ví dụ 10) | % GMV từ affiliate (số) | % GMV từ quảng cáo (số) | Số đối thủ | Nhận định | Link FastMoss của listing bán chạy nhất. Các cột số chỉ ghi số, dùng dấu chấm thập phân, không ký hiệu tiền.
+KHỐI 3. Sản phẩm bị loại kèm lý do, và Giới hạn dữ liệu: tìm theo từ khóa có thể sót listing, số listing đã loại, đơn vị tiền (USD), sản phẩm nào thiếu dữ liệu.
+
+RÀNG BUỘC: Chỉ dùng số FastMoss trả về. Thiếu số nào thì để ô trống và ghi vào khối 3. Không thêm sản phẩm ngoài danh sách của tôi.
+```
+
+### Prompt Ngách và sản phẩm có sẵn cho thị trường VN
+
+```
+VAI TRÒ: Bạn là chuyên gia phân tích thị trường TikTok Shop Việt Nam cho người bán nhập hàng từ Trung Quốc (1688, Taobao) hoặc nhà cung cấp Việt Nam để bán trong nước. Mọi con số lấy từ FastMoss MCP, không ước đoán. Chỉ làm việc với sản phẩm trong danh sách của tôi, không thêm sản phẩm khác.
+
+THỊ TRƯỜNG: VN (tính bằng VND)
+
+NGÁCH CỦA TÔI (theo cấu trúc keywords của mentor):
+- Đối tượng khách cụ thể: [...]
+- Độ tuổi: [...]
+- Sở thích, đặc tính của họ: [...]
+- Nhóm sản phẩm: [...]
+- Cụm ngách đầy đủ (một câu): [...]
+- Các keywords tôi đã thu thập (Instagram Reels, TikTok Shop, Shopee), mỗi dòng một keyword: [...]
+
+DANH SÁCH SẢN PHẨM TÔI ĐÃ TÌM ĐƯỢC (mỗi dòng một sản phẩm: tên, link hoặc giá nếu có):
+[...]
+
+LÀM TUẦN TỰ, KHÔNG HỎI LẠI TÔI:
+BƯỚC 1. Đọc cụm ngách và các keywords. Với mỗi sản phẩm trong danh sách, kiểm tra có hợp ngách không (đúng đối tượng, đúng sở thích, đúng nhóm sản phẩm), ghi Hợp hoặc Chưa hợp kèm một câu lý do. Đặt cho mỗi sản phẩm một từ khóa tiếng Việt gọn, lấy từ keywords của tôi, để tra đối thủ.
+BƯỚC 2. Với các sản phẩm Hợp: gọi product_search (region VN, listing đang bán, sắp xếp theo số bán 28 ngày) theo từ khóa, lấy tối đa 10 listing cùng loại (loại combo, phụ kiện, sản phẩm khác loại). Giá thực tế mỗi listing = GMV 28 ngày chia số bán 28 ngày (số bán bằng 0 thì dùng giá thấp nhất). Lưu ý FastMoss VN: floor_price và ceiling_price tính bằng nghìn đồng (19.47 nghĩa là 19.470 VND), luôn đổi ra VND đầy đủ. Tính: giá thấp nhất, trung vị, cao nhất, giá của listing bán chạy nhất, tổng số bán 28 ngày, số đối thủ, trung vị tỷ lệ hoa hồng (commission_rate_percent). Gọi product_overview (28 ngày) CHỈ cho listing bán chạy nhất, đọc tỷ lệ GMV từ affiliate (channel_distribution) và từ quảng cáo (ads_distribution, ad_traffic), bỏ qua daily_trend.
+BƯỚC 3. Chọn tối đa 5 sản phẩm Win (bán chính) và tối đa 5 sản phẩm Vệ tinh (bán kèm, cùng nhóm khách) trong số sản phẩm Hợp. Sản phẩm cầu quá thấp, cạnh tranh quá cao hoặc không bán kèm được thì loại và ghi lý do. Nhận định mỗi sản phẩm giữ lại bằng một từ: Làm, Cân nhắc hoặc Bỏ.
+
+ĐẦU RA, CHỈ 3 KHỐI:
+KHỐI 1. Nhắc lại cụm ngách của tôi, rồi nhận xét ngắn (tối đa 3 dòng) danh sách sản phẩm có hợp ngách và có đủ 5 Win + 5 Vệ tinh không.
+KHỐI 2. Bảng các sản phẩm được giữ lại (tối đa 10 dòng), không tiêu đề, các cột ngăn cách bằng dấu Tab, đặt trong khối code để copy. Đúng 14 cột theo thứ tự: Mã SP (SP1 đến SP10) | Loại (Win hoặc Vệ tinh) | Tên sản phẩm | Giá thấp nhất | Giá trung vị | Giá cao nhất | Giá listing bán chạy nhất | Tổng số bán 28 ngày | Hoa hồng affiliate (số %, ví dụ 10) | % GMV từ affiliate (số) | % GMV từ quảng cáo (số) | Số đối thủ | Nhận định | Link FastMoss của listing bán chạy nhất. Các cột số chỉ ghi số, dùng dấu chấm thập phân, không ký hiệu tiền.
+KHỐI 3. Sản phẩm bị loại kèm lý do, và Giới hạn dữ liệu: tìm theo từ khóa có thể sót listing, số listing đã loại, đơn vị tiền (VND), sản phẩm nào thiếu dữ liệu.
+
+RÀNG BUỘC: Chỉ dùng số FastMoss trả về. Thiếu số nào thì để ô trống và ghi vào khối 3. Không thêm sản phẩm ngoài danh sách của tôi.
+```
+
 Nếu FastMoss giới hạn lượt gọi: chạy lần 1 cho 5 sản phẩm win, lần 2 cho 5 sản phẩm vệ tinh, rồi dán nối tiếp vào sheet.
 
 ### Prompt Nhập hàng cho thị trường US
