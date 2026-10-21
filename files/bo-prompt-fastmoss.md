@@ -62,10 +62,10 @@ RÀNG BUỘC: Chỉ dùng số FastMoss trả về. Thiếu số nào thì để
 
 ### Prompt Ngách và sản phẩm có sẵn cho thị trường US
 
-Dùng khi bạn đã chốt ngách theo cấu trúc keywords của mentor và đã tìm được danh sách sản phẩm. Dán danh sách sản phẩm vào chỗ `[...]` cuối phần danh sách. AI kết hợp keywords với sản phẩm của bạn rồi ra bảng để dán vào file tính giá.
+Dùng khi bạn đã chốt ngách theo cấu trúc keywords của mentor và đã tìm được danh sách sản phẩm. Dán toàn bộ link các sản phẩm vào chỗ `[...]` ở cuối câu lệnh. AI kết hợp keywords với sản phẩm của bạn rồi ra bảng để dán vào file tính giá.
 
 ```
-VAI TRÒ: Bạn là chuyên gia phân tích thị trường TikTok Shop US cho người bán nhập hàng từ Việt Nam để bán sang Mỹ. Mọi con số lấy từ FastMoss MCP, không ước đoán. Chỉ làm việc với sản phẩm trong danh sách của tôi, không thêm sản phẩm khác.
+VAI TRÒ: Bạn là chuyên gia phân tích thị trường TikTok Shop US cho người bán nhập hàng từ Việt Nam để bán sang Mỹ. Mọi con số lấy từ FastMoss MCP, không ước đoán. Chỉ làm việc với sản phẩm trong DANH SÁCH SẢN PHẨM nằm ở cuối câu lệnh này, không thêm sản phẩm khác.
 
 THỊ TRƯỜNG: US (tính bằng USD)
 
@@ -76,9 +76,6 @@ NGÁCH CỦA TÔI (theo cấu trúc keywords của mentor):
 - Nhóm sản phẩm: [...]
 - Cụm ngách đầy đủ (một câu): [...]
 - Các keywords tôi đã thu thập (Instagram Reels, TikTok Shop, Shopee), mỗi dòng một keyword: [...]
-
-DANH SÁCH SẢN PHẨM TÔI ĐÃ TÌM ĐƯỢC (mỗi dòng một sản phẩm: tên, link hoặc giá nếu có):
-[...]
 
 LÀM TUẦN TỰ, KHÔNG HỎI LẠI TÔI:
 BƯỚC 1. Đọc cụm ngách và các keywords. Với mỗi sản phẩm trong danh sách, kiểm tra có hợp ngách không (đúng đối tượng, đúng sở thích, đúng nhóm sản phẩm), ghi Hợp hoặc Chưa hợp kèm một câu lý do. Đặt cho mỗi sản phẩm một từ khóa tiếng Anh gọn, lấy từ keywords của tôi, để tra đối thủ.
@@ -91,12 +88,16 @@ KHỐI 2. Bảng các sản phẩm được giữ lại (tối đa 10 dòng), kh
 KHỐI 3. Sản phẩm bị loại kèm lý do, và Giới hạn dữ liệu: tìm theo từ khóa có thể sót listing, số listing đã loại, đơn vị tiền (USD), sản phẩm nào thiếu dữ liệu.
 
 RÀNG BUỘC: Chỉ dùng số FastMoss trả về. Thiếu số nào thì để ô trống và ghi vào khối 3. Không thêm sản phẩm ngoài danh sách của tôi.
+
+======== DANH SÁCH SẢN PHẨM TÔI ĐÃ TÌM ĐƯỢC ========
+Dán TOÀN BỘ LINK các sản phẩm bạn tìm được vào ngay dưới đây, mỗi dòng một sản phẩm (kèm tên hoặc giá nếu có). Xóa dòng [...] rồi dán vào chỗ đó:
+[...]
 ```
 
 ### Prompt Ngách và sản phẩm có sẵn cho thị trường VN
 
 ```
-VAI TRÒ: Bạn là chuyên gia phân tích thị trường TikTok Shop Việt Nam cho người bán nhập hàng từ Trung Quốc (1688, Taobao) hoặc nhà cung cấp Việt Nam để bán trong nước. Mọi con số lấy từ FastMoss MCP, không ước đoán. Chỉ làm việc với sản phẩm trong danh sách của tôi, không thêm sản phẩm khác.
+VAI TRÒ: Bạn là chuyên gia phân tích thị trường TikTok Shop Việt Nam cho người bán nhập hàng từ Trung Quốc (1688, Taobao) hoặc nhà cung cấp Việt Nam để bán trong nước. Mọi con số lấy từ FastMoss MCP, không ước đoán. Chỉ làm việc với sản phẩm trong DANH SÁCH SẢN PHẨM nằm ở cuối câu lệnh này, không thêm sản phẩm khác.
 
 THỊ TRƯỜNG: VN (tính bằng VND)
 
@@ -107,9 +108,6 @@ NGÁCH CỦA TÔI (theo cấu trúc keywords của mentor):
 - Nhóm sản phẩm: [...]
 - Cụm ngách đầy đủ (một câu): [...]
 - Các keywords tôi đã thu thập (Instagram Reels, TikTok Shop, Shopee), mỗi dòng một keyword: [...]
-
-DANH SÁCH SẢN PHẨM TÔI ĐÃ TÌM ĐƯỢC (mỗi dòng một sản phẩm: tên, link hoặc giá nếu có):
-[...]
 
 LÀM TUẦN TỰ, KHÔNG HỎI LẠI TÔI:
 BƯỚC 1. Đọc cụm ngách và các keywords. Với mỗi sản phẩm trong danh sách, kiểm tra có hợp ngách không (đúng đối tượng, đúng sở thích, đúng nhóm sản phẩm), ghi Hợp hoặc Chưa hợp kèm một câu lý do. Đặt cho mỗi sản phẩm một từ khóa tiếng Việt gọn, lấy từ keywords của tôi, để tra đối thủ.
@@ -122,6 +120,10 @@ KHỐI 2. Bảng các sản phẩm được giữ lại (tối đa 10 dòng), kh
 KHỐI 3. Sản phẩm bị loại kèm lý do, và Giới hạn dữ liệu: tìm theo từ khóa có thể sót listing, số listing đã loại, đơn vị tiền (VND), sản phẩm nào thiếu dữ liệu.
 
 RÀNG BUỘC: Chỉ dùng số FastMoss trả về. Thiếu số nào thì để ô trống và ghi vào khối 3. Không thêm sản phẩm ngoài danh sách của tôi.
+
+======== DANH SÁCH SẢN PHẨM TÔI ĐÃ TÌM ĐƯỢC ========
+Dán TOÀN BỘ LINK các sản phẩm bạn tìm được vào ngay dưới đây, mỗi dòng một sản phẩm (kèm tên hoặc giá nếu có). Xóa dòng [...] rồi dán vào chỗ đó:
+[...]
 ```
 
 Nếu FastMoss giới hạn lượt gọi: chạy lần 1 cho 5 sản phẩm win, lần 2 cho 5 sản phẩm vệ tinh, rồi dán nối tiếp vào sheet.
