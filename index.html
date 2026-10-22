@@ -573,6 +573,10 @@ details.more>summary{font-weight:600}
 .gt-more>summary::-webkit-details-marker{display:none}
 .gt-endc{padding-top:6px;font-size:16px}
 @media (max-width:560px){.gt-st{padding-left:52px}.gt-br{margin-left:22px}.gt-br::before{left:-53px;width:41px}}
+.dl{display:grid;gap:10px;margin:10px 0 24px}
+.dl-c{display:grid;gap:4px;border:1px solid rgba(55,53,47,.2);border-radius:8px;padding:12px 14px;text-decoration:none;color:#37352F;background:#fff}
+.dl-c:hover{background:rgba(55,53,47,.05)}
+.dl-c b{font-size:17px;font-weight:600}.dl-c span{font-size:14.5px;color:rgba(55,53,47,.75)}.dl-c em{font-style:normal;display:flex;gap:6px;flex-wrap:wrap;margin-top:2px}.dl-c em .tg{display:inline-block;margin:0;padding:1px 9px;border-radius:4px;background:rgba(55,53,47,.09);color:#37352F;font-size:12.5px;line-height:1.5}
 .ntn-lb{font-size:13.5px;color:rgba(55,53,47,.65);margin:16px 0 4px;font-weight:500}
 .ntn-bd p{margin:4px 0}
 .ntn-co{display:block;background:#F7F6F3;border-radius:4px;padding:10px 14px;margin:6px 0;font-size:15.5px}
@@ -1242,7 +1246,7 @@ function aiFill(k,s){
 }
 var DOCST={
 VN:{
-1:[{t:"Tìm ngách bằng tư duy (PDF)",u:"files/tim-ngach-vn.pdf"}],
+1:[{t:"Tìm ngách bằng tư duy (VN)",u:"files/tim-ngach-vn.pdf"}],
 2:[{t:"Sổ tay dùng AI (PDF)",u:"files/so-tay-dung-ai-fastmoss.pdf"},{t:"Bộ prompt FastMoss",u:"files/bo-prompt-fastmoss.html"},{t:"File tính giá",u:"files/TinhGia_TuDong.xlsx"},{t:"Tìm nhà cung cấp bằng AI (VN)",u:"files/tim-nha-cung-cap-vn.pdf"}],
 3:[{t:"Tìm nhà cung cấp bằng AI (VN)",u:"files/tim-nha-cung-cap-vn.pdf"},{t:"File tính giá",u:"files/TinhGia_TuDong.xlsx"}],
 4:[{t:"File tính giá",u:"files/TinhGia_TuDong.xlsx"}]
@@ -1251,9 +1255,28 @@ US:{
 1:[{t:"Tìm ngách bằng tư duy (US)",u:"files/tim-ngach-us.pdf"},{t:"Sổ tay dùng AI (PDF)",u:"files/so-tay-dung-ai-fastmoss.pdf"},{t:"Bộ prompt FastMoss",u:"files/bo-prompt-fastmoss.html"}],
 2:[{t:"Tìm nhà cung cấp bằng AI (US)",u:"files/tim-nha-cung-cap-us.pdf"},{t:"File tính giá",u:"files/TinhGia_TuDong.xlsx"}]
 }};
+var DOCDESC={
+"files/tim-ngach-vn.pdf":"Cách tìm một ngách bằng tư duy, làm trước khi mở FastMoss.",
+"files/tim-ngach-us.pdf":"Cách tìm một ngách bằng tư duy, làm trước khi mở FastMoss.",
+"files/so-tay-dung-ai-fastmoss.pdf":"Cài ChatGPT hoặc Claude, nối FastMoss MCP, dùng câu lệnh từng bước.",
+"files/bo-prompt-fastmoss.html":"Các câu lệnh AI sẵn dùng, copy và dán.",
+"files/TinhGia_TuDong.xlsx":"File tính giá bán và lợi nhuận. Dán kết quả AI vào là có kết luận.",
+"files/tim-nha-cung-cap-vn.pdf":"Dùng AI tìm, hỏi và so sánh nhà cung cấp trên 1688.",
+"files/tim-nha-cung-cap-us.pdf":"Dùng AI tìm, hỏi và so sánh nhà cung cấp ở Việt Nam và trên 1688."};
+function docsView(mk,model){
+  var map={},order=[];
+  var steps=DOCST[mk]||{};
+  Object.keys(steps).map(Number).sort(function(x,y){return x-y}).forEach(function(n){
+    steps[n].forEach(function(d){var u=typeof d.u==="function"?d.u(mk):d.u, t=typeof d.t==="function"?d.t(mk):d.t;
+      if(!map[u]){map[u]={t:t,u:u,st:[]};order.push(u)} map[u].st.push(n)});
+  });
+  var nm={};(model||[]).forEach(function(m){nm[m.n]=m.pb.name});
+  return '<h2 class="ntn-h2">Tài liệu</h2><p class="ntn-mu">Mỗi tài liệu dùng ở một số trạm trên hành trình. Mở đúng tài liệu khi bạn tới trạm đó.</p><div class="dl">'+order.map(function(u){var d=map[u];
+    return '<a class="dl-c" href="'+esc(d.u)+'" target="_blank" rel="noopener"><b>'+esc(d.t)+'</b><span>'+esc(DOCDESC[d.u]||"")+'</span><em>'+d.st.map(function(n){return '<i class="tg">Trạm '+n+'</i>'}).join(" ")+'</em></a>'}).join("")+'</div>';
+}
 function ntnView(s,a,asn,ms,rs,tab){
   var mk=a.mk, ns=a.ns, model=stepModel(a), now=new Date(), nm=a.nextM, openN=a.cur<=ns?a.cur:0, MN=!window.STUDENT_MODE;
-  var TB=[["tien-do","Quá trình"],["bai-tap","Bài tập"],["trinh-chieu","Slide"]].concat(MN?[["nhat-ky","Nhật ký"]]:[]);
+  var TB=[["tien-do","Quá trình"],["bai-tap","Bài tập"],["tai-lieu","Tài liệu"]].concat(MN?[["nhat-ky","Nhật ký"]]:[]);
   var mnProps='';
   if(MN){
     var ac=s.account, hasAc=ac&&ac.password&&s.email, al=a.attn.slice().sort(function(p,q){return q.sev-p.sev}).filter(function(x){return x.sev>=2});
@@ -1273,7 +1296,6 @@ function ntnView(s,a,asn,ms,rs,tab){
     +'<div class="ntn-props">'+mnProps
     +'<div><span>Tiến độ</span><b>'+a.done+' / '+ns+' bước</b></div>'
     +(nm?'<div><span>Họp tiếp</span><div><b>'+DOW[parse(nm.date).getDay()]+' '+fmt(nm.date)+(nm.time?', '+esc(nm.time):'')+'</b>'+(/^https:\/\//.test(nm.link||"")?' <a href="'+esc(nm.link)+'" target="_blank" rel="noopener">Link họp</a>':'')+'</div></div>':'')
-    +'<div><span>Tài liệu</span><div><a href="files/tim-ngach-'+(mk==='US'?'us':'vn')+'.pdf" target="_blank" rel="noopener">Tìm ngách bằng tư duy ('+(mk==='US'?'US':'VN')+')</a> · <a href="files/bo-prompt-fastmoss.html" target="_blank" rel="noopener">Bộ prompt FastMoss</a> · <a href="files/so-tay-dung-ai-fastmoss.pdf" target="_blank" rel="noopener">Sổ tay dùng AI (PDF)</a> · <a href="files/TinhGia_TuDong.xlsx">File tính giá</a> · <a href="files/tim-nha-cung-cap-'+(mk==='US'?'us':'vn')+'.pdf" target="_blank" rel="noopener">Tìm nhà cung cấp bằng AI ('+(mk==='US'?'US':'VN')+')</a></div></div>'
     +'</div>'
     +'<nav class="ntn-tabs" aria-label="Mục">'+TB.map(function(t){return '<a href="#/'+esc(s.id)+'/'+t[0]+(window.PREVIEW?'?xem':'')+'"'+(t[0]===tab?' aria-current="page"':'')+'>'+t[1]+'</a>'}).join("")+'</nav>';
   function tag(st,raw){return st==="done"?'<i class="tg gr">Đã xong'+(raw?' '+fmt(raw):'')+'</i>':(st==="cur"?'<i class="tg y">Đang làm</i>':'<i class="tg">Chưa tới</i>')}
@@ -1289,7 +1311,7 @@ function ntnView(s,a,asn,ms,rs,tab){
         +(MN&&x.status!=="Đạt"&&x.status!=="Hủy"?'<p><button type="button" class="ntn-bt" data-copyass="'+esc(x.id)+'">Sao chép tin nhắn giao bài này</button></p>':'')+'</div>';
     }
   if(MN&&tab==="nhat-ky") return '<div class="ntn">'+head+secActivity(a)+'</div>';
-  if(tab==="trinh-chieu") return '<div class="ntn">'+head+deckView(s,mk,asn,ms,rs)+'</div>';
+  if(tab==="tai-lieu") return '<div class="ntn">'+head+docsView(mk,model)+'</div>';
   if(tab==="bai-tap"){
     var live=asn.filter(function(x){return x.status!=="Đạt"&&x.status!=="Hủy"}), done=asn.filter(function(x){return x.status==="Đạt"||(MN&&x.status==="Hủy")});
     var o='<h2 class="ntn-h2">Bài đang giao</h2>'+(live.length?live.map(card).join(""):'<p class="ntn-mu">Chưa có bài đang giao. Chờ mentor giao bài.</p>');
@@ -1595,7 +1617,7 @@ function analysisView(rs){
 }
 var STABS=[["tien-do","Tiến độ"],["trinh-chieu","Trình chiếu"],["bai-tap","Theo tuần"],["lich-hop","Lịch họp"],["bao-cao","Báo cáo"],["nhat-ky","Nhật ký"]];
 function viewStudent(id,tab){
-  var SM=!!window.STUDENT_MODE, TABS=SM?[["tien-do","Quá trình"],["bai-tap","Bài tập"],["trinh-chieu","Slide"]]:[["tien-do","Quá trình"],["bai-tap","Bài tập"],["trinh-chieu","Slide"],["nhat-ky","Nhật ký"]];
+  var SM=!!window.STUDENT_MODE, TABS=SM?[["tien-do","Quá trình"],["bai-tap","Bài tập"],["tai-lieu","Tài liệu"]]:[["tien-do","Quá trình"],["bai-tap","Bài tập"],["tai-lieu","Tài liệu"],["nhat-ky","Nhật ký"]];
   if((SM&&tab==="phan-tich")||(!SM&&(tab==="lich-hop"||tab==="bao-cao"||tab==="phan-tich"))) tab="bai-tap";
   tab=TABS.some(function(x){return x[0]===tab})?tab:"tien-do";
   var back=SM?'':'<a class="back" href="#/hoc-vien">← Danh sách học viên</a>';
