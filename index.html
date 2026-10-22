@@ -588,6 +588,8 @@ details.more>summary{font-weight:600}
 .gt-ch.b{text-decoration-color:#2b78c9}.gt-ch.r{text-decoration-color:#d44c47}
 .gt-br .nb{margin:6px 0 0}.gt-br .ntn-as{margin:0;padding:0;border:0}
 .gt-st .nck li.y i{background:#0b0b0b;border-color:#0b0b0b}.gt-st .nck li i{border-color:#0b0b0b}
+.gt-gt{margin:8px 0 12px;border:1.5px solid #0b0b0b;border-radius:9px;padding:8px 12px 6px;background:#fffbe6}
+.gt-gh{display:flex;justify-content:space-between;align-items:center;font-size:15px;margin-bottom:2px}.gt-gh b{font-family:Fraunces,Georgia,serif;font-size:16px}.gt-gh span{font-weight:700}
 .gt-more>summary{cursor:pointer;font-size:14px;color:#0b0b0b;font-weight:600;padding:4px 0;list-style:none}
 .gt-more>summary::before{content:"\25B8";margin-right:6px}.gt-more[open]>summary::before{content:"\25BE"}
 .gt-more>summary::-webkit-details-marker{display:none}
@@ -1280,6 +1282,7 @@ US:{
 4:[{t:"Đăng ký LLC (US)",u:"files/dang-ky-llc-us.pdf"}],
 7:[{t:"Đăng ký LLC (US)",u:"files/dang-ky-llc-us.pdf"}]
 }};
+var STORE_SPLIT={US:{papers:[0,1,2,3],papersStep:4,plat:[4,5,6],platStep:7},VN:{papers:[1,2,3],papersStep:1,plat:[0,4,5],platStep:1}};
 var DOCDESC={
 "files/tim-ngach-vn.pdf":"Cách tìm một ngách bằng tư duy, làm trước khi mở FastMoss.",
 "files/tim-ngach-us.pdf":"Cách tìm một ngách bằng tư duy, làm trước khi mở FastMoss.",
@@ -1367,6 +1370,11 @@ function ntnView(s,a,asn,ms,rs,tab){
     var brs=mine.map(function(x){
       if(MN) return '<div class="gt-br '+brCls(x)+'"><span class="gt-bl">Bài tập</span>'+card(x)+'</div>';
       return '<div class="gt-br '+brCls(x)+'"><div class="gt-bt"><b>'+esc(x.title)+'</b>'+dueTxt(x)+'</div>'+((x.items||[]).length?'<ul class="nb">'+x.items.map(function(i){return '<li>'+esc(i)+'</li>'}).join("")+'</ul>':'')+'</div>'}).join("");
+    var gt='';
+    function gtBlock(ttl,idxs){var stl=STORE[mk]||STORE.VN, stk=((s.checks||{}).store)||[], nOk=idxs.filter(function(q){return stk.indexOf(q)>=0}).length;
+      return '<div class="gt-gt"><div class="gt-gh"><b>'+ttl+'</b><span>'+nOk+' / '+idxs.length+'</span></div><ul class="nck">'+idxs.map(function(q){var y=stk.indexOf(q)>=0;return '<li class="'+(y?'y':'')+'"><i></i><span>'+esc(stl[q])+'</span></li>'}).join("")+'</ul></div>'}
+    var SP=STORE_SPLIT[mk];
+    if(SP){ if(n===SP.papersStep) gt+=gtBlock("Giấy tờ phải đủ",SP.papers); if(n===SP.platStep) gt+=gtBlock("Đăng ký nền tảng",SP.plat); }
     var ck=(m.st==="cur"&&m.sub.length)?'<ul class="nck">'+m.sub.map(function(x,k){var y=m.ck.indexOf(k)>=0;return '<li class="'+(y?'y':'')+'"><i></i><span>'+esc(x)+'</span></li>'}).join("")+'</ul>':'';
     var mn='';
     if(MN){
@@ -1382,7 +1390,7 @@ function ntnView(s,a,asn,ms,rs,tab){
     var dt=m.st==="done"&&m.raw?'<span class="gt-dt">xong '+fmt(m.raw)+'</span>':'';
     return '<div class="gt-st st-'+m.st+(idx===model.length-1?' gt-last':'')+'" data-n="'+n+'">'
       +'<div class="gt-l"><details class="gt-d" id="stp-'+n+'"'+(n===openN?' open':'')+'><summary><span class="nt">'+n+'. '+esc(m.pb.name)+'</span>'+hereP+dt+(MN&&m.st==="cur"&&m.days!=null?'<i class="tg'+(a.risk>=3?' r':(a.risk===2?' y':''))+'">'+m.days+'/'+m.std+' ngày</i>':'')+'</summary>'
-      +'<div class="gt-bd">'+prs+brs+ck+mn+'</div></details></div>'
+      +'<div class="gt-bd">'+gt+prs+brs+ck+mn+'</div></details></div>'
       +'<div class="gt-m"><span class="gt-nd">'+(m.st==="done"?'&#10003;':(m.st==="cur"?'':n))+'</span></div>'
       +'<div class="gt-r">'+dk+'</div></div>';
   }).join("");
