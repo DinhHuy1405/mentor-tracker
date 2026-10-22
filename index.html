@@ -552,6 +552,16 @@ details.more>summary{font-weight:600}
 .gt-d>summary .nt{flex:0 1 auto}
 .st-todo .gt-d>summary .nt{color:rgba(55,53,47,.5);font-weight:500}
 .gt-here{background:#37352F;color:#fff;border-radius:10px;padding:2px 9px;font-size:12px;font-weight:600}
+.gt-docs{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:4px 0 12px;padding:10px 12px;background:#eef6ff;border:1.5px solid #2b78c9;border-radius:8px}
+.gt-dl{font-size:13px;font-weight:700;color:#1d5fa8;text-transform:uppercase;letter-spacing:.04em;margin-right:2px}
+.gt-doc{display:inline-flex;align-items:center;gap:6px;background:#2b78c9;color:#fff;border-radius:6px;padding:7px 13px;font-size:15px;font-weight:500;text-decoration:none}
+.gt-doc::before{content:"";width:11px;height:14px;border:2px solid #fff;border-radius:2px;box-sizing:border-box}
+.gt-doc:hover{background:#1d5fa8}
+.gt-dc{font-style:normal;background:#dbeafe;color:#1d5fa8;border-radius:10px;padding:1px 9px;font-size:12.5px;font-weight:600}
+.gt-dt{font-size:13px;color:rgba(55,53,47,.55);font-weight:400}
+.gt-bt{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.gt-bt b{font-size:16px}
+.gt-ch{font-style:normal;font-size:12.5px;border-radius:4px;padding:1px 8px;background:#fdecc8}.gt-ch.b{background:#dbeafe}.gt-ch.r{background:#fddcd9}
+.gt-br .nb{margin:6px 0 0}
 .gt-bd{padding:6px 0 4px}
 .gt-tags{display:flex;gap:6px;flex-wrap:wrap;margin:2px 0 10px}
 .gt-tag{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(55,53,47,.3);border-radius:5px;padding:4px 10px;font-size:14px;color:#37352F;text-decoration:none;background:#fff}
@@ -1272,7 +1282,7 @@ function docsView(mk,model){
   });
   var nm={};(model||[]).forEach(function(m){nm[m.n]=m.pb.name});
   return '<h2 class="ntn-h2">Tài liệu</h2><p class="ntn-mu">Mỗi tài liệu dùng ở một số trạm trên hành trình. Mở đúng tài liệu khi bạn tới trạm đó.</p><div class="dl">'+order.map(function(u){var d=map[u];
-    return '<a class="dl-c" href="'+esc(d.u)+'" target="_blank" rel="noopener"><b>'+esc(d.t)+'</b><span>'+esc(DOCDESC[d.u]||"")+'</span><em>'+d.st.map(function(n){return '<i class="tg">Trạm '+n+'</i>'}).join(" ")+'</em></a>'}).join("")+'</div>';
+    return '<a class="dl-c" href="'+esc(d.u)+'" target="_blank" rel="noopener"><b>'+esc(d.t)+'</b><span>'+esc(DOCDESC[d.u]||"")+'</span><em>'+d.st.map(function(n){return '<i class="gt-dc">Trạm '+n+'</i>'}).join(" ")+'</em></a>'}).join("")+'</div>';
 }
 function ntnView(s,a,asn,ms,rs,tab){
   var mk=a.mk, ns=a.ns, model=stepModel(a), now=new Date(), nm=a.nextM, openN=a.cur<=ns?a.cur:0, MN=!window.STUDENT_MODE;
@@ -1330,30 +1340,34 @@ function ntnView(s,a,asn,ms,rs,tab){
   var curN=0;model.forEach(function(m){if(m.st==="cur")curN=m.n});
   function stepOfA(x){var v=parseInt(x.step,10);return v>=1&&v<=ns?v:curN}
   function brCls(x){var late=false;if(x.status!=="Đã nộp"){var dd=parse(x.due);late=!!dd&&new Date(dd.getFullYear(),dd.getMonth(),dd.getDate(),23,59)<now}return x.status==="Đã nộp"?"sub":(late?"late":"live")}
+  function dueTxt(x){if(x.status==="Đã nộp")return '<i class="gt-ch b">Đã nộp, chờ nhận xét</i>';var dd=parse(x.due);if(!x.due)return '';var late=!!dd&&new Date(dd.getFullYear(),dd.getMonth(),dd.getDate(),23,59)<now;return '<i class="gt-ch '+(late?'r':'y')+'">'+(late?'Quá hạn ':'Hạn ')+fmt(x.due)+'</i>'}
   var stations=model.map(function(m,idx){
     var n=m.n, t=(TRAIN[mk]||{})[n], pr=(AIPR_AT[mk]||{})[n]||[];
     var mine=liveA.filter(function(x){return stepOfA(x)===n});
-    var okA=doneA.filter(function(x){return parseInt(x.step,10)===n});
     var docs=(DOCST[mk]||{})[n]||[];
-    var tags=docs.length?'<div class="gt-tags">'+docs.map(function(d){return '<a class="gt-tag" href="'+esc(typeof d.u==="function"?d.u(mk):d.u)+'" target="_blank" rel="noopener">'+esc(typeof d.t==="function"?d.t(mk):d.t)+'</a>'}).join("")+'</div>':'';
-    var brs=mine.map(function(x){return '<div class="gt-br '+brCls(x)+'"><span class="gt-bl">Bài tập</span>'+card(x)+'</div>'}).join("")
-      +okA.map(function(x){return '<div class="gt-br ok"><span class="gt-bl">Bài tập</span><div class="gt-okc"><b>'+esc(x.title)+'</b> <i class="tg gr">Đạt</i></div></div>'}).join("");
-    var todo='<p class="ntn-p">'+inl(m.pb.task[mk])+'</p>';
-    if(m.sub.length) todo+='<ul class="nck">'+m.sub.map(function(x,i){var y=m.st==="done"||m.ck.indexOf(i)>=0;return '<li class="'+(y?'y':'')+'"><i></i><span>'+esc(x)+'</span></li>'}).join("")+'</ul>';
-    if(t) todo+='<p class="ntn-lb">Xong trạm này khi</p><ul class="nb">'+t.out.map(function(x){return '<li>'+esc(x)+'</li>'}).join("")+'</ul>';
+    var showAll=m.st==="cur"||MN;
+    var dk=docs.length?'<div class="gt-docs"><span class="gt-dl">Tài liệu</span>'+docs.map(function(d){return '<a class="gt-doc" href="'+esc(typeof d.u==="function"?d.u(mk):d.u)+'" target="_blank" rel="noopener">'+esc(typeof d.t==="function"?d.t(mk):d.t)+'</a>'}).join("")+'</div>':'';
     var prs=pr.map(function(k){var tx=aiFill(k,s);return '<details class="ntn-pr"><summary>Câu lệnh AI: '+esc(AIPR[k].name)+(tx.filled?' <i class="tg gr">Đã điền sẵn thông tin của bạn</i>':'')+'</summary><pre>'+esc(tx.text)+'</pre><p><button type="button" class="ntn-bt" data-copypr="'+k+'">Sao chép câu lệnh</button></p></details>'}).join("");
+    var brs=mine.map(function(x){
+      if(MN) return '<div class="gt-br '+brCls(x)+'"><span class="gt-bl">Bài tập</span>'+card(x)+'</div>';
+      return '<div class="gt-br '+brCls(x)+'"><div class="gt-bt"><b>'+esc(x.title)+'</b>'+dueTxt(x)+'</div>'+((x.items||[]).length?'<ul class="nb">'+x.items.map(function(i){return '<li>'+esc(i)+'</li>'}).join("")+'</ul>':'')+'</div>'}).join("");
+    var ck=(m.st==="cur"&&m.sub.length)?'<ul class="nck">'+m.sub.map(function(x,k){var y=m.ck.indexOf(k)>=0;return '<li class="'+(y?'y':'')+'"><i></i><span>'+esc(x)+'</span></li>'}).join("")+'</ul>':'';
     var mn='';
     if(MN){
+      mn+='<p class="ntn-p">'+inl(m.pb.task[mk])+'</p>';
+      if(t) mn+='<p class="ntn-lb">Xong trạm này khi</p><ul class="nb">'+t.out.map(function(x){return '<li>'+esc(x)+'</li>'}).join("")+'</ul>';
       if(m.pb.help&&m.pb.help[mk]) mn+='<p class="ntn-lb">Mentor cần support</p><p class="ntn-p">'+inl(m.pb.help[mk])+'</p>';
       if(m.st!=="done"&&m.pb.risk) mn+='<p class="ntn-lb">Rủi ro hay gặp</p><p class="ntn-p">'+esc(m.pb.risk)+'</p>';
       if(t) mn+='<p class="ntn-lb">Buổi train 30 phút</p><p class="ntn-p">'+esc(t.title)+'. Chuẩn bị: '+esc(t.prep)+'</p>';
       if(m.st!=="done") mn+='<p><button type="button" class="ntn-bt" data-copystep="'+esc(s.id)+':'+n+'">Sao chép tin nhắn giao bước này</button></p>';
+      mn='<details class="gt-more"><summary>Dành cho mentor</summary><div class="ntn-bd">'+mn+'</div></details>';
     }
-    var badge=(mine.length?'<i class="tg y">'+mine.length+' bài tập</i>':'');
+    var chip=docs.length&&m.st!=="cur"?'<i class="gt-dc">'+docs.length+' tài liệu</i>':'';
     var hereP=m.st==="cur"?'<span class="gt-here">BẠN Ở ĐÂY</span>':'';
+    var dt=m.st==="done"&&m.raw?'<span class="gt-dt">xong '+fmt(m.raw)+'</span>':'';
     return '<div class="gt-st st-'+m.st+(idx===model.length-1?' gt-last':'')+'"><span class="gt-nd">'+(m.st==="done"?'&#10003;':(m.st==="cur"?'':n))+'</span>'
-      +'<details class="gt-d" id="stp-'+n+'"'+(n===openN?' open':'')+'><summary><span class="nt">'+n+'. '+esc(m.pb.name)+'</span>'+hereP+(MN&&m.st==="cur"&&m.days!=null?'<i class="tg'+(a.risk>=3?' r':(a.risk===2?' y':''))+'">'+m.days+'/'+m.std+' ngày</i>':'')+badge+tag(m.st,m.raw)+'</summary>'
-      +'<div class="gt-bd">'+tags+brs+'<div class="gt-info"><details class="gt-more"'+(m.st==="cur"?' open':'')+'><summary>Việc cần làm ở trạm này</summary><div class="ntn-bd">'+todo+prs+mn+'</div></details></div></div></details></div>';
+      +'<details class="gt-d" id="stp-'+n+'"'+(n===openN?' open':'')+'><summary><span class="nt">'+n+'. '+esc(m.pb.name)+'</span>'+hereP+dt+chip+(MN&&m.st==="cur"&&m.days!=null?'<i class="tg'+(a.risk>=3?' r':(a.risk===2?' y':''))+'">'+m.days+'/'+m.std+' ngày</i>':'')+'</summary>'
+      +'<div class="gt-bd">'+dk+prs+brs+ck+mn+'</div></details></div>';
   }).join("");
   var route='<div class="gt">'+stations+'<div class="gt-st gt-last gt-end"><span class="gt-nd gt-flag">&#9873;</span><div class="gt-endc"><b>Đích: đơn hàng thật đầu tiên trên sàn</b></div></div></div>';
   return '<div class="ntn">'+head+route+'</div>';
