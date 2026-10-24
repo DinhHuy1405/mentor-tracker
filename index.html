@@ -590,6 +590,7 @@ details.more>summary{font-weight:600}
 .gt-st .nck li.y i{background:#0b0b0b;border-color:#0b0b0b}.gt-st .nck li i{border-color:#0b0b0b}
 .gt-gt{margin:8px 0 12px;border:1.5px solid #0b0b0b;border-radius:9px;padding:8px 12px 6px;background:#fffbe6}
 .gt-gh{display:flex;justify-content:space-between;align-items:center;font-size:15px;margin-bottom:2px}.gt-gh b{font-family:Fraunces,Georgia,serif;font-size:16px}.gt-gh span{font-weight:700}
+.gt-cnt{font-family:Inter,system-ui,sans-serif;font-size:12px;font-weight:600;color:#0b0b0b;border-bottom:2px solid #e0a800}
 .gt-more>summary{cursor:pointer;font-size:14px;color:#0b0b0b;font-weight:600;padding:4px 0;list-style:none}
 .gt-more>summary::before{content:"\25B8";margin-right:6px}.gt-more[open]>summary::before{content:"\25BE"}
 .gt-more>summary::-webkit-details-marker{display:none}
@@ -1271,16 +1272,16 @@ function aiFill(k,s){
 }
 var DOCST={
 VN:{
-1:[{t:"Tìm ngách bằng tư duy (VN)",u:"files/tim-ngach-vn.pdf"}],
-2:[{t:"Sổ tay dùng AI (PDF)",u:"files/so-tay-dung-ai-fastmoss.pdf"},{t:"Bộ prompt FastMoss",u:"files/bo-prompt-fastmoss.html"},{t:"File tính giá",u:"files/TinhGia_TuDong.xlsx"},{t:"Tìm nhà cung cấp bằng AI (VN)",u:"files/tim-nha-cung-cap-vn.pdf"}],
-3:[{t:"Tìm nhà cung cấp bằng AI (VN)",u:"files/tim-nha-cung-cap-vn.pdf"},{t:"File tính giá",u:"files/TinhGia_TuDong.xlsx"}],
-4:[{t:"File tính giá",u:"files/TinhGia_TuDong.xlsx"}]
+1:[{k:"ngach",t:"Tìm ngách bằng tư duy (VN)",u:"files/tim-ngach-vn.pdf"}],
+2:[{k:"sotay",t:"Sổ tay dùng AI (PDF)",u:"files/so-tay-dung-ai-fastmoss.pdf"},{k:"prompt",t:"Bộ prompt FastMoss",u:"files/bo-prompt-fastmoss.html"},{k:"tinhgia",t:"File tính giá",u:"files/TinhGia_TuDong.xlsx"},{k:"ncc",t:"Tìm nhà cung cấp bằng AI (VN)",u:"files/tim-nha-cung-cap-vn.pdf"}],
+3:[{k:"ncc",t:"Tìm nhà cung cấp bằng AI (VN)",u:"files/tim-nha-cung-cap-vn.pdf"},{k:"tinhgia",t:"File tính giá",u:"files/TinhGia_TuDong.xlsx"}],
+4:[{k:"tinhgia",t:"File tính giá",u:"files/TinhGia_TuDong.xlsx"}]
 },
 US:{
-1:[{t:"Tìm ngách bằng tư duy (US)",u:"files/tim-ngach-us.pdf"},{t:"Sổ tay dùng AI (PDF)",u:"files/so-tay-dung-ai-fastmoss.pdf"},{t:"Bộ prompt FastMoss",u:"files/bo-prompt-fastmoss.html"}],
-2:[{t:"Tìm nhà cung cấp bằng AI (US)",u:"files/tim-nha-cung-cap-us.pdf"},{t:"File tính giá",u:"files/TinhGia_TuDong.xlsx"}],
-4:[{t:"Đăng ký LLC (US)",u:"files/dang-ky-llc-us.pdf"}],
-7:[{t:"Đăng ký LLC (US)",u:"files/dang-ky-llc-us.pdf"}]
+1:[{k:"ngach",t:"Tìm ngách bằng tư duy (US)",u:"files/tim-ngach-us.pdf"},{k:"sotay",t:"Sổ tay dùng AI (PDF)",u:"files/so-tay-dung-ai-fastmoss.pdf"},{k:"prompt",t:"Bộ prompt FastMoss",u:"files/bo-prompt-fastmoss.html"}],
+2:[{k:"ncc",t:"Tìm nhà cung cấp bằng AI (US)",u:"files/tim-nha-cung-cap-us.pdf"},{k:"tinhgia",t:"File tính giá",u:"files/TinhGia_TuDong.xlsx"}],
+4:[{k:"llc",t:"Đăng ký LLC (US)",u:"files/dang-ky-llc-us.pdf"}],
+7:[{k:"llc",t:"Đăng ký LLC (US)",u:"files/dang-ky-llc-us.pdf"}]
 }};
 var STORE_SPLIT={US:{papers:[0,1,2,3],papersStep:4,plat:[4,5,6],platStep:7},VN:{papers:[1,2,3],papersStep:1,plat:[0,4,5],platStep:1}};
 var DOCDESC={
@@ -1316,6 +1317,7 @@ function ntnView(s,a,asn,ms,rs,tab){
       +(s.blocker?'<div><span>Đang vướng</span><b>'+esc(s.blocker)+'</b></div>':'')
       +(s.mentorNext?'<div><span>Mentor sẽ làm</span><b>'+esc(s.mentorNext)+'</b></div>':'')
       +(s.niche?'<div><span>Ngách</span><b>'+esc(s.niche)+'</b></div>':'')
+      +'<div><span>Tài liệu đã thêm</span><b>'+(Array.isArray(s.docs)&&s.docs.length?esc(s.docs.map(function(k){var L={ngach:"Tìm ngách",sotay:"Sổ tay AI",prompt:"Bộ prompt",tinhgia:"File tính giá",ncc:"Tìm nhà cung cấp",llc:"Đăng ký LLC"};return L[k]||k}).join(", ")):'chưa thêm')+'</b></div>'
       +(s.strength?'<div><span>Thế mạnh</span><b>'+esc(s.strength)+'</b></div>':'')
       +(s.note?'<div><span>Ghi chú</span><b>'+esc(s.note)+'</b></div>':'')
       +'<div><span>Tài khoản</span><div>'+(hasAc?'<b>'+esc(s.email)+'</b> · <code>'+esc(ac.password)+'</code> <button type="button" class="ntn-bt" data-copyacct="'+esc(s.id)+'">Sao chép gửi học viên</button>':'<b>Chưa có'+(s.email?'':', thiếu email học viên')+'</b>')+' <a href="#/'+esc(s.id)+'/tien-do?xem">Xem như học viên</a></div></div>'
@@ -1363,7 +1365,8 @@ function ntnView(s,a,asn,ms,rs,tab){
   var stations=model.map(function(m,idx){
     var n=m.n, t=(TRAIN[mk]||{})[n], pr=(AIPR_AT[mk]||{})[n]||[];
     var mine=liveA.filter(function(x){return stepOfA(x)===n});
-    var docs=(DOCST[mk]||{})[n]||[];
+    var added=Array.isArray(s.docs)?s.docs:[];
+    var docs=((DOCST[mk]||{})[n]||[]).filter(function(d){return added.indexOf(d.k)>=0});
     var showAll=m.st==="cur"||MN;
     var dk=docs.length?'<div class="gt-rl">Tài liệu</div>'+docs.map(function(d){var u=typeof d.u==="function"?d.u(mk):d.u;return '<a class="gt-leaf" data-dk="'+esc(u)+'" href="'+esc(u)+'" target="_blank" rel="noopener">'+esc(typeof d.t==="function"?d.t(mk):d.t)+'</a>'}).join(""):'';
     var prs=pr.map(function(k){var tx=aiFill(k,s);return '<details class="ntn-pr"><summary>Câu lệnh AI: '+esc(AIPR[k].name)+(tx.filled?' <i class="tg gr">Đã điền sẵn thông tin của bạn</i>':'')+'</summary><pre>'+esc(tx.text)+'</pre><p><button type="button" class="ntn-bt" data-copypr="'+k+'">Sao chép câu lệnh</button></p></details>'}).join("");
@@ -1389,12 +1392,12 @@ function ntnView(s,a,asn,ms,rs,tab){
     var hereP=m.st==="cur"?'<span class="gt-here">BẠN Ở ĐÂY</span>':'';
     var dt=m.st==="done"&&m.raw?'<span class="gt-dt">xong '+fmt(m.raw)+'</span>':'';
     return '<div class="gt-st st-'+m.st+(idx===model.length-1?' gt-last':'')+'" data-n="'+n+'">'
-      +'<div class="gt-l"><details class="gt-d" id="stp-'+n+'"'+(n===openN?' open':'')+'><summary><span class="nt">'+n+'. '+esc(m.pb.name)+'</span>'+hereP+dt+(MN&&m.st==="cur"&&m.days!=null?'<i class="tg'+(a.risk>=3?' r':(a.risk===2?' y':''))+'">'+m.days+'/'+m.std+' ngày</i>':'')+'</summary>'
+      +'<div class="gt-l"><details class="gt-d" id="stp-'+n+'"><summary><span class="nt">'+n+'. '+esc(m.pb.name)+'</span>'+hereP+dt+(mine.length?'<span class="gt-cnt">'+mine.length+' bài tập</span>':'')+(MN&&m.st==="cur"&&m.days!=null?'<i class="tg'+(a.risk>=3?' r':(a.risk===2?' y':''))+'">'+m.days+'/'+m.std+' ngày</i>':'')+'</summary>'
       +'<div class="gt-bd">'+gt+prs+brs+ck+mn+'</div></details></div>'
       +'<div class="gt-m"><span class="gt-nd">'+(m.st==="done"?'&#10003;':(m.st==="cur"?'':n))+'</span></div>'
       +'<div class="gt-r">'+dk+'</div></div>';
   }).join("");
-  var route='<p class="gt-note">Đường chính là hành trình của bạn. Nhánh chĩa sang phải là tài liệu cần dùng ở trạm đó. Tài liệu nối chấm chấm là tài liệu dùng lại ở nhiều trạm.</p><div class="gt" id="gt">'+stations+'<div class="gt-st gt-last gt-end"><div class="gt-l"></div><div class="gt-m"><span class="gt-nd gt-flag">&#9873;</span></div><div class="gt-r"><div class="gt-endc"><b>Đích: đơn hàng thật đầu tiên trên sàn</b></div></div></div><svg class="gt-svg" id="gt-svg" aria-hidden="true"></svg></div>';
+  var route='<p class="gt-note">Đường chính là hành trình của bạn. Bấm vào một trạm để xem chi tiết. Mentor sẽ thêm tài liệu chĩa sang phải khi bạn cần dùng.</p><div class="gt" id="gt">'+stations+'<div class="gt-st gt-last gt-end"><div class="gt-l"></div><div class="gt-m"><span class="gt-nd gt-flag">&#9873;</span></div><div class="gt-r"><div class="gt-endc"><b>Đích: đơn hàng thật đầu tiên trên sàn</b></div></div></div><svg class="gt-svg" id="gt-svg" aria-hidden="true"></svg></div>';
   return '<div class="ntn">'+head+route+'</div>';
 }
 function mtgItem(m,open){
@@ -1843,7 +1846,7 @@ function render(){
   if(m&&m[3]&&!window.STUDENT_MODE&&students.some(function(x){return x.id===m[1]})){
     var id0=m[1], keep=[students,assignments,meetings,reports];
     var st0=students.filter(function(x){return x.id===id0})[0];
-    students=[{id:st0.id,name:st0.name,market:st0.market,pkg:st0.pkg,niche:st0.niche,strength:st0.strength,goal:st0.goal,start:st0.start,steps:st0.steps||{},checks:st0.checks||{},status:st0.status,firstOrder:st0.firstOrder}];
+    students=[{id:st0.id,name:st0.name,market:st0.market,pkg:st0.pkg,niche:st0.niche,strength:st0.strength,docs:st0.docs,goal:st0.goal,start:st0.start,steps:st0.steps||{},checks:st0.checks||{},status:st0.status,firstOrder:st0.firstOrder}];
     assignments=keep[1].filter(function(x){return x.studentId===id0}).map(function(x){return {id:x.id,studentId:id0,title:x.title,items:x.items,assignedOn:x.assignedOn,due:x.due,dueTime:x.dueTime,status:x.status,note:x.pubnote,submission:x.submission,reviews:x.reviews}});
     meetings=keep[2].filter(function(x){return x.studentId===id0&&x.status!=="Hủy"}).map(function(x){var h=x.status==="Đã họp";return {id:x.id,studentId:id0,date:x.date,time:x.time,status:x.status,link:x.link,notes:h?x.notes:null,edits:h?x.edits:null,actions:h?x.actions:null,links:h?x.links:null}});
     reports=keep[3].filter(function(x){return x.studentId===id0}).map(function(x){return {id:x.id,studentId:id0,date:x.date,title:x.title,source:x.source,summary:x.summary,verdict:x.verdict,charts:x.charts,body:x.body}});
