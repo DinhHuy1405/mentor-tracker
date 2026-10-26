@@ -590,6 +590,17 @@ details.more>summary{font-weight:600}
 .gt-st .nck li.y i{background:#0b0b0b;border-color:#0b0b0b}.gt-st .nck li i{border-color:#0b0b0b}
 .gt-gt{margin:8px 0 12px;border:1.5px solid #0b0b0b;border-radius:9px;padding:8px 12px 6px;background:#fffbe6}
 .gt-gh{display:flex;justify-content:space-between;align-items:center;font-size:15px;margin-bottom:2px}.gt-gh b{font-family:Fraunces,Georgia,serif;font-size:16px}.gt-gh span{font-weight:700}
+.gt-chev{margin-left:auto;flex:none;width:10px;height:10px;border-right:2.5px solid #0b0b0b;border-bottom:2.5px solid #0b0b0b;transform:rotate(45deg);margin-top:-4px;margin-right:6px;transition:transform .15s}
+.gt-d[open]>summary .gt-chev{transform:rotate(-135deg);margin-top:6px}
+.st-todo .gt-chev{border-color:rgba(11,11,11,.4)}
+.gt-kn{display:grid;gap:4px;margin:2px 0 8px}
+.gt-k{border:1.5px solid rgba(11,11,11,.25);border-radius:8px;padding:2px 10px}
+.gt-k>summary{cursor:pointer;font-size:15px;font-weight:600;padding:5px 0;list-style:none}
+.gt-k>summary::-webkit-details-marker{display:none}.gt-k>summary::marker{content:""}
+.gt-k>summary::after,.gt-k[open]>summary::after{content:none!important}
+.gt-k>summary::before{content:"\25B8";margin-right:6px}.gt-k[open]>summary::before{content:"\25BE"}
+.gt-kf{background:#fff7d6;border:1.5px solid #0b0b0b;border-radius:8px;padding:6px 10px;margin:4px 0;font-weight:600;font-size:14.5px}.gt-kf small{display:block;font-weight:400;margin-top:2px}
+.gt-k .nb{margin:4px 0 8px}
 .gt-cnt{font-family:Inter,system-ui,sans-serif;font-size:12px;font-weight:600;color:#0b0b0b;border-bottom:2px solid #e0a800}
 .gt-more>summary{cursor:pointer;font-size:14px;color:#0b0b0b;font-weight:600;padding:4px 0;list-style:none}
 .gt-more>summary::before{content:"\25B8";margin-right:6px}.gt-more[open]>summary::before{content:"\25BE"}
@@ -1366,7 +1377,8 @@ function ntnView(s,a,asn,ms,rs,tab){
     var n=m.n, t=(TRAIN[mk]||{})[n], pr=(AIPR_AT[mk]||{})[n]||[];
     var mine=liveA.filter(function(x){return stepOfA(x)===n});
     var added=Array.isArray(s.docs)?s.docs:[];
-    var docs=((DOCST[mk]||{})[n]||[]).filter(function(d){return added.indexOf(d.k)>=0});
+    var allDocs=(DOCST[mk]||{})[n]||[];
+    var docs=added.length?allDocs.filter(function(d){return added.indexOf(d.k)>=0}):allDocs;
     var showAll=m.st==="cur"||MN;
     var dk=docs.length?'<div class="gt-rl">Tài liệu</div>'+docs.map(function(d){var u=typeof d.u==="function"?d.u(mk):d.u;return '<a class="gt-leaf" data-dk="'+esc(u)+'" href="'+esc(u)+'" target="_blank" rel="noopener">'+esc(typeof d.t==="function"?d.t(mk):d.t)+'</a>'}).join(""):'';
     var prs=pr.map(function(k){var tx=aiFill(k,s);return '<details class="ntn-pr"><summary>Câu lệnh AI: '+esc(AIPR[k].name)+(tx.filled?' <i class="tg gr">Đã điền sẵn thông tin của bạn</i>':'')+'</summary><pre>'+esc(tx.text)+'</pre><p><button type="button" class="ntn-bt" data-copypr="'+k+'">Sao chép câu lệnh</button></p></details>'}).join("");
@@ -1378,11 +1390,12 @@ function ntnView(s,a,asn,ms,rs,tab){
       return '<div class="gt-gt"><div class="gt-gh"><b>'+ttl+'</b><span>'+nOk+' / '+idxs.length+'</span></div><ul class="nck">'+idxs.map(function(q){var y=stk.indexOf(q)>=0;return '<li class="'+(y?'y':'')+'"><i></i><span>'+esc(stl[q])+'</span></li>'}).join("")+'</ul></div>'}
     var SP=STORE_SPLIT[mk];
     if(SP){ if(n===SP.papersStep) gt+=gtBlock("Giấy tờ phải đủ",SP.papers); if(n===SP.platStep) gt+=gtBlock("Đăng ký nền tảng",SP.plat); }
-    var ck=(m.st==="cur"&&m.sub.length)?'<ul class="nck">'+m.sub.map(function(x,k){var y=m.ck.indexOf(k)>=0;return '<li class="'+(y?'y':'')+'"><i></i><span>'+esc(x)+'</span></li>'}).join("")+'</ul>':'';
+    var ck=m.sub.length?'<p class="ntn-lb">Đầu việc</p><ul class="nck">'+m.sub.map(function(x,k){var y=m.st==="done"||m.ck.indexOf(k)>=0;return '<li class="'+(y?'y':'')+'"><i></i><span>'+esc(x)+'</span></li>'}).join("")+'</ul>':'';
+    var tk='<p class="ntn-p">'+inl(m.pb.task[mk])+'</p>'+(t?'<p class="ntn-lb">Xong trạm này khi</p><ul class="nb">'+t.out.map(function(x){return '<li>'+esc(x)+'</li>'}).join("")+'</ul>':'');
+    var kns=knowFor(mk,n,s.start||"");
+    var kn=kns.length?'<p class="ntn-lb">Kiến thức</p><div class="gt-kn">'+kns.map(function(x){return '<details class="gt-k"><summary>'+esc(x.title)+'</summary>'+(x.formula?'<div class="gt-kf">'+inl(x.formula[0])+(x.formula[1]?'<small>'+esc(x.formula[1])+'</small>':'')+'</div>':'')+'<ul class="nb">'+x.pts.map(function(q){return '<li>'+inl(q)+'</li>'}).join("")+'</ul></details>'}).join("")+'</div>':'';
     var mn='';
     if(MN){
-      mn+='<p class="ntn-p">'+inl(m.pb.task[mk])+'</p>';
-      if(t) mn+='<p class="ntn-lb">Xong trạm này khi</p><ul class="nb">'+t.out.map(function(x){return '<li>'+esc(x)+'</li>'}).join("")+'</ul>';
       if(m.pb.help&&m.pb.help[mk]) mn+='<p class="ntn-lb">Mentor cần support</p><p class="ntn-p">'+inl(m.pb.help[mk])+'</p>';
       if(m.st!=="done"&&m.pb.risk) mn+='<p class="ntn-lb">Rủi ro hay gặp</p><p class="ntn-p">'+esc(m.pb.risk)+'</p>';
       if(t) mn+='<p class="ntn-lb">Buổi train 30 phút</p><p class="ntn-p">'+esc(t.title)+'. Chuẩn bị: '+esc(t.prep)+'</p>';
@@ -1392,12 +1405,12 @@ function ntnView(s,a,asn,ms,rs,tab){
     var hereP=m.st==="cur"?'<span class="gt-here">BẠN Ở ĐÂY</span>':'';
     var dt=m.st==="done"&&m.raw?'<span class="gt-dt">xong '+fmt(m.raw)+'</span>':'';
     return '<div class="gt-st st-'+m.st+(idx===model.length-1?' gt-last':'')+'" data-n="'+n+'">'
-      +'<div class="gt-l"><details class="gt-d" id="stp-'+n+'"><summary><span class="nt">'+n+'. '+esc(m.pb.name)+'</span>'+hereP+dt+(mine.length?'<span class="gt-cnt">'+mine.length+' bài tập</span>':'')+(MN&&m.st==="cur"&&m.days!=null?'<i class="tg'+(a.risk>=3?' r':(a.risk===2?' y':''))+'">'+m.days+'/'+m.std+' ngày</i>':'')+'</summary>'
-      +'<div class="gt-bd">'+gt+prs+brs+ck+mn+'</div></details></div>'
+      +'<div class="gt-l"><details class="gt-d" id="stp-'+n+'"><summary><span class="nt">'+n+'. '+esc(m.pb.name)+'</span>'+hereP+dt+(mine.length?'<span class="gt-cnt">'+mine.length+' bài tập</span>':'')+(MN&&m.st==="cur"&&m.days!=null?'<i class="tg'+(a.risk>=3?' r':(a.risk===2?' y':''))+'">'+m.days+'/'+m.std+' ngày</i>':'')+'<span class="gt-chev" aria-hidden="true"></span></summary>'
+      +'<div class="gt-bd">'+tk+ck+gt+brs+prs+kn+mn+'</div></details></div>'
       +'<div class="gt-m"><span class="gt-nd">'+(m.st==="done"?'&#10003;':(m.st==="cur"?'':n))+'</span></div>'
       +'<div class="gt-r">'+dk+'</div></div>';
   }).join("");
-  var route='<p class="gt-note">Đường chính là hành trình của bạn. Bấm vào một trạm để xem chi tiết. Mentor sẽ thêm tài liệu chĩa sang phải khi bạn cần dùng.</p><div class="gt" id="gt">'+stations+'<div class="gt-st gt-last gt-end"><div class="gt-l"></div><div class="gt-m"><span class="gt-nd gt-flag">&#9873;</span></div><div class="gt-r"><div class="gt-endc"><b>Đích: đơn hàng thật đầu tiên trên sàn</b></div></div></div><svg class="gt-svg" id="gt-svg" aria-hidden="true"></svg></div>';
+  var route='<p class="gt-note">Đường chính là hành trình của bạn, tài liệu chĩa sang phải. Bấm mũi tên xuống ở mỗi trạm để xem đầy đủ.</p><div class="gt" id="gt">'+stations+'<div class="gt-st gt-last gt-end"><div class="gt-l"></div><div class="gt-m"><span class="gt-nd gt-flag">&#9873;</span></div><div class="gt-r"><div class="gt-endc"><b>Đích: đơn hàng thật đầu tiên trên sàn</b></div></div></div><svg class="gt-svg" id="gt-svg" aria-hidden="true"></svg></div>';
   return '<div class="ntn">'+head+route+'</div>';
 }
 function mtgItem(m,open){
