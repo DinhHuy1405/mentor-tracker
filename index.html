@@ -68,6 +68,25 @@ body.nt .sec{border-top:0;padding-top:0}
 body.nt .stat{border-width:1px!important}
 body.nt .tl2.red li,body.nt ul.red li{border-left:0;background:#fbe4e4;border-radius:4px;padding:8px 12px;margin:4px 0;list-style:none}
 body.nt .tl2.red{padding-left:0}
+.nsb[hidden]{display:none!important}
+body.nt{padding-left:256px}
+body.nt .wrap{max-width:900px}
+body.nt nav.tabs.mainnav{display:none}
+body.nt header.bar{padding-block:40px 0}
+.nsb{position:fixed;left:0;top:0;bottom:0;width:240px;background:#f7f7f5;border-right:1px solid #e9e9e7;padding:14px 8px;overflow:auto;font-size:14px;color:#37352f}
+.nsb .ws{display:flex;align-items:center;gap:8px;padding:6px 10px 12px;font-weight:600}
+.nsb .ws i{width:20px;height:20px;border-radius:4px;background:#37352f;color:#fff;font-style:normal;font-size:12px;display:grid;place-items:center}
+.nsb h5{margin:14px 10px 4px;font-size:12px;font-weight:600;color:#9b9a97}
+.nsb a{display:block;padding:4px 10px;border-radius:4px;color:#5f5e5b;text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.7}
+.nsb a:hover{background:#ebebe9}
+.nsb a[aria-current="page"]{background:#e8e8e6;color:#37352f;font-weight:500}
+.nsb a small{color:#9b9a97;margin-left:6px;font-size:12px}
+@media (max-width:820px){
+  body.nt{padding-left:16px}
+  .nsb{position:static;width:auto;margin:0 -16px;border-right:0;border-bottom:1px solid #e9e9e7;padding:8px 10px;display:flex;flex-wrap:wrap;gap:2px 4px;align-items:center}
+  .nsb .ws,.nsb h5,.nsb .nsb-st{display:none}
+  .nsb a{padding:2px 10px}
+}
 @media (max-width:600px){body.nt header.bar{padding-block:28px 0}body.nt header.bar h1{font-size:26px}}
 
 /* Dải số liệu: một khối, chia bằng đường kẻ mảnh */
@@ -872,6 +891,7 @@ a{color:inherit}
 
 </head>
 <body>
+<aside id="side" class="nsb" aria-label="Điều hướng" hidden></aside>
 <div class="wrap">
   <header class="bar">
     <div>
@@ -1902,17 +1922,22 @@ function render(){
     window.STUDENT_MODE=id0; window.PREVIEW=true;
     var html;
     try{html=viewStudent(id0,m[2])}finally{window.STUDENT_MODE=null; window.PREVIEW=false; students=keep[0]; assignments=keep[1]; meetings=keep[2]; reports=keep[3]}
-    $("#nav").hidden=true; $("#nav").innerHTML="";
+    $("#nav").hidden=true; $("#nav").innerHTML=""; $("#side").hidden=true;
     $("#app").innerHTML='<div class="prevbar">Đang xem đúng như học viên thấy. Dữ liệu riêng của mentor đã được ẩn. <a href="#/'+esc(id0)+'">Thoát</a></div>'+html;
     return;
   }
   if(window.STUDENT_MODE){
     var tb=m&&m[1]===window.STUDENT_MODE?m[2]:(m&&MAIN.every(function(x){return x[0]!==m[1]})?null:null);
-    $("#nav").hidden=true; $("#nav").innerHTML="";
+    $("#nav").hidden=true; $("#nav").innerHTML=""; $("#side").hidden=true;
     $("#app").innerHTML=viewStudent(window.STUDENT_MODE,tb);
     return;
   }
   var main=!m||MAIN.some(function(x){return x[0]===m[1]});
+  var curp=m?m[1]:"tong-quan", sd=$("#side");
+  sd.hidden=false;
+  var stl=students.slice().sort(function(a,b){return String(a.name).localeCompare(String(b.name),"vi")});
+  function sgrp(mk,lb){var l=stl.filter(function(x){return (x.market||"VN")===mk});return l.length?'<h5>'+lb+'</h5>'+l.map(function(x){return '<a class="nsb-st" href="#/'+esc(x.id)+'"'+(x.id===curp?' aria-current="page"':'')+'>'+esc(x.name)+'</a>'}).join(""):""}
+  sd.innerHTML='<div class="ws"><i>M</i>Mentor</div>'+MAIN.map(function(t){return '<a href="#/'+t[0]+'"'+(t[0]===curp?' aria-current="page"':'')+'>'+t[1]+'</a>'}).join("")+'<div class="nsb-st">'+sgrp("VN","Việt Nam")+sgrp("US","US")+'</div>';
   $("#nav").innerHTML=main?mainNav(m?m[1]:"tong-quan"):"";
   $("#nav").hidden=!main;
   $("#app").innerHTML=main?viewTrack(m?m[1]:"tong-quan"):viewStudent(m[1],m[2]);
