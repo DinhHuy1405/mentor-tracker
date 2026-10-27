@@ -35,6 +35,41 @@ nav.tabs button:hover{color:var(--ink)}
 nav.tabs button[aria-selected="true"]{color:var(--ink);font-weight:600;border-bottom-color:var(--ink)}
 button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 
+/* Kiểu Notion cơ bản cho các trang quản lý của mentor (học viên không thấy) */
+body.nt{--ink:#37352f;--muted:#5f5e5b;--soft:#787774;--line:#e9e9e7;--line2:#dfdfdd;--serif:var(--font);--r:4px;--rs:4px;font-size:15px;line-height:1.5}
+body.nt .wrap{max-width:960px}
+body.nt header.bar{border-bottom:0;padding-block:48px 0;margin-bottom:8px;display:block}
+body.nt header.bar>div:first-child{padding-bottom:4px}
+body.nt header.bar h1{font-size:34px;font-weight:700;letter-spacing:-.02em;line-height:1.2}
+body.nt header.bar .sub{font-size:13px;color:var(--soft);margin-top:4px}
+body.nt nav.tabs{border-bottom:1px solid var(--line);margin:14px 0 24px;gap:0}
+body.nt nav.tabs button{padding:6px 10px;margin-right:4px;font-size:14px;border-radius:4px 4px 0 0;color:var(--soft);font-weight:400}
+body.nt nav.tabs button:hover{background:#f7f6f3;color:var(--ink)}
+body.nt nav.tabs button[aria-selected="true"]{color:var(--ink);font-weight:500;border-bottom:2px solid var(--ink)}
+body.nt h2,body.nt h3,body.nt .panel h3{font-family:var(--font);font-weight:600;letter-spacing:-.01em;color:var(--ink)}
+body.nt .stats{border:0;border-radius:0;display:flex;flex-wrap:wrap;gap:8px;margin:0 0 28px;overflow:visible}
+body.nt .stat{border:1px solid var(--line);border-radius:4px;margin:0;padding:10px 14px;min-width:130px;flex:1 1 130px}
+body.nt .stat .v{font-family:var(--font);font-size:24px;font-weight:600}
+body.nt .stat .l{font-size:12.5px;color:var(--soft)}
+body.nt .stu,body.nt .panel,body.nt .side{border:1px solid var(--line);box-shadow:none;border-radius:4px}
+body.nt .stu:hover{background:#f7f6f3}
+body.nt .pill{border-radius:3px;padding:1px 7px;font-size:12.5px;font-weight:400}
+body.nt .pill::before{display:none}
+body.nt .pill.r1{background:#dbeddb;color:#1c3829}body.nt .pill.r2{background:#fdecc8;color:#402c1b}body.nt .pill.r3{background:#ffe2dd;color:#5d1715}body.nt .pill.r0{background:#e3e2e0;color:#32302c}
+body.nt .btn{border-color:var(--line2);box-shadow:none;font-weight:400;padding:5px 11px}
+body.nt .btn:hover,body.nt .add:hover{background:#efefed}
+body.nt .btn.primary{background:#2383e2;border-color:#2383e2;color:#fff}
+body.nt .btn.primary:hover{background:#0b6ec5;border-color:#0b6ec5}
+body.nt .pick:hover{background:#efefed}body.nt .pick[aria-current="true"]{background:#efefed;box-shadow:none;font-weight:500}
+body.nt a{text-underline-offset:3px;text-decoration-color:#c9c8c4}
+body.nt tbody tr:hover,body.nt .step-row:hover,body.nt .mrow:hover{background:#f7f6f3}
+body.nt details{border-top-color:var(--line)}
+body.nt .sec{border-top:0;padding-top:0}
+body.nt .stat{border-width:1px!important}
+body.nt .tl2.red li,body.nt ul.red li{border-left:0;background:#fbe4e4;border-radius:4px;padding:8px 12px;margin:4px 0;list-style:none}
+body.nt .tl2.red{padding-left:0}
+@media (max-width:600px){body.nt header.bar{padding-block:28px 0}body.nt header.bar h1{font-size:26px}}
+
 /* Dải số liệu: một khối, chia bằng đường kẻ mảnh */
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0;background:var(--surface);border:1px solid var(--line);
   border-radius:var(--r);overflow:hidden;margin:0 0 26px;padding:0}
@@ -1856,6 +1891,7 @@ function render(){
   var t=today();
   $("#today").textContent="Hôm nay "+pad(t.getDate())+"/"+pad(t.getMonth()+1)+"/"+t.getFullYear();
   var m=/^#\/([\w-]+)(?:\/([\w-]+))?(\?xem)?$/.exec(location.hash||"");
+  document.body.classList.toggle("nt",!window.STUDENT_MODE&&!(m&&m[3]));
   if(m&&m[3]&&!window.STUDENT_MODE&&students.some(function(x){return x.id===m[1]})){
     var id0=m[1], keep=[students,assignments,meetings,reports];
     var st0=students.filter(function(x){return x.id===id0})[0];
