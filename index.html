@@ -80,6 +80,7 @@ body.nt header.bar{padding-block:40px 0}
 .nsb a{display:block;padding:4px 10px;border-radius:4px;color:#5f5e5b;text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.7}
 .nsb a:hover{background:#ebebe9}
 .nsb a[aria-current="page"]{background:#e8e8e6;color:#37352f;font-weight:500}
+.nsb-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#e03e3e;margin-left:8px;vertical-align:1px}
 .nsb a small{color:#9b9a97;margin-left:6px;font-size:12px}
 @media (max-width:820px){
   body.nt{padding-left:16px}
@@ -1936,7 +1937,7 @@ function render(){
   var curp=m?m[1]:"tong-quan", sd=$("#side");
   sd.hidden=false;
   var stl=students.slice().sort(function(a,b){return String(a.name).localeCompare(String(b.name),"vi")});
-  function sgrp(mk,lb){var l=stl.filter(function(x){return (x.market||"VN")===mk});return l.length?'<h5>'+lb+'</h5>'+l.map(function(x){return '<a class="nsb-st" href="#/'+esc(x.id)+'"'+(x.id===curp?' aria-current="page"':'')+'>'+esc(x.name)+'</a>'}).join(""):""}
+  function sgrp(mk,lb){var l=stl.filter(function(x){return (x.market||"VN")===mk});return l.length?'<h5>'+lb+'</h5>'+l.map(function(x){var bad=analyze(x).attnSev>=3;return '<a class="nsb-st" href="#/'+esc(x.id)+'"'+(x.id===curp?' aria-current="page"':'')+(bad?' title="Cần xử lý: trễ hạn hoặc đang kẹt"':'')+'>'+esc(x.name)+(bad?'<i class="nsb-dot" aria-label="Cần xử lý"></i>':'')+'</a>'}).join(""):""}
   sd.innerHTML='<div class="ws"><i>M</i>Mentor</div>'+MAIN.map(function(t){return '<a href="#/'+t[0]+'"'+(t[0]===curp?' aria-current="page"':'')+'>'+t[1]+'</a>'}).join("")+'<div class="nsb-st">'+sgrp("VN","Việt Nam")+sgrp("US","US")+'</div>';
   $("#nav").innerHTML=main?mainNav(m?m[1]:"tong-quan"):"";
   $("#nav").hidden=!main;
