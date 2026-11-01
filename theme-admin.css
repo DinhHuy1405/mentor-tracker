@@ -60,6 +60,10 @@ body.nt .ntn-tabs a[aria-current="page"]{color:var(--ink);border-bottom-color:#2
 .pill.r3::before,body.nt .pill.r3::before{background:#BE2A22}
 .tl2.red li,ul.red li,body.nt .tl2.red li,body.nt ul.red li{background:#fff;border:1px solid var(--line);border-radius:6px}
 
+.tg,.tg.gr,.tg.r,.tg.y,.tg.b,.tg.g,.gt-here,.gt-cnt,body.nt .tg,body.nt .gt-here,body.nt .gt-cnt{background:none;border:1px solid var(--line2);border-radius:4px;color:var(--muted);font-size:12px;font-weight:400;letter-spacing:-.003em;text-transform:none;padding:0 6px;line-height:1.55}
+.tg.r,body.nt .tg.r{color:#BE2A22}
+.gt-here,body.nt .gt-here{color:#234FB6;border-color:#C9D6F3}
+
 /* ô nhập */
 input,select,textarea{border-radius:6px}
 input:focus,select:focus,textarea:focus,body.nt input:focus,body.nt select:focus,body.nt textarea:focus{border-color:#2C5FD4;box-shadow:0 0 0 3px rgba(44,104,238,.14);outline:0}
@@ -78,6 +82,7 @@ input[type=checkbox],input[type=radio]{accent-color:#2C5FD4}
 /* trang chi tiết học viên khi mentor xem */
 body.nt .ntn{font-family:var(--font);color:var(--ink)}
 body.nt .ntn-h1,body.nt .ntn-h2{font-weight:600;letter-spacing:-.02em;color:var(--ink)}
+body.nt .ntn-h1{font-size:22px}
 
 /* dải số liệu trang Tổng quan */
 body.nt .brief{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;border:0;padding:0;background:none}

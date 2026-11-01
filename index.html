@@ -930,7 +930,7 @@ h1,h2,h3,h4{font-weight:600;letter-spacing:-.01em}
 .btn.primary:hover{background:#0b6ec5;border-color:#0b6ec5}
 .pill{border-radius:3px}
 </style>
-<link rel="stylesheet" href="theme-admin.css?v=2">
+<link rel="stylesheet" href="theme-admin.css?v=3">
 
 </head>
 <body>
@@ -1239,7 +1239,7 @@ function viewTrack(tab){
   var active=as.filter(function(a){return a.s.status!=="Dừng"});
   var live=as.filter(function(a){return a.active});
   if(!students.length) return '<div class="empty">Chưa có học viên. Nhắn trong cuộc trò chuyện để thêm học viên.</div>';
-  if(tab==="bieu-do") return secBullet(live)+secDist(live);
+  if(tab==="bieu-do") return live.length?secBullet(live)+secDist(live):'<div class="empty">Chưa có học viên đang học để vẽ biểu đồ.</div>';
   if(tab==="lich") return secWeeks();
   if(tab==="hoc-vien"){
     var out='<section class="sec"><h2>Học viên</h2><p class="lead">Người cần xử lý nằm trên cùng. Bấm tên để mở trang riêng.</p>';
@@ -1923,7 +1923,7 @@ function viewStudent(id,tab){
   }
   return out+secActivity(a);
 }
-function stat(v,l,c){return '<div class="stat '+c+'"><div class="v">'+v+'</div><div class="l">'+l+'</div></div>'}
+function stat(v,l,c){return '<div class="stat '+c+'"><div class="v">'+v+'</div><div class="l">'+String(l).charAt(0).toUpperCase()+String(l).slice(1)+'</div></div>'}
 
 /* ---------- render ---------- */
 
