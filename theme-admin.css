@@ -1,0 +1,62 @@
+/* Giao diện chung Huy Tim cho trang quản lý của mentor: nền trắng, khung lưới đường kẻ mảnh, xanh dương đậm, chữ Geist.
+   Mọi quy tắc đều gắn với body.nt (hoặc .nsb, thanh bên chỉ mentor thấy) nên trang học viên không bị ảnh hưởng. */
+body.nt{
+  --ink:#09090B; --muted:#52525B; --soft:#71717A; --line:#E7E8EE; --line2:#D8DAE3; --todo:#EFEFF3;
+  --accent:#1E4EED; --accent-ink:#FFFFFF; --focus:#1E4EED;
+  --font:Geist,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  --r:6px; --rs:6px; letter-spacing:-.005em; font-family:var(--font);
+}
+body.nt header.bar h1{font-weight:500;letter-spacing:-.03em}
+body.nt h2,body.nt h3,body.nt .panel h3{font-weight:500;letter-spacing:-.015em}
+
+/* nút */
+body.nt .btn{border-radius:6px;box-shadow:0 1px 2px rgba(9,9,11,.05)}
+body.nt .btn:hover,body.nt .add:hover{background:#EEF2FD}
+body.nt .btn.primary{background:#1E4EED;border-color:#173FC4;color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 1px 2px rgba(21,35,122,.25)}
+body.nt .btn.primary:hover{background:#173FC4;border-color:#15237A}
+
+/* khung lưới */
+body.nt .stats{gap:0;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+body.nt .stat{border:0!important;border-right:1px solid var(--line)!important;border-bottom:1px solid var(--line)!important;border-radius:0;margin:0 -1px -1px 0;padding:14px 16px}
+body.nt .stat .v{font-weight:500;letter-spacing:-.02em}
+body.nt .stu,body.nt .panel,body.nt .side{border-color:var(--line);border-radius:8px}
+body.nt .stu:hover{background:#F6F8FE;border-color:#98B5EF}
+body.nt tbody tr:hover,body.nt .step-row:hover,body.nt .mrow:hover{background:#F6F8FE}
+body.nt .pick:hover{background:#F6F8FE}
+body.nt .pick[aria-current="true"]{background:#E6ECFD;color:#15237A}
+
+/* tab */
+body.nt nav.tabs button:hover{background:#F6F8FE}
+body.nt nav.tabs button[aria-selected="true"]{color:#1E4EED;border-bottom-color:#1E4EED}
+
+/* nhãn */
+body.nt .pill{border-radius:4px}
+body.nt .pill.r1{background:#E6ECFD;color:#15237A}
+body.nt .pill.r2{background:#F1ECD6;color:#593D29}
+body.nt .pill.r3{background:#FDE6E3;color:#8F1D18}
+body.nt .pill.r0{background:#EFEFF3;color:#3F3F46}
+body.nt .tl2.red li,body.nt ul.red li{background:#FDEEEC;border-radius:6px}
+
+/* ô nhập */
+body.nt input:focus,body.nt select:focus,body.nt textarea:focus{border-color:#1E4EED}
+
+/* thanh bên */
+.nsb{background:#fff;border-right-color:var(--line,#E7E8EE);font-family:Geist,ui-sans-serif,-apple-system,"Segoe UI",sans-serif;color:#09090B}
+.nsb .ws i{background:#1E4EED;border-radius:5px}
+.nsb h5{color:#A1A1AA;letter-spacing:.02em}
+.nsb a{color:#52525B}
+.nsb a:hover{background:#F6F8FE}
+.nsb a[aria-current="page"]{background:#E6ECFD;color:#15237A}
+.nsb a small{color:#A1A1AA}
+
+/* trang chi tiết học viên khi mentor xem */
+body.nt .ntn{font-family:var(--font);color:var(--ink)}
+body.nt .ntn-h1,body.nt .ntn-h2{font-weight:500;letter-spacing:-.02em;color:var(--ink)}
+body.nt .ntn-tabs a[aria-current="page"]{color:#1E4EED;border-bottom-color:#1E4EED}
+
+/* dải số liệu trang Tổng quan */
+body.nt .brief{border:1px solid var(--line);border-radius:8px;padding:0}
+body.nt .fig{padding:14px 16px}
+body.nt .fig+.fig{padding-left:16px;border-left:1px solid var(--line)}
+body.nt .fig b{font-family:var(--font);font-weight:500;font-size:28px;letter-spacing:-.025em}
+body.nt .fig span{font-size:12.5px;color:var(--soft);margin-top:4px}
