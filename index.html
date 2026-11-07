@@ -1382,12 +1382,12 @@ function aiFill(k,s){
 var DOCST={
 VN:{
 1:[{k:"ngach",t:"Tìm ngách bằng tư duy (VN)",u:"files/tim-ngach-vn.pdf"}],
-2:[{k:"sotay",t:"Sổ tay dùng AI (PDF)",u:"files/so-tay-dung-ai-fastmoss.pdf"},{k:"prompt",t:"Bộ prompt FastMoss",u:"files/bo-prompt-fastmoss.html"},{k:"tinhgia",t:"File tính giá",u:"files/TinhGia_TuDong.xlsx"},{k:"ncc",t:"Tìm nhà cung cấp bằng AI (VN)",u:"files/tim-nha-cung-cap-vn.pdf"}],
+2:[{k:"sotay",t:"Sổ tay dùng AI (PDF)",u:"files/so-tay-dung-ai-fastmoss-vn.pdf"},{k:"prompt",t:"Bộ prompt FastMoss",u:"files/bo-prompt-fastmoss-vn.html"},{k:"tinhgia",t:"File tính giá",u:"files/TinhGia_TuDong.xlsx"},{k:"ncc",t:"Tìm nhà cung cấp bằng AI (VN)",u:"files/tim-nha-cung-cap-vn.pdf"}],
 3:[{k:"ncc",t:"Tìm nhà cung cấp bằng AI (VN)",u:"files/tim-nha-cung-cap-vn.pdf"},{k:"tinhgia",t:"File tính giá",u:"files/TinhGia_TuDong.xlsx"}],
 4:[{k:"tinhgia",t:"File tính giá",u:"files/TinhGia_TuDong.xlsx"}]
 },
 US:{
-1:[{k:"ngach",t:"Tìm ngách bằng tư duy (US)",u:"files/tim-ngach-us.pdf"},{k:"sotay",t:"Sổ tay dùng AI (PDF)",u:"files/so-tay-dung-ai-fastmoss.pdf"},{k:"prompt",t:"Bộ prompt FastMoss",u:"files/bo-prompt-fastmoss.html"}],
+1:[{k:"ngach",t:"Tìm ngách bằng tư duy (US)",u:"files/tim-ngach-us.pdf"},{k:"sotay",t:"Sổ tay dùng AI (PDF)",u:"files/so-tay-dung-ai-fastmoss-us.pdf"},{k:"prompt",t:"Bộ prompt FastMoss",u:"files/bo-prompt-fastmoss-us.html"}],
 2:[{k:"ncc",t:"Tìm nhà cung cấp bằng AI (US)",u:"files/tim-nha-cung-cap-us.pdf"},{k:"tinhgia",t:"File tính giá",u:"files/TinhGia_TuDong.xlsx"}],
 3:[{k:"sku",t:"SKU variant prompt (US)",u:"files/sku-variant-prompt-us.pdf"},{k:"skudoc",t:"SKU variant prompt (DOCX, editable)",u:"files/sku-variant-prompt-us.docx"},{k:"label",g:"packing",t:"Designing labels for organic products",u:"files/designing-labels-organic.pdf"},{k:"labelskill",g:"packing",t:"Organic label designer (Claude skill)",u:"files/organic-label-designer.skill"}],
 4:[{k:"llc",t:"Đăng ký LLC (US)",u:"files/dang-ky-llc-us.pdf"}],
@@ -1397,8 +1397,10 @@ var STORE_SPLIT={US:{papers:[0,1,2,3],papersStep:4,plat:[4,5,6],platStep:7},VN:{
 var DOCDESC={
 "files/tim-ngach-vn.pdf":"Cách tìm một ngách bằng tư duy, làm trước khi mở FastMoss.",
 "files/tim-ngach-us.pdf":"Cách tìm một ngách bằng tư duy, làm trước khi mở FastMoss.",
-"files/so-tay-dung-ai-fastmoss.pdf":"Cài ChatGPT hoặc Claude, nối FastMoss MCP, dùng câu lệnh từng bước.",
-"files/bo-prompt-fastmoss.html":"Các câu lệnh AI sẵn dùng, copy và dán.",
+"files/so-tay-dung-ai-fastmoss-us.pdf":"Cài ChatGPT hoặc Claude, nối FastMoss MCP, dùng câu lệnh từng bước (thị trường US).",
+"files/so-tay-dung-ai-fastmoss-vn.pdf":"Cài ChatGPT hoặc Claude, nối FastMoss MCP, dùng câu lệnh từng bước (thị trường VN).",
+"files/bo-prompt-fastmoss-us.html":"Các câu lệnh AI sẵn dùng cho thị trường US, copy và dán.",
+"files/bo-prompt-fastmoss-vn.html":"Các câu lệnh AI sẵn dùng cho thị trường VN, copy và dán.",
 "files/TinhGia_TuDong.xlsx":"File tính giá bán và lợi nhuận. Dán kết quả AI vào là có kết luận.",
 "files/tim-nha-cung-cap-vn.pdf":"Dùng AI tìm, hỏi và so sánh nhà cung cấp trên 1688.",
 "files/tim-nha-cung-cap-us.pdf":"Dùng AI tìm, hỏi và so sánh nhà cung cấp ở Việt Nam và trên 1688.",

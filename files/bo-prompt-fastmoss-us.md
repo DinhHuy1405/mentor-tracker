@@ -1,18 +1,18 @@
-# Bộ prompt phân tích: từ sản phẩm đến ngách, đến giá nhập và giá bán
+# Bộ prompt cho học viên US: từ sản phẩm đến ngách, đến giá nhập và giá bán
 
-Dùng cho buổi hướng dẫn FastMoss. Phần "Quy trình tự động" ngay bên dưới là cách nhanh nhất; các prompt chi tiết từng bước nằm phía sau. Cách dùng: copy prompt, thay phần trong ngoặc vuông [ ], dán vào ChatGPT (hoặc Claude). Lưu file này lại để dùng cho mọi ngách sau.
+Dành cho học viên bán sang thị trường Mỹ (US). Toàn bộ prompt dùng USD, FastMoss thị trường US, nhà cung cấp Việt Nam hoặc 1688, vận chuyển Việt Nam sang Mỹ. Phần "Quy trình tự động" ngay bên dưới là cách nhanh nhất; các prompt chi tiết từng bước nằm phía sau. Cách dùng: copy prompt, thay phần trong ngoặc vuông [ ], dán vào ChatGPT (hoặc Claude). Lưu file này lại để dùng cho mọi ngách sau.
 
 ## Quy trình tự động (khuyên dùng)
 
 Chỉ cần 2 prompt. AI tự làm hết phần tìm ngách, chọn sản phẩm, lấy số FastMoss. Bước duy nhất cần thông tin của bạn là thông tin nhập hàng. Công thức tính giá nằm sẵn trong file tính giá (bản TinhGia_TuDong), không cần AI tính.
 
-Cần: Claude hoặc ChatGPT đã kết nối FastMoss MCP, và file tính giá.
+Cần: Claude hoặc ChatGPT đã kết nối FastMoss MCP, và file tính giá (ô C4 ở thẻ THAM SỐ chọn US).
 
-1. Chạy **Prompt Tự động** đúng thị trường của bạn (US hoặc VN, bên dưới). Copy khối 2 dán vào sheet DỮ LIỆU FASTMOSS, ô A5.
-2. Làm việc với nhà cung cấp, rồi chạy **Prompt Nhập hàng** đúng thị trường của bạn. Copy khối 1 dán vào sheet NHẬP HÀNG, ô C5.
+1. Chạy **Prompt Tự động** bên dưới. Copy khối 2 dán vào sheet DỮ LIỆU FASTMOSS, ô A5.
+2. Làm việc với nhà cung cấp, rồi chạy **Prompt Nhập hàng**. Copy khối 1 dán vào sheet NHẬP HÀNG, ô C5.
 3. Mở sheet KẾT QUẢ: lợi nhuận, giá bán đề xuất, giá nhập tối đa, kết luận Làm, Cân nhắc, Bỏ cho từng sản phẩm.
 
-### Prompt Tự động cho thị trường US
+### Prompt Tự động
 
 ```
 VAI TRÒ: Bạn là chuyên gia chọn ngách và phân tích thị trường TikTok Shop cho người bán nhập hàng từ Việt Nam để bán sang Mỹ trên TikTok Shop US. Mọi con số lấy từ FastMoss MCP, không ước đoán.
@@ -36,31 +36,7 @@ KHỐI 3. Giới hạn dữ liệu: tìm theo từ khóa có thể sót listing,
 RÀNG BUỘC: Chỉ dùng số FastMoss trả về. Thiếu số nào thì để ô trống và ghi vào khối 3.
 ```
 
-### Prompt Tự động cho thị trường VN
-
-```
-VAI TRÒ: Bạn là chuyên gia chọn ngách và phân tích thị trường TikTok Shop cho người bán nhập hàng từ Trung Quốc (1688, Taobao) hoặc nhà cung cấp Việt Nam để bán trong nước trên TikTok Shop Việt Nam. Mọi con số lấy từ FastMoss MCP, không ước đoán.
-
-ĐẦU VÀO:
-- Thị trường: VN (bán tại Việt Nam, tính bằng VND)
-- Ý tưởng sản phẩm hoặc nhóm khách: [...]
-- Thế mạnh của tôi: [...]
-
-LÀM TUẦN TỰ, KHÔNG HỎI LẠI TÔI:
-BƯỚC 1. Viết 3 phương án ngách theo công thức [đối tượng cụ thể + độ tuổi + sở thích + nhóm sản phẩm]. Loại ngách tác động trực tiếp tới sức khỏe, thực phẩm, mỹ phẩm, đồ em bé. Chấm 5 câu lọc (đối tượng, branding, logistics, thế mạnh, kiểm chứng được bằng dữ liệu), chọn 1 ngách và viết thành một câu ngắn, bỏ tính từ thừa.
-BƯỚC 2. Gọi search_category_by_words rồi product_search (region VN, listing đang bán, sắp xếp theo số bán 28 ngày) để tìm sản phẩm trong ngách. Chọn 5 sản phẩm win (bán chính) và 5 sản phẩm vệ tinh (bán kèm, cùng nhóm khách). Ưu tiên nhẹ, nhỏ, ít vỡ, dễ tìm nguồn trên 1688 hoặc nhà cung cấp Việt Nam, giá nhập thấp so với giá bán trên TikTok Shop Việt Nam. Mỗi sản phẩm đặt một từ khóa tiếng Việt gọn để tra đối thủ.
-BƯỚC 3. Với MỖI sản phẩm: gọi product_search theo từ khóa, lấy tối đa 10 listing cùng loại (loại combo, phụ kiện, sản phẩm khác loại). Giá thực tế mỗi listing = GMV 28 ngày chia số bán 28 ngày (số bán bằng 0 thì dùng giá thấp nhất). Lưu ý FastMoss VN: floor_price và ceiling_price tính bằng nghìn đồng (19.47 nghĩa là 19.470 VND), luôn đổi ra VND đầy đủ; giá thực tế tính từ GMV và số bán thì đã là VND đầy đủ. Tính: giá thấp nhất, trung vị, cao nhất, giá của listing bán chạy nhất, tổng số bán 28 ngày, số đối thủ, trung vị tỷ lệ hoa hồng (commission_rate_percent). Gọi product_overview (28 ngày) CHỈ cho listing bán chạy nhất và chỉ đọc tỷ lệ GMV từ affiliate (channel_distribution) và từ quảng cáo (ads_distribution, ad_traffic), bỏ qua daily_trend.
-BƯỚC 4. Nhận định thị trường cho từng sản phẩm bằng một từ: Làm, Cân nhắc hoặc Bỏ, dựa trên số bán 28 ngày, số creator liên kết và mức cạnh tranh.
-
-ĐẦU RA, CHỈ 3 KHỐI:
-KHỐI 1. Ngách đã chọn (một câu) và một dòng lý do.
-KHỐI 2. Bảng 10 dòng, không tiêu đề, các cột ngăn cách bằng dấu Tab, đặt trong khối code để copy. Đúng 14 cột theo thứ tự: Mã SP (SP1 đến SP10) | Loại (Win hoặc Vệ tinh) | Tên sản phẩm | Giá thấp nhất | Giá trung vị | Giá cao nhất | Giá listing bán chạy nhất | Tổng số bán 28 ngày | Hoa hồng affiliate (số %, ví dụ 10) | % GMV từ affiliate (số) | % GMV từ quảng cáo (số) | Số đối thủ | Nhận định | Link FastMoss của listing bán chạy nhất. Các cột số chỉ ghi số, dùng dấu chấm thập phân, không ký hiệu tiền.
-KHỐI 3. Giới hạn dữ liệu: tìm theo từ khóa có thể sót listing, số listing đã loại và lý do, đơn vị tiền (VND), sản phẩm nào thiếu dữ liệu.
-
-RÀNG BUỘC: Chỉ dùng số FastMoss trả về. Thiếu số nào thì để ô trống và ghi vào khối 3.
-```
-
-### Prompt Ngách và sản phẩm có sẵn cho thị trường US
+### Prompt Ngách và sản phẩm có sẵn
 
 Dùng khi bạn đã chốt ngách theo cấu trúc keywords của mentor và đã tìm được danh sách sản phẩm. Dán toàn bộ link các sản phẩm vào chỗ `[...]` ở cuối câu lệnh. AI kết hợp keywords với sản phẩm của bạn rồi ra bảng để dán vào file tính giá.
 
@@ -94,41 +70,7 @@ Dán TOÀN BỘ LINK các sản phẩm bạn tìm được vào ngay dưới đ�
 [...]
 ```
 
-### Prompt Ngách và sản phẩm có sẵn cho thị trường VN
-
-```
-VAI TRÒ: Bạn là chuyên gia phân tích thị trường TikTok Shop Việt Nam cho người bán nhập hàng từ Trung Quốc (1688, Taobao) hoặc nhà cung cấp Việt Nam để bán trong nước. Mọi con số lấy từ FastMoss MCP, không ước đoán. Chỉ làm việc với sản phẩm trong DANH SÁCH SẢN PHẨM nằm ở cuối câu lệnh này, không thêm sản phẩm khác.
-
-THỊ TRƯỜNG: VN (tính bằng VND)
-
-NGÁCH CỦA TÔI (theo cấu trúc keywords của mentor):
-- Đối tượng khách cụ thể: [...]
-- Độ tuổi: [...]
-- Sở thích, đặc tính của họ: [...]
-- Nhóm sản phẩm: [...]
-- Cụm ngách đầy đủ (một câu): [...]
-- Các keywords tôi đã thu thập (Instagram Reels, TikTok Shop, Shopee), mỗi dòng một keyword: [...]
-
-LÀM TUẦN TỰ, KHÔNG HỎI LẠI TÔI:
-BƯỚC 1. Đọc cụm ngách và các keywords. Với mỗi sản phẩm trong danh sách, kiểm tra có hợp ngách không (đúng đối tượng, đúng sở thích, đúng nhóm sản phẩm), ghi Hợp hoặc Chưa hợp kèm một câu lý do. Đặt cho mỗi sản phẩm một từ khóa tiếng Việt gọn, lấy từ keywords của tôi, để tra đối thủ.
-BƯỚC 2. Với các sản phẩm Hợp: gọi product_search (region VN, listing đang bán, sắp xếp theo số bán 28 ngày) theo từ khóa, lấy tối đa 10 listing cùng loại (loại combo, phụ kiện, sản phẩm khác loại). Giá thực tế mỗi listing = GMV 28 ngày chia số bán 28 ngày (số bán bằng 0 thì dùng giá thấp nhất). Lưu ý FastMoss VN: floor_price và ceiling_price tính bằng nghìn đồng (19.47 nghĩa là 19.470 VND), luôn đổi ra VND đầy đủ. Tính: giá thấp nhất, trung vị, cao nhất, giá của listing bán chạy nhất, tổng số bán 28 ngày, số đối thủ, trung vị tỷ lệ hoa hồng (commission_rate_percent). Gọi product_overview (28 ngày) CHỈ cho listing bán chạy nhất, đọc tỷ lệ GMV từ affiliate (channel_distribution) và từ quảng cáo (ads_distribution, ad_traffic), bỏ qua daily_trend.
-BƯỚC 3. Chọn tối đa 5 sản phẩm Win (bán chính) và tối đa 5 sản phẩm Vệ tinh (bán kèm, cùng nhóm khách) trong số sản phẩm Hợp. Sản phẩm cầu quá thấp, cạnh tranh quá cao hoặc không bán kèm được thì loại và ghi lý do. Nhận định mỗi sản phẩm giữ lại bằng một từ: Làm, Cân nhắc hoặc Bỏ.
-
-ĐẦU RA, CHỈ 3 KHỐI:
-KHỐI 1. Nhắc lại cụm ngách của tôi, rồi nhận xét ngắn (tối đa 3 dòng) danh sách sản phẩm có hợp ngách và có đủ 5 Win + 5 Vệ tinh không.
-KHỐI 2. Bảng các sản phẩm được giữ lại (tối đa 10 dòng), không tiêu đề, các cột ngăn cách bằng dấu Tab, đặt trong khối code để copy. Đúng 14 cột theo thứ tự: Mã SP (SP1 đến SP10) | Loại (Win hoặc Vệ tinh) | Tên sản phẩm | Giá thấp nhất | Giá trung vị | Giá cao nhất | Giá listing bán chạy nhất | Tổng số bán 28 ngày | Hoa hồng affiliate (số %, ví dụ 10) | % GMV từ affiliate (số) | % GMV từ quảng cáo (số) | Số đối thủ | Nhận định | Link FastMoss của listing bán chạy nhất. Các cột số chỉ ghi số, dùng dấu chấm thập phân, không ký hiệu tiền.
-KHỐI 3. Sản phẩm bị loại kèm lý do, và Giới hạn dữ liệu: tìm theo từ khóa có thể sót listing, số listing đã loại, đơn vị tiền (VND), sản phẩm nào thiếu dữ liệu.
-
-RÀNG BUỘC: Chỉ dùng số FastMoss trả về. Thiếu số nào thì để ô trống và ghi vào khối 3. Không thêm sản phẩm ngoài danh sách của tôi.
-
-======== DANH SÁCH SẢN PHẨM TÔI ĐÃ TÌM ĐƯỢC ========
-Dán TOÀN BỘ LINK các sản phẩm bạn tìm được vào ngay dưới đây, mỗi dòng một sản phẩm (kèm tên hoặc giá nếu có). Xóa dòng [...] rồi dán vào chỗ đó:
-[...]
-```
-
-Nếu FastMoss giới hạn lượt gọi: chạy lần 1 cho 5 sản phẩm win, lần 2 cho 5 sản phẩm vệ tinh, rồi dán nối tiếp vào sheet.
-
-### Prompt Nhập hàng cho thị trường US
+### Prompt Nhập hàng
 
 Đây là bước duy nhất cần thông tin của bạn.
 
@@ -154,30 +96,6 @@ KHỐI 2. Thông tin còn thiếu cho từng nhà cung cấp, kèm một tin nh�
 RÀNG BUỘC: Chỉ lấy số có trong dữ liệu, thiếu thì để ô trống, không đoán. Nếu có nhiều mức giá, ghi mức đang dùng ở khối 2.
 ```
 
-### Prompt Nhập hàng cho thị trường VN
-
-```
-VAI TRÒ: Bạn là trợ lý nhập hàng. Bạn chuyển thông tin nhà cung cấp và chi phí của tôi thành dòng dữ liệu để dán vào bảng tính. Thị trường bán: VN, bảng tính tính bằng VND.
-
-DỮ LIỆU:
-- Danh sách sản phẩm (dán cột Mã SP và Tên sản phẩm từ sheet NHẬP HÀNG): [...]
-- Số lượng nhập thử mỗi sản phẩm: [...]
-- Tỷ giá tệ (CNY) sang VND nếu nhập từ 1688, Taobao: [...]
-- Thông tin nhà cung cấp cho từng sản phẩm (dán tin nhắn, listing 1688, báo giá; ghi mã SP trước mỗi đoạn): [...]
-- Cân nặng mỗi cái (kg), nếu nhà cung cấp chưa ghi: [...]
-- Chi phí bằng VND (bỏ trống nếu chưa có): phí vận chuyển Trung Quốc về Việt Nam mỗi kg [...], logistics Việt Nam mỗi đơn (ship về kho, ship nội địa) [...], packing mỗi đơn [...]. Hàng bán tại Việt Nam không có fulfillment và logistics đầu đích, để trống hai cột này.
-
-NHIỆM VỤ: Với mỗi mã SP, trích giá nhập mỗi cái theo mức giá bậc thang phù hợp số lượng nhập thử (đổi ra VND), cân nặng mỗi cái (kg), MOQ, tên nhà cung cấp. Nếu thiếu cân nặng hoặc số lượng của sản phẩm nào thì hỏi tôi MỘT LẦN, liệt kê hết những gì còn thiếu, rồi mới in kết quả.
-
-ĐẦU RA:
-KHỐI 1. Bảng 10 dòng, không tiêu đề, ngăn cách bằng dấu Tab, đặt trong khối code, theo đúng thứ tự mã SP1 đến SP10. Đúng 14 cột: Giá nhập | Cân nặng (kg) | (để trống: dài) | (để trống: rộng) | (để trống: cao) | Số lượng nhập thử | Phí vận chuyển Trung Quốc về Việt Nam mỗi kg | (để trống: fulfillment) | (để trống: logistics đầu đích) | Logistics Việt Nam | Packing | MOQ | Nhà cung cấp | (để trống: giá bán dự kiến). Sản phẩm không có thông tin thì để dòng trống. Chỉ ghi số cho các cột số, dùng dấu chấm thập phân.
-KHỐI 2. Thông tin còn thiếu cho từng nhà cung cấp, kèm một tin nhắn ngắn, lịch sự để hỏi (giá theo mức số lượng, MOQ, hàng mẫu, cân nặng, quy cách đóng gói, khả năng không in tên thương hiệu).
-
-RÀNG BUỘC: Chỉ lấy số có trong dữ liệu, thiếu thì để ô trống, không đoán. Nếu có nhiều mức giá, ghi mức đang dùng ở khối 2.
-```
-
----
-
 ## Quy tắc chung (áp dụng cho mọi prompt)
 
 - Luôn có 6 khối: VAI TRÒ, BỐI CẢNH, DỮ LIỆU, NHIỆM VỤ, ĐỊNH DẠNG, RÀNG BUỘC.
@@ -196,11 +114,11 @@ Thứ tự: **Bước 1** xác định ngách, **Bước 2** tìm sản phẩm v
 ### Prompt 1.1. Từ sản phẩm ra 3 phương án ngách
 
 ```
-VAI TRÒ: Bạn là chuyên gia chọn ngách bán hàng thương mại điện tử sang [US / VN].
+VAI TRÒ: Bạn là chuyên gia chọn ngách bán hàng thương mại điện tử sang Mỹ (US).
 BỐI CẢNH: Tôi bán từ Việt Nam. Thế mạnh của tôi: [kiến thức, người quen, nguồn hàng]. Sản phẩm tôi đang quan tâm: [danh sách 3 đến 10 sản phẩm hoặc dán link].
 NHIỆM VỤ: Tìm điểm chung của các sản phẩm này, rồi viết 3 phương án ngách theo công thức:
 [đối tượng cụ thể] + [độ tuổi] + [sở thích, đặc tính] + [nhóm sản phẩm]
-Với mỗi phương án nêu: lý do, rủi ro sức khỏe hoặc pháp lý (FDA, kiểm định), khả năng branding hoặc rebranding, khó khăn logistics (giá, kích thước, cân nặng, giấy tờ).
+Với mỗi phương án nêu: lý do, rủi ro sức khỏe hoặc pháp lý (FDA, kiểm định tại Mỹ), khả năng branding hoặc rebranding, khó khăn logistics (giá, kích thước, cân nặng, giấy tờ).
 ĐỊNH DẠNG: Bảng 3 dòng; cột: cụm ngách, lý do, rủi ro, branding, logistics.
 RÀNG BUỘC: Loại ngách tác động trực tiếp tới sức khỏe. Ưu tiên tự nhiên, dùng hằng ngày, dễ bảo quản, nhẹ. Mỗi cụm ngách chỉ 1 câu, bỏ hết tính từ thừa.
 ```
@@ -231,7 +149,7 @@ Ngách: "[dán ngách dài]"
 
 ```
 Từ ngách "[cụm ngách]", tạo 20 keywords:
-- 10 tiếng Anh để tìm trên Instagram Reels, TikTok Shop, Amazon.
+- 10 tiếng Anh để tìm trên Instagram Reels, TikTok Shop US, Amazon.
 - 10 tiếng Trung giản thể để tìm trên 1688.
 Xếp theo mức độ cụ thể từ rộng đến hẹp. Chỉ trả bảng: keyword, ngôn ngữ, nơi dùng.
 ```
@@ -244,7 +162,7 @@ Xếp theo mức độ cụ thể từ rộng đến hẹp. Chỉ trả bảng: 
 
 ```
 VAI TRÒ: Bạn là chuyên gia chọn sản phẩm cho ngách "[cụm ngách]".
-BỐI CẢNH: Tôi nhập hàng từ Việt Nam sang [US / VN], giai đoạn test vốn ít.
+BỐI CẢNH: Tôi nhập hàng từ Việt Nam sang Mỹ (US), giai đoạn test vốn ít.
 NHIỆM VỤ: Đề xuất 20 loại sản phẩm phù hợp ngách. Ưu tiên: giá rẻ ở Việt Nam nhưng bán giá cao ở thị trường đích; hàng dư thừa, sản xuất nhiều tại Việt Nam; nhẹ, mỏng, dễ bảo quản; ít giấy tờ.
 ĐỊNH DẠNG: Bảng; cột: sản phẩm, vì sao hợp ngách, nơi tìm nhà cung cấp, rủi ro giấy tờ, ước lượng nhẹ hay nặng.
 RÀNG BUỘC: Không đề xuất thực phẩm, mỹ phẩm, đồ em bé. Điều gì không chắc thì ghi rõ "cần xác nhận lại".
@@ -262,7 +180,7 @@ RÀNG BUỘC: Không thêm sản phẩm ngoài danh sách. Sản phẩm vệ tin
 ### Prompt 2.3. Hỏi FastMoss MCP để tìm sản phẩm theo ngách (dùng sau khi đã kết nối FastMoss MCP)
 
 ```
-Dùng dữ liệu FastMoss, thị trường [US], 28 ngày gần nhất.
+Dùng dữ liệu FastMoss, thị trường US, 28 ngày gần nhất.
 1) Tìm danh mục phù hợp với "[ngách / sản phẩm]".
 2) Liệt kê các sản phẩm bán chạy và sản phẩm mới lên sàn trong danh mục đó: tên, giá bán, số bán 28 ngày, GMV 28 ngày, số creator liên kết, link FastMoss.
 3) Đánh dấu sản phẩm có số creator mới tăng gần đây.
@@ -280,7 +198,7 @@ Lấy số liệu từ FastMoss, Kalodata cho từng sản phẩm đã chọn, g
 Dùng sau khi đã kết nối FastMoss MCP. Kết quả có thể copy dán thẳng vào sheet NHẬP của file tính giá.
 
 ```
-Dùng FastMoss MCP, thị trường [US / VN], chỉ lấy listing đang bán.
+Dùng FastMoss MCP, thị trường US, chỉ lấy listing đang bán.
 Sản phẩm cần tra: "[từ khóa tiếng Anh hoặc tiếng Việt của sản phẩm]".
 
 Làm theo thứ tự:
@@ -330,7 +248,7 @@ RÀNG BUỘC: Chỉ dùng số đã dán. Cuối bài ghi Giới hạn dữ li�
 
 ## Bước 4. Giá nhập tối đa và giá bán để có lời
 
-Điền trước các khoản chi phí thật vào Google Sheet bảng tính giá (lấy từ nhà cung cấp, đơn vị fulfillment, logistics). Đơn vị USD cho thị trường US.
+Điền trước các khoản chi phí thật vào Google Sheet bảng tính giá (lấy từ nhà cung cấp, đơn vị fulfillment, logistics). Đơn vị tiền: USD.
 
 Công thức tính ngược:
 `Giá nhập tối đa = Giá bán - Phí sàn - Hoa hồng - Phí fulfillment - Logistics US - Shipping VN sang US - Logistics VN - Packing - Chi phí marketing - Lãi mục tiêu`
@@ -338,7 +256,7 @@ Công thức tính ngược:
 ### Prompt 4.1. Tính giá nhập tối đa từ giá đối thủ
 
 ```
-VAI TRÒ: Bạn là chuyên gia tính giá thành cho hàng nhập từ Việt Nam bán sang [US / VN].
+VAI TRÒ: Bạn là chuyên gia tính giá thành cho hàng nhập từ Việt Nam bán sang Mỹ (US).
 DỮ LIỆU:
 - Giá bán đề xuất (từ bước 3): [số]
 - Phí sàn và hoa hồng: [%]
@@ -359,7 +277,7 @@ RÀNG BUỘC: Chỉ dùng số trong DỮ LIỆU. Thiếu số nào thì ghi "ch
 ### Prompt 4.2. So giá nhà cung cấp với giá nhập tối đa
 
 ```
-DỮ LIỆU: [dán bảng: sản phẩm, giá nhà cung cấp 1688 / VN báo, MOQ, giá nhập tối đa đã tính ở prompt 4.1]
+DỮ LIỆU: [dán bảng: sản phẩm, giá nhà cung cấp 1688 hoặc Việt Nam báo, MOQ, giá nhập tối đa đã tính ở prompt 4.1]
 NHIỆM VỤ: Đánh dấu từng sản phẩm: Vào (giá nhà cung cấp thấp hơn giá nhập tối đa), Đàm phán (cao hơn không quá 15%), Bỏ (cao hơn nhiều). Với sản phẩm Đàm phán, nêu mức giá cần đạt.
 ĐỊNH DẠNG: bảng + 1 câu kết luận cho mỗi sản phẩm.
 ```
@@ -375,5 +293,5 @@ NHIỆM VỤ: Chỉ ra khoản chi phí lớn nhất, giá bán tối thiểu đ
 ### Prompt 4.4. Hỏi nhà cung cấp
 
 ```
-Soạn tin nhắn hỏi nhà cung cấp [tiếng Việt / tiếng Trung] về sản phẩm [tên]: giá theo mức số lượng, MOQ, thời gian sản xuất, hàng mẫu, quy cách đóng gói, cân nặng mỗi cái, khả năng không in tên thương hiệu bên trong sản phẩm. Ngắn, lịch sự, dưới 8 dòng.
+Soạn tin nhắn hỏi nhà cung cấp [tiếng Việt hoặc tiếng Trung] về sản phẩm [tên]: giá theo mức số lượng, MOQ, thời gian sản xuất, hàng mẫu, quy cách đóng gói, cân nặng mỗi cái, khả năng không in tên thương hiệu bên trong sản phẩm. Ngắn, lịch sự, dưới 8 dòng.
 ```
