@@ -950,7 +950,8 @@ h1,h2,h3,h4{font-weight:600;letter-spacing:-.01em}
 
 <script src="config.js?v=7"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.js"></script>
-<script src="store.js?v=10"></script>
+<script src="store.js?v=11"></script>
+<script src="academy.js?v=1"></script>
 <script>
 (function(){
 "use strict";
@@ -1184,7 +1185,7 @@ function secBullet(live){
   return '<section class="sec"><h2>Ngày ở bước so với chuẩn</h2><p class="hint">Vạch đen là mốc chuẩn của bước đang làm. Thanh vượt vạch nghĩa là đã chậm hơn chuẩn. Sắp xếp người chậm nhất lên đầu.</p>'+h+'</section>';
 }
 function fig(v,l,c){return '<div class="fig '+(c||"")+'"><b>'+v+'</b><span>'+l+'</span></div>'}
-var MAIN=[["tong-quan","Tổng quan"],["bieu-do","Biểu đồ"],["lich","Lịch họp"],["hoc-vien","Học viên"]];
+var MAIN=[["tong-quan","Tổng quan"],["bieu-do","Biểu đồ"],["lich","Lịch họp"],["hoc-vien","Học viên"],["bai-giang","Bài giảng"]];
 function mainNav(cur){
   return MAIN.map(function(t){return '<a href="#/'+t[0]+'"'+(t[0]===cur?' aria-current="page"':'')+'>'+t[1]+'</a>'}).join("");
 }
@@ -1239,6 +1240,7 @@ function viewTrack(tab){
   var active=as.filter(function(a){return a.s.status!=="Dừng"});
   var live=as.filter(function(a){return a.active});
   if(!students.length) return '<div class="empty">Chưa có học viên. Nhắn trong cuộc trò chuyện để thêm học viên.</div>';
+  if(tab==="bai-giang") return window.ACAD?ACAD.adminView(students):'<div class="empty">Chưa tải được phần bài giảng.</div>';
   if(tab==="bieu-do") return live.length?secBullet(live)+secDist(live):'<div class="empty">Chưa có học viên đang học để vẽ biểu đồ.</div>';
   if(tab==="lich") return secWeeks();
   if(tab==="hoc-vien"){
@@ -1425,7 +1427,7 @@ function docsView(mk,model){
 }
 function ntnView(s,a,asn,ms,rs,tab){
   var mk=a.mk, ns=a.ns, model=stepModel(a), now=new Date(), nm=a.nextM, openN=a.cur<=ns?a.cur:0, MN=!window.STUDENT_MODE;
-  var TB=[["tien-do","Quá trình"],["bai-tap","Bài tập"],["tai-lieu","Tài liệu"]].concat(MN?[["nhat-ky","Nhật ký"]]:[]);
+  var TB=[["tien-do","Quá trình"],["bai-giang","Bài giảng"],["bai-tap","Bài tập"],["tai-lieu","Tài liệu"]].concat(MN?[["nhat-ky","Nhật ký"]]:[]);
   var mnProps='';
   if(MN){
     var ac=s.account, hasAc=ac&&ac.password&&s.email, al=a.attn.slice().sort(function(p,q){return q.sev-p.sev}).filter(function(x){return x.sev>=2});
@@ -1462,6 +1464,7 @@ function ntnView(s,a,asn,ms,rs,tab){
     }
   if(MN&&tab==="nhat-ky") return '<div class="ntn">'+head+secActivity(a)+'</div>';
   if(tab==="tai-lieu") return '<div class="ntn">'+head+docsView(mk,model)+'</div>';
+  if(tab==="bai-giang") return '<div class="ntn">'+head+(window.ACAD?ACAD.view(s,a):'<p class="ntn-mu">Chưa tải được phần bài giảng.</p>')+'</div>';
   if(tab==="bai-tap"){
     var live=asn.filter(function(x){return x.status!=="Đạt"&&x.status!=="Hủy"}), done=asn.filter(function(x){return x.status==="Đạt"||(MN&&x.status==="Hủy")});
     var o='<h2 class="ntn-h2">Bài đang giao</h2>'+(live.length?live.map(card).join(""):'<p class="ntn-mu">Chưa có bài đang giao. Chờ mentor giao bài.</p>');
@@ -1781,7 +1784,7 @@ function analysisView(rs){
 }
 var STABS=[["tien-do","Tiến độ"],["trinh-chieu","Trình chiếu"],["bai-tap","Theo tuần"],["lich-hop","Lịch họp"],["bao-cao","Báo cáo"],["nhat-ky","Nhật ký"]];
 function viewStudent(id,tab){
-  var SM=!!window.STUDENT_MODE, TABS=SM?[["tien-do","Quá trình"],["bai-tap","Bài tập"],["tai-lieu","Tài liệu"]]:[["tien-do","Quá trình"],["bai-tap","Bài tập"],["tai-lieu","Tài liệu"],["nhat-ky","Nhật ký"]];
+  var SM=!!window.STUDENT_MODE, TABS=SM?[["tien-do","Quá trình"],["bai-giang","Bài giảng"],["bai-tap","Bài tập"],["tai-lieu","Tài liệu"]]:[["tien-do","Quá trình"],["bai-giang","Bài giảng"],["bai-tap","Bài tập"],["tai-lieu","Tài liệu"],["nhat-ky","Nhật ký"]];
   if((SM&&tab==="phan-tich")||(!SM&&(tab==="lich-hop"||tab==="bao-cao"||tab==="phan-tich"))) tab="bai-tap";
   tab=TABS.some(function(x){return x[0]===tab})?tab:"tien-do";
   var back=SM?'':'<a class="back" href="#/hoc-vien">← Danh sách học viên</a>';
@@ -1961,7 +1964,9 @@ function gtDraw(){
   if(window.MutationObserver) new MutationObserver(function(recs){for(var i=0;i<recs.length;i++){var tg=recs[i].target;if(!(tg&&tg.id==='gt-svg')){go();return}}}).observe(document.documentElement,{childList:true,subtree:true});
   if(document.fonts&&document.fonts.ready) document.fonts.ready.then(go);
 })();
-function render(){
+/* vẽ lại xong thì gắn lại trình phát bài giảng ngay (cùng lượt) để video không bị dừng */
+function render(){render0();if(window.ACAD)ACAD.mount()}
+function render0(){
   var t=today();
   $("#today").textContent="Hôm nay "+pad(t.getDate())+"/"+pad(t.getMonth()+1)+"/"+t.getFullYear();
   var m=/^#\/([\w-]+)(?:\/([\w-]+))?(\?xem)?$/.exec(location.hash||"");
@@ -2063,6 +2068,7 @@ window.addEventListener("hashchange",function(){render();window.scrollTo(0,0)});
   db.collection("assignments").onSnapshot(function(q){assignments=q.docs.map(function(d){var o=Object.assign({},d.data());o.id=d.id;return o});safeRender()},function(){});
   db.collection("reports").onSnapshot(function(q){reports=q.docs.map(function(d){var o=Object.assign({},d.data());o.id=d.id;return o});safeRender()},function(){});
   db.collection("logs").onSnapshot(function(q){logs=q.docs.map(function(d){var o=Object.assign({},d.data());o.id=d.id;return o});safeRender()},function(){});
+  if(window.ACAD) ACAD.init({onChange:safeRender});
   db.collection("meetings").onSnapshot(function(q){meetings=q.docs.map(function(d){var o=Object.assign({},d.data());o.id=d.id;return o});safeRender()},function(){});
 })();
 })();

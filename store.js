@@ -202,6 +202,7 @@
       return localDb();
     }
     if (!sb) sb = window.supabase.createClient(cfg.supabaseUrl, cfg.anonKey, { auth: { persistSession: true, detectSessionInUrl: true } });
+    window.MENTOR_SB = sb; /* academy.js dùng chung client này */
     var cur = await sb.auth.getSession();
     if (!(cur.data && cur.data.session)) await loginScreen();
     addSignOut();

@@ -21,6 +21,13 @@ Mở http://localhost:8124 (chưa điền `config.js` là chế độ thử).
 4. Authentication, Sign In / Providers: tắt "Allow new users to sign up" sau khi bạn đã đăng nhập lần đầu (tùy chọn, tăng an toàn).
 5. Authentication, URL Configuration: đặt Site URL và Redirect URLs là địa chỉ website sau khi deploy (và `http://localhost:8124` nếu chạy thử).
 
+## Bài giảng video (tab "Bài giảng")
+- `academy.js`: tab "Bài giảng" trên trang từng học viên và mục "Bài giảng" ở menu mentor. Học viên thấy mọi tập đã công bố của chương trình mình (VN hoặc US) và tập dùng chung, xếp theo bước; xem video có phụ đề, mục lục chương, tải PDF, nộp bài tập ngay dưới video. Mentor thấy bảng tiến độ (đã xem, đã nộp) và đánh dấu "đã xem" hoặc "cần làm lại" kèm nhận xét.
+- Dữ liệu: bảng `academy.lessons`, `academy.progress` (view `public.academy_lessons`, `public.academy_progress`), kho riêng tư `academy-lessons` và `academy-submissions`, link ký có hạn 3 giờ. Cài đặt: `supabase/academy_lessons.sql`. Số bước mỗi chương trình trong hàm `academy.current_step` phải khớp `PBV`, `PBU` trong `index.html`.
+- Không bỏ video, phụ đề, PDF hay bài nộp vào repo này (repo công khai).
+
+**Thêm một tập:** đăng nhập bằng tài khoản owner, mở mục "Bài giảng" ở menu trái, điền khung "Thêm một tập": chương trình (VN, VN sang Mỹ, hoặc dùng chung), mã tập, bước VN và bước US, tên, bài tập và kiểu nộp, chọn file .mp4 (tối đa 50 MB), .srt, mục lục .txt (mỗi dòng `00:38 Tên chương`), .pdf; tick "Công bố" khi sẵn sàng.
+
 ## Deploy
 - Vercel: Import repo, Framework Preset "Other", không cần build, Output Directory để trống.
 - Hoặc GitHub Pages: Settings, Pages, Deploy from branch, `main`, thư mục `/ (root)`.
