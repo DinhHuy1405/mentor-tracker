@@ -152,7 +152,7 @@
         + '<button type="submit" class="ntn-bt ac-go">' + (shown ? 'Nộp lại' : 'Nộp bài') + '</button> <span class="ac-mu">' + esc(EX[t]) + '</span></form>';
     } else if (!window.STUDENT_MODE && A.editor) {
       h += '<div class="ac-rv" data-acad-rv="' + esc(l.id) + '" data-sid="' + esc(s.id) + '"><label>Nhận xét cho học viên<textarea rows="2" name="note">' + esc((pr && pr.mentor_note) || '') + '</textarea></label>'
-        + '<div><button type="button" class="ntn-bt" data-acad-mark="da_xem">Đánh dấu đã xem</button> <button type="button" class="ntn-bt" data-acad-mark="lam_lai">Cần làm lại</button>'
+        + '<div><button type="button" class="ntn-bt" data-acad-mark="da_xem">' + (st === "da_xem" ? 'Lưu nhận xét' : 'Đánh dấu đã xem') + '</button>'
         + (st !== "chua_nop" ? '' : ' <span class="ac-mu">Học viên chưa nộp</span>') + '</div></div>';
     }
     return h + '</section>';
@@ -324,7 +324,7 @@
     var mk = e.target.closest("[data-acad-mark]");
     if (mk && A.editor && !window.STUDENT_MODE) {
       var box = mk.closest("[data-acad-rv]"), note = (box.querySelector("textarea").value || "").trim();
-      try { await saveProgress(box.dataset.sid, box.dataset.acadRv, { status: mk.dataset.acadMark, mentor_note: note || null, reviewed_at: new Date().toISOString() }); toast(mk.dataset.acadMark === "da_xem" ? "Đã đánh dấu đã xem" : "Đã báo cần làm lại"); changed(); }
+      try { await saveProgress(box.dataset.sid, box.dataset.acadRv, { status: mk.dataset.acadMark, mentor_note: note || null, reviewed_at: new Date().toISOString() }); toast("Đã lưu: mentor đã xem"); changed(); }
       catch (err) { toast("Chưa lưu được: " + ((err && err.message) || err)); }
       return;
     }
