@@ -11,7 +11,7 @@
   var EX = { text: "Trả lời bằng chữ", link: "Dán link (Google Sheet, Drive...)", image: "Nộp ảnh chụp, hoặc gõ chữ" };
   var A = {
     ready: false, err: "", lessons: [], prog: {}, editor: false, me: null,
-    sel: {}, subsOn: true, urls: {}, player: null, onChange: function () {}, saving: {}
+    sel: {}, stu: {}, auto: true, autoplay: false, subsOn: true, urls: {}, player: null, onChange: function () {}, saving: {}
   };
   var MOCK = window.ACAD_MOCK || null;
   function sb() { return window.MENTOR_SB || null; }
@@ -99,6 +99,12 @@
     return A.lessons.filter(function (l) { return (l.program === p || l.program === "ALL") && stepOf(l, p) && (l.published || A.editor && !window.STUDENT_MODE); })
       .sort(function (x, y) { return stepOf(x, p) - stepOf(y, p) || (x.sort || 0) - (y.sort || 0) || String(x.episode).localeCompare(String(y.episode), "vi", { numeric: true }); });
   }
+  /* tập kế tiếp theo đúng thứ tự lessonsFor(s), chỉ tập đã công bố */
+  function nextOf(s, lid) {
+    var list = lessonsFor(s).filter(function (l) { return l.published; }), i = -1;
+    for (var k = 0; k < list.length; k++) if (list[k].id === lid) { i = k; break; }
+    return i >= 0 && i + 1 < list.length ? list[i + 1] : null;
+  }
   function count(s) { return A.ready ? lessonsFor(s).length : ""; }
   function tagSt(p) { var st = ST[(p && p.status) || "chua_nop"]; return '<i class="tg ' + st[1] + '">' + st[0] + '</i>'; }
 
@@ -111,7 +117,8 @@
     var sel = list.filter(function (l) { return l.id === A.sel[s.id]; })[0]
       || list.filter(function (l) { return stepOf(l, p) === a.cur; })[0]
       || list.filter(function (l) { var pr = A.prog[key(s.id, l.id)]; return !(pr && pr.watched_at); })[0] || list[0];
-    A.sel[s.id] = sel.id;
+    A.sel[s.id] = sel.id; A.stu[s.id] = s;
+    var nx = nextOf(s, sel.id);
     var ch = sel.chapters || [], pr = A.prog[key(s.id, sel.id)] || null, step = stepOf(sel, p), pb = a.pb[step - 1];
     var h = '<div class="ac">';
     h += '<div class="ac-pl" id="acad-pl" data-les="' + esc(sel.id) + '" data-sid="' + esc(s.id) + '"></div>';
@@ -119,6 +126,7 @@
       + '<h2 class="ac-t">' + esc(sel.title) + '</h2><div class="ac-acts">'
       + (sel.vtt_path ? '<button type="button" class="ntn-bt" data-acad-subs aria-pressed="' + (A.subsOn ? "true" : "false") + '">' + (A.subsOn ? "Tắt phụ đề" : "Bật phụ đề") + '</button>' : '')
       + (sel.pdf_path ? '<button type="button" class="ntn-bt" data-acad-pdf="' + esc(sel.id) + '">Tải tài liệu PDF</button>' : '')
+      + (nx ? '<button type="button" class="ntn-bt ac-nx" data-acad-sel="' + esc(nx.id) + '" data-sid="' + esc(s.id) + '">Tập tiếp: ' + esc(nx.episode) + ' ' + esc(nx.title) + '</button>' : '')
       + (pr && pr.watched_pct ? '<span class="ac-mu">Đã xem ' + pr.watched_pct + '%' + (pr.watched_at ? ', xong ' + fmtD(pr.watched_at) : '') + '</span>' : '')
       + '</div></div>';
     if (ch.length) h += '<details class="ac-ch" open><summary>Mục lục ' + ch.length + ' chương</summary><ol>' + ch.map(function (x) { return '<li><button type="button" data-acad-t="' + x.t + '"><span>' + hms(x.t) + '</span>' + esc(x.title) + '</button></li>'; }).join("") + '</ol></details>';
@@ -164,8 +172,8 @@
     if (!box) return;
     var lid = box.dataset.les, sid = box.dataset.sid, l = A.lessons.filter(function (x) { return x.id === lid; })[0];
     if (!l) return;
-    if (A.player && A.player.lid === lid && A.player.sid === sid) { box.appendChild(A.player.el); markChapter(); return; }
-    if (A.player) { try { A.player.el.pause(); A.player.el.removeAttribute("src"); A.player.el.load(); } catch (e) {} }
+    if (A.player && A.player.lid === lid && A.player.sid === sid) { box.appendChild(A.player.el); if (A.player.ov) { box.appendChild(A.player.ov); box.classList.add("ov-on"); } markChapter(); return; }
+    if (A.player) { closeNext(); try { A.player.el.pause(); A.player.el.removeAttribute("src"); A.player.el.load(); } catch (e) {} }
     var v = document.createElement("video");
     v.controls = true; v.playsInline = true; v.preload = "metadata"; v.setAttribute("controlslist", "nodownload"); v.className = "ac-v";
     A.player = { lid: lid, sid: sid, el: v, last: 0 };
@@ -175,6 +183,7 @@
       if (!A.player || A.player.el !== v) return;
       if (!src) { var m = document.createElement("p"); m.className = "ac-err"; m.textContent = "Chưa mở được video. Tải lại trang, hoặc nhắn mentor."; v.replaceWith(m); A.player = null; return; }
       v.src = src;
+      if (A.autoplay) { A.autoplay = false; v.play().catch(function () {}); }
       if (l.vtt_path) {
         try {
           var u = await signed(BUCKET, l.vtt_path), txt = u ? await (await fetch(u)).text() : "";
@@ -185,7 +194,56 @@
       }
     })();
     v.addEventListener("timeupdate", function () { markChapter(); track(v, sid, lid, false); });
-    v.addEventListener("ended", function () { track(v, sid, lid, true); });
+    v.addEventListener("ended", function () { track(v, sid, lid, true); showNext(sid, lid); });
+    v.addEventListener("play", function () { closeNext(); });
+  }
+
+  /* ---------- hết video: mời sang tập kế tiếp ---------- */
+  function closeNext() {
+    var P = A.player; if (!P) return;
+    if (P.timer) { clearInterval(P.timer); P.timer = null; }
+    if (P.ov) { var b = P.ov.parentNode; P.ov.remove(); P.ov = null; if (b) b.classList.remove("ov-on"); }
+  }
+  function goNext(sid, nid) {
+    closeNext(); A.sel[sid] = nid; A.autoplay = true; changed();
+    var pl = document.getElementById("acad-pl"); if (pl) pl.scrollIntoView({ block: "start", behavior: "smooth" });
+  }
+  function showNext(sid, lid) {
+    var P = A.player, box = document.getElementById("acad-pl"), s = A.stu[sid];
+    if (!P || !box || !s) return;
+    closeNext();
+    var cur = A.lessons.filter(function (x) { return x.id === lid; })[0] || {}, nx = nextOf(s, lid), pr = A.prog[key(sid, lid)];
+    var needSub = cur.exercise && !(pr && pr.status && pr.status !== "chua_nop");
+    var ov = document.createElement("div"); ov.className = "ac-ov"; ov.setAttribute("role", "dialog"); ov.setAttribute("aria-label", nx ? "Tập tiếp theo" : "Đã xem hết");
+    var h = '<div class="ac-ovc">';
+    if (nx) {
+      h += '<div class="ac-ovk">Tập tiếp theo</div><div class="ac-ovt">' + esc(nx.episode) + '. ' + esc(nx.title) + '</div>'
+        + '<div class="ac-ovm">' + (nx.duration_sec ? hms(nx.duration_sec) : '') + '<span data-ov-cd></span></div>'
+        + '<div class="ac-ova"><button type="button" class="ntn-bt ac-go" data-ov-go>Xem ngay</button><button type="button" class="ntn-bt" data-ov-stay>Ở lại tập này</button></div>'
+        + '<label class="ac-ovck"><input type="checkbox" data-ov-auto' + (A.auto ? ' checked' : '') + '> Tự chuyển tập</label>';
+    } else {
+      h += '<div class="ac-ovt">Bạn đã xem hết các tập hiện có</div><div class="ac-ova"><button type="button" class="ntn-bt" data-ov-replay>Xem lại</button><button type="button" class="ntn-bt" data-ov-stay>Đóng</button></div>';
+    }
+    if (needSub) h += '<div class="ac-ovs">Nhớ nộp bài tập của tập này <button type="button" class="ntn-bt" data-ov-sub>Đến ô nộp bài</button></div>';
+    ov.innerHTML = h + '</div>';
+    P.ov = ov; box.appendChild(ov); box.classList.add("ov-on");
+    var bg = ov.querySelector("[data-ov-go]"); if (bg) { try { bg.focus({ preventScroll: true }); } catch (e) {} }
+    ov.addEventListener("click", function (e) {
+      if (e.target.closest("[data-ov-go]")) { goNext(sid, nx.id); return; }
+      if (e.target.closest("[data-ov-stay]")) { closeNext(); return; }
+      if (e.target.closest("[data-ov-replay]")) { closeNext(); P.el.currentTime = 0; P.el.play().catch(function () {}); return; }
+      if (e.target.closest("[data-ov-sub]")) { if (P.timer) { clearInterval(P.timer); P.timer = null; var c0 = ov.querySelector("[data-ov-cd]"); if (c0) c0.textContent = ""; } var ex = document.querySelector(".ac-ex"); if (ex) ex.scrollIntoView({ block: "start", behavior: "smooth" }); return; }
+    });
+    var ck = ov.querySelector("[data-ov-auto]");
+    if (ck) ck.addEventListener("change", function () {
+      A.auto = ck.checked; try { localStorage.setItem("acad-auto", A.auto ? "1" : "0"); } catch (_) {}
+      if (!A.auto && P.timer) { clearInterval(P.timer); P.timer = null; var c1 = ov.querySelector("[data-ov-cd]"); if (c1) c1.textContent = ""; }
+    });
+    if (nx && A.auto) {
+      var left = 8, cd = ov.querySelector("[data-ov-cd]"), draw = function () { cd.textContent = ' · tự chuyển sau ' + left + ' giây'; };
+      draw();
+      P.timer = setInterval(function () { left--; if (left <= 0) { goNext(sid, nx.id); return; } draw(); }, 1000);
+    }
   }
   function applySubs() { var v = A.player && A.player.el; if (!v || !v.textTracks) return; for (var i = 0; i < v.textTracks.length; i++) v.textTracks[i].mode = A.subsOn ? "showing" : "hidden"; }
   function markChapter() {
@@ -346,7 +404,13 @@
 
   /* ---------- kiểu dáng: theo trang học viên (kiểu Notion, phẳng, viền mảnh) ---------- */
   var css = document.createElement("style");
-  css.textContent = ".ac-pl{border:1px solid rgba(55,53,47,.16);border-radius:6px;overflow:hidden;background:#000;margin:14px 0 0}"
+  css.textContent = ".ac-pl{position:relative;border:1px solid rgba(55,53,47,.16);border-radius:6px;overflow:hidden;background:#000;margin:14px 0 0}"
+    + ".ac-pl.ov-on{min-height:310px}.ac-ov{position:absolute;inset:0;display:grid;place-items:center;padding:12px;background:rgba(15,15,15,.72);overflow:auto}"
+    + ".ac-ovc{background:#fff;color:#37352F;border-radius:6px;padding:14px 16px;width:min(420px,100%);display:grid;gap:8px}"
+    + ".ac-ovk{font-size:12.5px;color:rgba(55,53,47,.65)}.ac-ovt{font-size:16px;font-weight:600;line-height:1.35}.ac-ovm{font-size:13px;color:rgba(55,53,47,.65)}"
+    + ".ac-ova{display:flex;flex-wrap:wrap;gap:8px}.ac-ova .ntn-bt{min-height:36px;padding:6px 14px}.ac-ova .ac-go{background:#37352F;color:#fff;border-color:#37352F}"
+    + ".ac-ovck{display:flex;align-items:center;gap:8px;font-size:13.5px}.ac-ovs{font-size:13px;border-top:1px solid rgba(55,53,47,.12);padding-top:8px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}"
+    + ".ac-nx{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}"
     + ".ac-v{display:block;width:100%;aspect-ratio:16/9;background:#000}.ac-err{margin:0;padding:24px;background:#fff;color:rgba(55,53,47,.65)}"
     + ".ac-hd{padding:12px 0 4px}.ac-k{font-size:13px;color:rgba(55,53,47,.65)}.ac-t{font-size:20px;font-weight:600;margin:2px 0 8px;line-height:1.3;color:#37352F}"
     + ".ac-acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.ac-mu{font-size:13px;color:rgba(55,53,47,.65)}"
@@ -364,7 +428,7 @@
     + "@media (max-width:560px){.ac-g .w2{grid-column:auto}}.ac-ck{display:flex!important;grid-auto-flow:column;align-items:center;gap:8px;margin:6px 0 10px}.ac-log{white-space:pre-wrap;font-size:13px;color:rgba(55,53,47,.75)}"
     + ".ac-mx td,.ac-mx th{white-space:nowrap;font-size:13px}.ac-na{color:rgba(55,53,47,.35)}";
   document.head.appendChild(css);
-  try { A.subsOn = localStorage.getItem("acad-subs") !== "0"; } catch (_) {}
+  try { A.subsOn = localStorage.getItem("acad-subs") !== "0"; A.auto = localStorage.getItem("acad-auto") !== "0"; } catch (_) {}
 
   window.ACAD = {
     init: async function (o) { if (o && o.onChange) A.onChange = o.onChange; await load(); changed(); },
