@@ -143,6 +143,12 @@
     return h + '</div>';
   }
 
+  /* Mục Quá trình: PDF của các tập đã công bố trong một bước */
+  function stepDocs(s, n) {
+    if (!s || !A.ready || A.err) return [];
+    var p = progOf(s);
+    return lessonsFor(s).filter(function (l) { return l.published && l.pdf_path && stepOf(l, p) === n; });
+  }
   /* Mục Tài liệu: PDF của từng tập đã công bố, nhóm theo bước, đúng thứ tự Bài giảng */
   function docs(s, a) {
     if (!s || !a) return '';
@@ -451,7 +457,7 @@
   window.ACAD = {
     init: async function (o) { if (o && o.onChange) A.onChange = o.onChange; await load(); changed(); },
     reload: async function () { await load(); changed(); },
-    view: view, docs: docs, adminView: adminView, mount: mount, count: count,
+    view: view, docs: docs, stepDocs: stepDocs, adminView: adminView, mount: mount, count: count,
     _state: A, _srtToVtt: srtToVtt, _parseChapters: parseChapters
   };
 })();

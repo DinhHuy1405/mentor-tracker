@@ -603,6 +603,7 @@ details.more>summary{font-weight:600}
 .dl-c:hover{background:#fffbe6}
 .dl-c b{font-family:Inter,system-ui,sans-serif;font-size:19px}
 .dl-c em i.tg{width:auto;height:auto;display:inline-block;white-space:nowrap}
+.gt-lb{width:100%;text-align:left;font-family:inherit;cursor:pointer}
 .ntn-h1{font-family:Inter,system-ui,sans-serif}
 /* Hành trình dạng cây: thân cây là các trạm, tài liệu là nhánh chĩa ra */
 .gt-note{font-size:14px;color:rgba(11,11,11,.65);margin:6px 0 4px}
@@ -952,7 +953,7 @@ h1,h2,h3,h4{font-weight:600;letter-spacing:-.01em}
 <script src="config.js?v=7"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.js"></script>
 <script src="store.js?v=11"></script>
-<script src="academy.js?v=4"></script>
+<script src="academy.js?v=5"></script>
 <script>
 (function(){
 "use strict";
@@ -986,8 +987,8 @@ var PBV=[
 
 var PBU=[
 {name:"Phân tích: keyword sản phẩm & dữ liệu Kalodata US",std:{US:10,VN:10},done:"Chốt được keyword và sản phẩm dựa trên dữ liệu thị trường US từ Kalodata.",
- task:{US:"Chốt **một ngách** (đối tượng + đặc tính + sản phẩm), chọn **5 sản phẩm win và 5 sản phẩm vệ tinh**, kiểm chứng bằng Kalodata và FastMoss. Cách làm xem ở tab Kiến thức.",VN:""},
- help:{US:"Hướng dẫn cách tìm ngách (xem tài liệu cach-tim-ngach-US), phản biện ngách và danh sách 5+5 sản phẩm, kiểm tra dữ liệu Kalodata/FastMoss, chốt sản phẩm.",VN:""},
+ task:{US:"Chốt **một ngách** (đối tượng + đặc tính + sản phẩm), chọn **5 sản phẩm win và 5 sản phẩm vệ tinh**, kiểm chứng bằng Kalodata và FastMoss. Cách làm xem ở mục Bài giảng: tập 1.2, rồi 2.1 đến 2.3.",VN:""},
+ help:{US:"Hướng dẫn cách tìm ngách (tập 1.2 ở mục Bài giảng), phản biện ngách và danh sách 5+5 sản phẩm, kiểm tra dữ liệu Kalodata/FastMoss, chốt sản phẩm.",VN:""},
  risk:"Chọn theo cảm tính, thiếu dữ liệu thị trường US."},
 {name:"Tìm nhà cung cấp & mẫu mã tại Việt Nam",std:{US:14,VN:14},done:"Đã chốt nhà cung cấp, sản phẩm và mẫu mã tại Việt Nam.",
  task:{US:"Tìm các nhà cung cấp tại Việt Nam, tìm sản phẩm và mẫu mã tại Việt Nam.",VN:""},
@@ -1490,7 +1491,8 @@ function ntnView(s,a,asn,ms,rs,tab){
     var allDocs=(DOCST[mk]||{})[n]||[];
     var docs=added.length?allDocs.filter(function(d){return added.indexOf(d.k)>=0}):allDocs;
     var showAll=m.st==="cur"||MN;
-    var dk=docs.length?'<div class="gt-rl">Tài liệu</div>'+docs.map(function(d){var u=typeof d.u==="function"?d.u(mk):d.u;return '<a class="gt-leaf" data-dk="'+esc(u)+'" href="'+esc(u)+'" target="_blank" rel="noopener">'+esc(typeof d.t==="function"?d.t(mk):d.t)+'</a>'}).join(""):'';
+    var lsd=window.ACAD&&ACAD.stepDocs?ACAD.stepDocs(s,n):[];
+    var dk=(docs.length||lsd.length)?'<div class="gt-rl">Tài liệu</div>'+lsd.map(function(l){return '<button type="button" class="gt-leaf gt-lb" data-acad-pdf="'+esc(l.id)+'">'+esc(l.title)+'<small>Tập '+esc(l.episode)+' · PDF</small></button>'}).join("")+docs.map(function(d){var u=typeof d.u==="function"?d.u(mk):d.u;return '<a class="gt-leaf" data-dk="'+esc(u)+'" href="'+esc(u)+'" target="_blank" rel="noopener">'+esc(typeof d.t==="function"?d.t(mk):d.t)+(d.ep?'<small>Công cụ · Tập '+esc(d.ep)+'</small>':'')+'</a>'}).join(""):'';
     var prs=pr.map(function(k){var tx=aiFill(k,s);return '<details class="ntn-pr"><summary>Câu lệnh AI: '+esc(AIPR[k].name)+(tx.filled?' <i class="tg gr">Đã điền sẵn thông tin của bạn</i>':'')+'</summary><pre>'+esc(tx.text)+'</pre><p><button type="button" class="ntn-bt" data-copypr="'+k+'">Sao chép câu lệnh</button></p></details>'}).join("");
     var brs=mine.map(function(x){
       if(MN) return '<div class="gt-br '+brCls(x)+'"><span class="gt-bl">Bài tập</span>'+card(x)+'</div>';
@@ -1501,7 +1503,7 @@ function ntnView(s,a,asn,ms,rs,tab){
     var SP=STORE_SPLIT[mk];
     if(SP){ if(n===SP.papersStep) gt+=gtBlock("Giấy tờ phải đủ",SP.papers); if(n===SP.platStep) gt+=gtBlock("Đăng ký nền tảng",SP.plat); }
     var ck=m.sub.length?'<p class="ntn-lb">Đầu việc</p><ul class="nck">'+m.sub.map(function(x,k){var y=m.st==="done"||m.ck.indexOf(k)>=0;return '<li class="'+(y?'y':'')+'"><i></i><span>'+esc(x)+'</span></li>'}).join("")+'</ul>':'';
-    var tk='<p class="ntn-p">'+inl(m.pb.task[mk])+'</p>'+(t?'<p class="ntn-lb">Xong trạm này khi</p><ul class="nb">'+t.out.map(function(x){return '<li>'+esc(x)+'</li>'}).join("")+'</ul>':'');
+    var tk='<p class="ntn-p">'+inl(m.pb.task[mk])+'</p>'+(t?'<p class="ntn-lb">Xong bước này khi</p><ul class="nb">'+t.out.map(function(x){return '<li>'+esc(x)+'</li>'}).join("")+'</ul>':'');
     var kns=knowFor(mk,n,s.start||"");
     var kn=kns.length?'<p class="ntn-lb">Kiến thức</p><div class="gt-kn">'+kns.map(function(x){return '<details class="gt-k"><summary>'+esc(x.title)+'</summary>'+(x.formula?'<div class="gt-kf">'+inl(x.formula[0])+(x.formula[1]?'<small>'+esc(x.formula[1])+'</small>':'')+'</div>':'')+'<ul class="nb">'+x.pts.map(function(q){return '<li>'+inl(q)+'</li>'}).join("")+'</ul></details>'}).join("")+'</div>':'';
     var mn='';
@@ -1520,7 +1522,7 @@ function ntnView(s,a,asn,ms,rs,tab){
       +'<div class="gt-m"><span class="gt-nd">'+(m.st==="done"?'&#10003;':(m.st==="cur"?'':n))+'</span></div>'
       +'<div class="gt-r">'+dk+'</div></div>';
   }).join("");
-  var route='<p class="gt-note">Đường chính là hành trình của bạn, tài liệu chĩa sang phải. Bấm mũi tên xuống ở mỗi trạm để xem đầy đủ.</p><div class="gt" id="gt">'+stations+'<div class="gt-st gt-last gt-end"><div class="gt-l"></div><div class="gt-m"><span class="gt-nd gt-flag">&#9873;</span></div><div class="gt-r"><div class="gt-endc"><b>Đích: đơn hàng thật đầu tiên trên sàn</b></div></div></div><svg class="gt-svg" id="gt-svg" aria-hidden="true"></svg></div>';
+  var route='<p class="gt-note">Đường chính là hành trình của bạn, tài liệu chĩa sang phải. Bấm mũi tên xuống ở mỗi bước để xem đầy đủ.</p><div class="gt" id="gt">'+stations+'<div class="gt-st gt-last gt-end"><div class="gt-l"></div><div class="gt-m"><span class="gt-nd gt-flag">&#9873;</span></div><div class="gt-r"><div class="gt-endc"><b>Đích: đơn hàng thật đầu tiên trên sàn</b></div></div></div><svg class="gt-svg" id="gt-svg" aria-hidden="true"></svg></div>';
   return '<div class="ntn">'+head+route+'</div>';
 }
 function mtgItem(m,open){
