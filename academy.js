@@ -52,7 +52,7 @@
         c.from("academy_progress").select("*")
       ]);
       if (r[0].error) throw r[0].error;
-      A.lessons = r[0].data || [];
+      A.lessons = (r[0].data || []).filter(function (l) { return !l.archived; });
       A.prog = {}; (r[1].data || []).forEach(function (p) { A.prog[key(p.student_id, p.lesson_id)] = p; });
       if (!window.STUDENT_MODE) {
         var u = await c.auth.getUser(), em = u && u.data && u.data.user ? String(u.data.user.email || "").toLowerCase() : "";
@@ -367,7 +367,7 @@
     if (vf && vf.size > 50 * 1024 * 1024) { toast("Video quá 50 MB. Nhờ Đào Tạo xuất bản nhẹ hơn."); return; }
     $("#acad-go").disabled = true; log.textContent = "";
     try {
-      var row = { id: id, program: prog, episode: ep, title: title, step_vn: svn, step_us: sus, sort: parseInt(g("sort"), 10) || 0, exercise: g("exercise") || null, exercise_type: g("exercise_type") || "text", published: !!d.get("published") };
+      var row = { id: id, program: prog, episode: ep, title: title, step_vn: svn, step_us: sus, sort: parseInt(g("sort"), 10) || 0, exercise: g("exercise") || null, exercise_type: g("exercise_type") || "text", published: !!d.get("published"), archived: false };
       if (vf) { say("Đang tải video (" + Math.round(vf.size / 1048576) + " MB)..."); row.duration_sec = await videoDuration(vf); await upload(BUCKET, id + "/video.mp4", vf, "video/mp4"); row.video_path = id + "/video.mp4"; say("Xong video, " + hms(row.duration_sec) + "."); }
       else row.video_path = old.video_path;
       if (sf) { var st = await readText(sf), vt = /^﻿?WEBVTT/.test(st) ? st : srtToVtt(st); await upload(BUCKET, id + "/phu-de.vtt", new Blob([vt], { type: "text/vtt" }), "text/vtt"); row.vtt_path = id + "/phu-de.vtt"; say("Xong phụ đề."); }
