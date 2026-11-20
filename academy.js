@@ -178,7 +178,7 @@
 
   function exerciseHtml(s, l, pr) {
     if (!l.exercise) return '';
-    var sub = (pr && pr.submission) || {}, st = (pr && pr.status) || "chua_nop", h = '<section class="ac-ex"><div class="ac-exh"><b>Bài tập</b> ' + tagSt(pr) + '</div><p class="ac-ext">' + esc(l.exercise) + '</p>';
+    var sub = (pr && pr.submission) || {}, st = (pr && pr.status) || "chua_nop", h = '<section class="ac-ex"><div class="ac-exh"><b>Bài tập</b> ' + tagSt(pr) + '</div><p class="ac-ext">' + esc(l.exercise).replace(/https:\/\/[^\s<]+/g, function (u) { return '<a href="' + u + '" target="_blank" rel="noopener">' + u + '</a>'; }) + '</p>';
     var shown = sub.text || sub.link || sub.image_path;
     if (shown) h += '<div class="ntn-co"><b>Bài đã nộp' + (pr.submitted_at ? ' ' + fmtD(pr.submitted_at) : '') + '.</b> ' + esc(sub.text || '') + ' '
       + (/^https:\/\//.test(sub.link || '') ? '<a href="' + esc(sub.link) + '" target="_blank" rel="noopener">Mở link</a> ' : '')
