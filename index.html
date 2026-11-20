@@ -1777,7 +1777,7 @@ function analysisView(rs){
   var list=rs.filter(function(r){return (r.charts||[]).length});
   if(!list.length) return '<section class="sec"><h2>Phân tích</h2><div class="empty">Chưa có phân tích nào.</div></section>';
   return '<section class="sec"><h2>Phân tích</h2>'+list.map(function(r){
-    var v=r.verdict||String(r.summary||"").split(/(?<=\.)\s/)[0];
+    var v=r.verdict||(function(t){var k=t.search(/\.\s/);return k>=0?t.slice(0,k+1):t})(String(r.summary||""));
     return '<article class="an"><small>'+fmt(r.date)+'</small><h3>'+esc(r.title)+'</h3><p class="vd">'+inl(v)+'</p><div class="vzs">'
       +(r.charts||[]).map(function(c){
         return '<div class="vz">'+(c.ck?'<p class="ck2">'+esc(c.ck)+'</p>':'')+(c.type==="pie"?donutHtml(c):barsHtml(c.items))+'<h4>'+esc(c.title)+'</h4></div>'}).join("")+'</div></article>';
