@@ -1947,7 +1947,7 @@ function gtDraw(){
   var g=document.getElementById("gt"), sv=document.getElementById("gt-svg"); if(!g||!sv) return;
   while(sv.firstChild) sv.removeChild(sv.firstChild);
   if(window.innerWidth<760) return;
-  var gr=g.getBoundingClientRect(), by={}, ls=g.querySelectorAll(".gt-leaf");
+  var gr=g.getBoundingClientRect(), by={}, ls=g.querySelectorAll(".gt-leaf[data-dk]");
   Array.prototype.forEach.call(ls,function(a){var k=a.getAttribute("data-dk");(by[k]=by[k]||[]).push(a)});
   var ix=0;
   Object.keys(by).forEach(function(k){
