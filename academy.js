@@ -143,6 +143,23 @@
     return h + '</div>';
   }
 
+  /* Mục Tài liệu: PDF của từng tập đã công bố, nhóm theo bước, đúng thứ tự Bài giảng */
+  function docs(s, a) {
+    if (!s || !a) return '';
+    if (!A.ready) return '<h2 class="ntn-h2">Tài liệu bài học</h2><p class="ntn-mu">Đang tải tài liệu...</p>';
+    if (A.err) return '<h2 class="ntn-h2">Tài liệu bài học</h2><p class="ntn-mu">Chưa đọc được tài liệu. Tải lại trang, hoặc nhắn mentor.</p>';
+    var p = progOf(s), list = lessonsFor(s).filter(function (l) { return l.published && l.pdf_path; });
+    var h = '<h2 class="ntn-h2">Tài liệu bài học</h2><p class="ntn-mu">Mỗi tập có một tài liệu PDF đi kèm, cùng thứ tự với mục Bài giảng. Bấm thẻ để tải về.</p>';
+    if (!list.length) return h + '<p class="ntn-mu">Chưa có tài liệu cho chương trình ' + esc(PROG[p]) + '.</p>';
+    var last = null;
+    list.forEach(function (l) {
+      var n = stepOf(l, p);
+      if (n !== last) { if (last !== null) h += '</div>'; last = n; var b = a.pb && a.pb[n - 1]; h += '<div class="ac-st">Bước ' + n + (b ? ': ' + esc(b.name) : '') + '</div><div class="dl">'; }
+      h += '<button type="button" class="dl-c ac-dc" data-acad-pdf="' + esc(l.id) + '"><b>' + esc(l.title) + '</b><em><i class="tg">Tập ' + esc(l.episode) + '</i><i class="tg">PDF</i></em></button>';
+    });
+    return h + '</div>';
+  }
+
   function exerciseHtml(s, l, pr) {
     if (!l.exercise) return '';
     var sub = (pr && pr.submission) || {}, st = (pr && pr.status) || "chua_nop", h = '<section class="ac-ex"><div class="ac-exh"><b>Bài tập</b> ' + tagSt(pr) + '</div><p class="ac-ext">' + esc(l.exercise) + '</p>';
@@ -426,6 +443,7 @@
     + "@media (max-width:560px){.ac-row{grid-template-columns:40px minmax(0,1fr)}.ac-rs{grid-column:2;white-space:normal}}"
     + ".ac-h3{font-size:15px;margin:22px 0 8px}.ac-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:10px 0}.ac-g .w2{grid-column:span 2}"
     + "@media (max-width:560px){.ac-g .w2{grid-column:auto}}.ac-ck{display:flex!important;grid-auto-flow:column;align-items:center;gap:8px;margin:6px 0 10px}.ac-log{white-space:pre-wrap;font-size:13px;color:rgba(55,53,47,.75)}"
+    + ".ac-dc{width:100%;text-align:left;font:inherit;cursor:pointer}"
     + ".ac-mx td,.ac-mx th{white-space:nowrap;font-size:13px}.ac-na{color:rgba(55,53,47,.35)}";
   document.head.appendChild(css);
   try { A.subsOn = localStorage.getItem("acad-subs") !== "0"; A.auto = localStorage.getItem("acad-auto") !== "0"; } catch (_) {}
@@ -433,7 +451,7 @@
   window.ACAD = {
     init: async function (o) { if (o && o.onChange) A.onChange = o.onChange; await load(); changed(); },
     reload: async function () { await load(); changed(); },
-    view: view, adminView: adminView, mount: mount, count: count,
+    view: view, docs: docs, adminView: adminView, mount: mount, count: count,
     _state: A, _srtToVtt: srtToVtt, _parseChapters: parseChapters
   };
 })();

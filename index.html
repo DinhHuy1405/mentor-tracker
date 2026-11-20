@@ -951,7 +951,7 @@ h1,h2,h3,h4{font-weight:600;letter-spacing:-.01em}
 <script src="config.js?v=7"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.js"></script>
 <script src="store.js?v=11"></script>
-<script src="academy.js?v=3"></script>
+<script src="academy.js?v=4"></script>
 <script>
 (function(){
 "use strict";
@@ -1381,19 +1381,16 @@ function aiFill(k,s){
   var sg=(s.strength||"").trim(), b="- Thế mạnh của tôi: [...]"; if(sg&&t.indexOf(b)>=0){t=t.replace(b,"- Thế mạnh của tôi: "+sg);f=true}
   AIFILLED[k]=t; return {text:t,filled:f};
 }
+/* Công cụ đi kèm bài giảng (không phải PDF bài học). PDF bài học lấy từ bảng academy_lessons qua ACAD.docs.
+   Số bước theo bảng bài giảng: tập chung 2.1 đến 2.3 là bước 2 ở VN, bước 1 ở Mỹ. ep là tập dùng công cụ. */
 var DOCST={
 VN:{
-1:[{k:"ngach",t:"Tìm ngách bằng tư duy (VN)",u:"files/tim-ngach-vn.pdf"}],
-2:[{k:"sotay",t:"Sổ tay dùng AI (PDF)",u:"files/so-tay-dung-ai-fastmoss-vn.pdf"},{k:"prompt",t:"Bộ prompt FastMoss",u:"files/bo-prompt-fastmoss-vn.html"},{k:"tinhgia",t:"File tính giá",u:"files/TinhGia_TuDong.xlsx"},{k:"ncc",t:"Tìm nhà cung cấp bằng AI (VN)",u:"files/tim-nha-cung-cap-vn.pdf"}],
-3:[{k:"ncc",t:"Tìm nhà cung cấp bằng AI (VN)",u:"files/tim-nha-cung-cap-vn.pdf"},{k:"tinhgia",t:"File tính giá",u:"files/TinhGia_TuDong.xlsx"}],
-4:[{k:"tinhgia",t:"File tính giá",u:"files/TinhGia_TuDong.xlsx"}]
+2:[{k:"prompt",t:"Bộ prompt FastMoss (VN)",u:"files/bo-prompt-fastmoss-vn.html",ep:"2.2"},{k:"tinhgia",t:"File tính giá",u:"files/TinhGia_TuDong.xlsx",ep:"2.6"}]
 },
 US:{
-1:[{k:"ngach",t:"Tìm ngách bằng tư duy (US)",u:"files/tim-ngach-us.pdf"},{k:"sotay",t:"Sổ tay dùng AI (PDF)",u:"files/so-tay-dung-ai-fastmoss-us.pdf"},{k:"prompt",t:"Bộ prompt FastMoss",u:"files/bo-prompt-fastmoss-us.html"}],
-2:[{k:"ncc",t:"Tìm nhà cung cấp bằng AI (US)",u:"files/tim-nha-cung-cap-us.pdf"},{k:"tinhgia",t:"File tính giá",u:"files/TinhGia_TuDong.xlsx"}],
-3:[{k:"sku",t:"SKU variant prompt (US)",u:"files/sku-variant-prompt-us.pdf"},{k:"skudoc",t:"SKU variant prompt (DOCX, editable)",u:"files/sku-variant-prompt-us.docx"},{k:"label",g:"packing",t:"Designing labels for organic products",u:"files/designing-labels-organic.pdf"},{k:"labelskill",g:"packing",t:"Organic label designer (Claude skill)",u:"files/organic-label-designer.skill"}],
-4:[{k:"llc",t:"Đăng ký LLC (US)",u:"files/dang-ky-llc-us.pdf"}],
-7:[{k:"llc",t:"Đăng ký LLC (US)",u:"files/dang-ky-llc-us.pdf"}]
+1:[{k:"prompt",t:"Bộ prompt FastMoss (Mỹ)",u:"files/bo-prompt-fastmoss-us.html",ep:"2.2"}],
+2:[{k:"tinhgia",t:"File tính giá",u:"files/TinhGia_TuDong.xlsx",ep:"2.6, 2.7"}],
+3:[{k:"sku",t:"Prompt chọn biến thể SKU (Mỹ)",u:"files/sku-variant-prompt-us.pdf",ep:"3.1"},{k:"skudoc",t:"Prompt chọn biến thể SKU (bản Word)",u:"files/sku-variant-prompt-us.docx",ep:"3.1"},{k:"label",g:"packing",t:"Thiết kế label cho sản phẩm organic",u:"files/designing-labels-organic.pdf",ep:"3.1"},{k:"labelskill",g:"packing",t:"Skill Claude thiết kế label",u:"files/organic-label-designer.skill",ep:"3.1"}]
 }};
 var STORE_SPLIT={US:{papers:[0,1,2,3],papersStep:4,plat:[4,5,6],platStep:7},VN:{papers:[1,2,3],papersStep:1,plat:[0,4,5],platStep:1}};
 var DOCDESC={
@@ -1403,7 +1400,7 @@ var DOCDESC={
 "files/so-tay-dung-ai-fastmoss-vn.pdf":"Cài ChatGPT hoặc Claude, nối FastMoss MCP, dùng câu lệnh từng bước (thị trường VN).",
 "files/bo-prompt-fastmoss-us.html":"Các câu lệnh AI sẵn dùng cho thị trường US, copy và dán.",
 "files/bo-prompt-fastmoss-vn.html":"Các câu lệnh AI sẵn dùng cho thị trường VN, copy và dán.",
-"files/TinhGia_TuDong.xlsx":"File tính giá bán và lợi nhuận. Dán kết quả AI vào là có kết luận.",
+"files/TinhGia_TuDong.xlsx":"Bảng tính giá bán và lợi nhuận. Dán kết quả AI vào là có kết luận.",
 "files/tim-nha-cung-cap-vn.pdf":"Dùng AI tìm, hỏi và so sánh nhà cung cấp trên 1688.",
 "files/tim-nha-cung-cap-us.pdf":"Dùng AI tìm, hỏi và so sánh nhà cung cấp ở Việt Nam và trên 1688.",
 "files/sku-variant-prompt-us.pdf":"Prompt FastMoss chọn biến thể (màu, kích thước, giá) và 5 sản phẩm bán kèm cho ngách của bạn. Tiếng Anh.",
@@ -1411,18 +1408,19 @@ var DOCDESC={
 "files/designing-labels-organic.pdf":"Quy trình thiết kế label hai mặt cho sản phẩm organic: Canva, hình minh hoạ AI, xuất file in. Tiếng Anh.",
 "files/organic-label-designer.skill":"Skill để Claude thiết kế label theo đúng quy trình. Cài vào Claude rồi dùng.",
 "files/dang-ky-llc-us.pdf":"Chuẩn bị thông tin, chọn bang, nhận giấy tờ LLC rồi đăng ký các kênh bán."};
-function docsView(mk,model){
+function docsView(mk,model,st,ax){
   var map={},order=[];
   var steps=DOCST[mk]||{};
   Object.keys(steps).map(Number).sort(function(x,y){return x-y}).forEach(function(n){
     steps[n].forEach(function(d){var u=typeof d.u==="function"?d.u(mk):d.u, t=typeof d.t==="function"?d.t(mk):d.t;
-      if(!map[u]){map[u]={t:t,u:u,st:[],g:d.g||""};order.push(u)} map[u].st.push(n)});
+      if(!map[u]){map[u]={t:t,u:u,st:[],ep:d.ep||"",g:d.g||""};order.push(u)} map[u].st.push(n)});
   });
-  var nm={};(model||[]).forEach(function(m){nm[m.n]=m.pb.name});
   function card(u){var d=map[u];
-    return '<a class="dl-c" href="'+esc(d.u)+'" target="_blank" rel="noopener"><b>'+esc(d.t)+'</b><span>'+esc(DOCDESC[d.u]||"")+'</span><em>'+d.st.map(function(n){return '<i class="gt-dc">Trạm '+n+'</i>'}).join(" ")+'</em></a>'}
+    return '<a class="dl-c" href="'+esc(d.u)+'" target="_blank" rel="noopener"><b>'+esc(d.t)+'</b><span>'+esc(DOCDESC[d.u]||"")+'</span><em>'+d.st.map(function(n){return '<i class="tg">Bước '+n+'</i>'}).join("")+(d.ep?'<i class="tg">Tập '+esc(d.ep)+'</i>':'')+'</em></a>'}
   var main=order.filter(function(u){return !map[u].g}), pk=order.filter(function(u){return map[u].g==="packing"});
-  return '<h2 class="ntn-h2">Tài liệu</h2><p class="ntn-mu">Mỗi tài liệu dùng ở một số trạm trên hành trình. Mở đúng tài liệu khi bạn tới trạm đó.</p><div class="dl">'+main.map(card).join("")+'</div>'
+  var les=window.ACAD&&ACAD.docs?ACAD.docs(st,ax):'';
+  return les
+    +(main.length?'<h2 class="ntn-h2">Công cụ</h2><p class="ntn-mu">File làm việc dùng cùng bài giảng: bảng tính, câu lệnh sao chép. Mở khi tới đúng tập ghi trên thẻ.</p><div class="dl">'+main.map(card).join("")+'</div>':'')
     +(pk.length?'<h2 class="ntn-h2">Packing</h2><p class="ntn-mu">Thiết kế label và bao bì cho sản phẩm của bạn.</p><div class="dl">'+pk.map(card).join("")+'</div>':'');
 }
 function ntnView(s,a,asn,ms,rs,tab){
@@ -1463,7 +1461,7 @@ function ntnView(s,a,asn,ms,rs,tab){
         +(MN&&x.status!=="Đạt"&&x.status!=="Hủy"?'<p><button type="button" class="ntn-bt" data-copyass="'+esc(x.id)+'">Sao chép tin nhắn giao bài này</button></p>':'')+'</div>';
     }
   if(MN&&tab==="nhat-ky") return '<div class="ntn">'+head+secActivity(a)+'</div>';
-  if(tab==="tai-lieu") return '<div class="ntn">'+head+docsView(mk,model)+'</div>';
+  if(tab==="tai-lieu") return '<div class="ntn">'+head+docsView(mk,model,s,a)+'</div>';
   if(tab==="bai-giang") return '<div class="ntn">'+head+(window.ACAD?ACAD.view(s,a):'<p class="ntn-mu">Chưa tải được phần bài giảng.</p>')+'</div>';
   if(tab==="bai-tap"){
     var live=asn.filter(function(x){return x.status!=="Đạt"&&x.status!=="Hủy"}), done=asn.filter(function(x){return x.status==="Đạt"||(MN&&x.status==="Hủy")});
