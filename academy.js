@@ -104,6 +104,12 @@
   /* ---------- học viên: chọn tập theo chương trình và bước ---------- */
   function progOf(s) { return s.market === "US" ? "US" : "VN"; }
   function stepOf(l, p) { return p === "US" ? l.step_us : l.step_vn; }
+  /* hai làn trong một bước: "tay" (Từng bước) hoặc "tu_dong" (Tự động); null là tập chung */
+  function laneOf(l, p) { return (p === "US" ? l.lane_us : l.lane_vn) || null; }
+  var LANE = { tay: "Từng bước", tu_dong: "Tự động" };
+  function laneNext(list, i, p) { var ln = laneOf(list[i], p); for (var j = i + 1; j < list.length; j++) { var lj = laneOf(list[j], p); if (!ln || !lj || lj === ln) return list[j]; } return null; }
+  function laneHead(list, n, p) { return list.some(function (x) { return stepOf(x, p) === n && laneOf(x, p); }) ? '<p class="ac-ln-note">Bước này có hai làn: Từng bước (làm tay từng việc) hoặc Tự động (để Claude làm). Chọn một trong hai làn, làn nào cũng ra cùng một kết quả để nộp.</p>' : ''; }
+  function laneTag(ln) { return ln ? ' <i class="tg' + (ln === "tu_dong" ? " gr" : "") + '">' + LANE[ln] + '</i>' : ''; }
   function lessonsFor(s) {
     var p = progOf(s);
     return A.lessons.filter(function (l) { return (l.program === p || l.program === "ALL") && stepOf(l, p) && (l.published || A.editor && !window.STUDENT_MODE); })
@@ -113,7 +119,7 @@
   function nextOf(s, lid) {
     var list = lessonsFor(s).filter(function (l) { return l.published; }), i = -1;
     for (var k = 0; k < list.length; k++) if (list[k].id === lid) { i = k; break; }
-    return i >= 0 && i + 1 < list.length ? list[i + 1] : null;
+    return i >= 0 ? laneNext(list, i, progOf(s)) : null;
   }
   function count(s) { return A.ready ? lessonsFor(s).length : ""; }
   function tagSt(p) { var st = ST[(p && p.status) || "chua_nop"]; return '<i class="tg ' + st[1] + '">' + st[0] + '</i>'; }
@@ -142,12 +148,14 @@
     if (ch.length) h += '<details class="ac-ch" open><summary>Mục lục ' + ch.length + ' chương</summary><ol>' + ch.map(function (x) { return '<li><button type="button" data-acad-t="' + x.t + '"><span>' + hms(x.t) + '</span>' + esc(x.title) + '</button></li>'; }).join("") + '</ol></details>';
     h += exerciseHtml(s, sel, pr);
     h += '<h2 class="ntn-h2">Các tập theo bước</h2><p class="ntn-mu">' + esc(PROG[p]) + '. Bạn đang ở bước ' + Math.min(a.cur, a.ns) + '. Xem trước các bước sau cũng được.</p>';
-    var last = null;
+    var last = null, lastLn = null;
     list.forEach(function (l) {
-      var n = stepOf(l, p);
-      if (n !== last) { last = n; var b = a.pb[n - 1]; h += '<div class="ac-st">Bước ' + n + (b ? ': ' + esc(b.name) : '') + ' ' + (n < a.cur ? '<i class="tg gr">Đã xong</i>' : n === a.cur ? '<i class="tg y">Đang làm</i>' : '<i class="tg">Chưa tới</i>') + '</div>'; }
+      var n = stepOf(l, p), ln = laneOf(l, p);
+      if (n !== last) { last = n; lastLn = null; var b = a.pb[n - 1]; h += '<div class="ac-st">Bước ' + n + (b ? ': ' + esc(b.name) : '') + ' ' + (n < a.cur ? '<i class="tg gr">Đã xong</i>' : n === a.cur ? '<i class="tg y">Đang làm</i>' : '<i class="tg">Chưa tới</i>') + '</div>' + laneHead(list, n, p); }
+      if (ln && ln !== lastLn) h += '<div class="ac-ln">Làn ' + LANE[ln] + '</div>';
+      lastLn = ln;
       var q = A.prog[key(s.id, l.id)];
-      h += '<button type="button" class="ac-row' + (l.id === sel.id ? ' on' : '') + '" data-acad-sel="' + esc(l.id) + '" data-sid="' + esc(s.id) + '"><span class="ac-ep">' + esc(l.episode) + '</span><span class="ac-rt">' + esc(l.title) + (l.published ? '' : ' <i class="tg y">Chưa công bố</i>') + '</span><span class="ac-rs">'
+      h += '<button type="button" class="ac-row' + (l.id === sel.id ? ' on' : '') + '" data-acad-sel="' + esc(l.id) + '" data-sid="' + esc(s.id) + '"><span class="ac-ep">' + esc(l.episode) + '</span><span class="ac-rt">' + esc(l.title) + laneTag(ln) + (l.published ? '' : ' <i class="tg y">Chưa công bố</i>') + '</span><span class="ac-rs">'
         + (l.duration_sec ? hms(l.duration_sec) + ' · ' : '') + (q && q.watched_at ? 'Đã xem' : q && q.watched_pct ? 'Xem ' + q.watched_pct + '%' : 'Chưa xem') + (l.exercise ? ' · ' + (ST[(q && q.status) || "chua_nop"][0]) : '') + '</span></button>';
     });
     return h + '</div>';
@@ -450,7 +458,7 @@
     + ".ac-ch{margin:10px 0;border:1px solid rgba(55,53,47,.16);border-radius:6px;padding:4px 10px}.ac-ch summary{cursor:pointer;padding:6px 0;font-weight:500}"
     + ".ac-ch ol{list-style:none;margin:0;padding:0 0 6px}.ac-ch button{display:grid;grid-template-columns:56px minmax(0,1fr);gap:6px;width:100%;text-align:left;border:0;background:none;padding:6px 4px;border-radius:4px;cursor:pointer;font:inherit;color:inherit}"
     + ".ac-ch button:hover{background:rgba(55,53,47,.06)}.ac-ch button.on{background:rgba(55,53,47,.08);font-weight:600}.ac-ch button span{color:rgba(55,53,47,.65);font-size:13px;padding-top:1px}"
-    + ".ac-ex{border:1px solid rgba(55,53,47,.16);border-radius:6px;padding:12px 14px;margin:12px 0}.ac-exh{display:flex;gap:8px;align-items:center}.ac-ext{margin:6px 0 8px}"
+    + ".ac-ex{border:1px solid rgba(55,53,47,.16);border-radius:6px;padding:12px 14px;margin:12px 0}.ac-exh{display:flex;gap:8px;align-items:center}.ac-ext{margin:6px 0 8px}.ac-ln{margin:10px 0 4px 6px;font-size:13px;font-weight:600;opacity:.8}.ac-ln-note{margin:4px 0 8px;font-size:13px;opacity:.8}"
     + ".ac-f,.ac-rv{display:grid;gap:8px;margin-top:8px}.ac-f label,.ac-rv label,.ac-form label{display:grid;gap:4px;font-size:13.5px;color:rgba(55,53,47,.75)}"
     + ".ac-f input,.ac-f textarea,.ac-rv textarea,.ac-form input,.ac-form select,.ac-form textarea{border:1px solid rgba(55,53,47,.2);border-radius:4px;padding:6px 8px;font:inherit;background:#fff;min-width:0}"
     + ".ac-st{margin:16px 0 4px;font-weight:600;font-size:14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}"
