@@ -72,6 +72,16 @@
     A.urls[k] = { url: r.data.signedUrl, exp: Date.now() + TTL * 1000 };
     return r.data.signedUrl;
   }
+  /* Safari chặn window.open gọi sau await (mất "cú bấm" của người dùng). Mở tab trống ngay lúc bấm, có link rồi mới chuyển tab đó tới link. */
+  function openAfter(getUrl, failMsg) {
+    var w = null;
+    try { w = window.open("", "_blank"); } catch (_) { w = null; }
+    Promise.resolve().then(getUrl).then(function (u) {
+      if (!u) { if (w) try { w.close(); } catch (_) {} toast(failMsg); return; }
+      if (w && !w.closed) { try { w.opener = null; } catch (_) {} w.location.href = u; }
+      else location.href = u;
+    }, function () { if (w) try { w.close(); } catch (_) {} toast(failMsg); });
+  }
   async function saveProgress(sid, lid, patch) {
     var cur = A.prog[key(sid, lid)] || { student_id: sid, lesson_id: lid, watched_pct: 0, status: "chua_nop" };
     var row = Object.assign({}, cur, patch, { student_id: sid, lesson_id: lid });
@@ -399,9 +409,9 @@
     if (s) { A.sel[s.dataset.sid] = s.dataset.acadSel; changed(); var pl = document.getElementById("acad-pl"); if (pl) pl.scrollIntoView({ block: "start", behavior: "smooth" }); return; }
     if (e.target.closest("[data-acad-subs]")) { A.subsOn = !A.subsOn; try { localStorage.setItem("acad-subs", A.subsOn ? "1" : "0"); } catch (_) {} applySubs(); changed(); return; }
     var p = e.target.closest("[data-acad-pdf]");
-    if (p) { var l = A.lessons.filter(function (x) { return x.id === p.dataset.acadPdf; })[0]; var u = l && await signed(BUCKET, l.pdf_path, { download: l.pdf_name || "tai-lieu.pdf" }); if (u) window.open(u, "_blank", "noopener"); else toast("Chưa mở được tài liệu"); return; }
+    if (p) { var l = A.lessons.filter(function (x) { return x.id === p.dataset.acadPdf; })[0]; openAfter(function () { return l ? signed(BUCKET, l.pdf_path) : Promise.resolve(null); }, "Chưa mở được tài liệu"); return; }
     var im = e.target.closest("[data-acad-img]");
-    if (im) { var iu = await signed(SUBS, im.dataset.acadImg); if (iu) window.open(iu, "_blank", "noopener"); else toast("Chưa mở được ảnh"); return; }
+    if (im) { var ip = im.dataset.acadImg; openAfter(function () { return signed(SUBS, ip); }, "Chưa mở được ảnh"); return; }
     var mk = e.target.closest("[data-acad-mark]");
     if (mk && A.editor && !window.STUDENT_MODE) {
       var box = mk.closest("[data-acad-rv]"), note = (box.querySelector("textarea").value || "").trim();
