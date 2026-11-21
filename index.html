@@ -1434,6 +1434,8 @@ function ntnView(s,a,asn,ms,rs,tab){
     mnProps='<div><span>Gói</span><b>'+esc([s.pkg,s.platform].filter(Boolean).join(" · "))+'</b></div>'
       +(s.email||s.phone?'<div><span>Liên hệ</span><b>'+esc([s.phone,s.email].filter(Boolean).join(" · "))+'</b></div>':'')
       +(s.start?'<div><span>Bắt đầu</span><b>'+fmt(s.start)+'</b></div>':'')
+      +(function(){var ot=mk==="US"?"VN":"US", on=Array.isArray(s.extraPrograms)&&s.extraPrograms.indexOf(ot)>=0, nm2=ot==="VN"?"khoá Việt Nam":"khoá Mỹ";
+        return '<div><span>Khoá thêm</span><div><b>'+(on?'Đang mở '+nm2:'Chưa mở')+'</b> <button type="button" class="ntn-bt" data-extraprog="'+esc(s.id)+'">'+(on?'Tắt '+nm2:'Mở thêm '+nm2)+'</button></div></div>'})()
       +'<div><span>Tình trạng</span><div><i class="tg '+(s.flag&&s.flag!=="ok"?"y":"gr")+'">'+esc(FLAGS[s.flag||"ok"]||"Bình thường")+'</i>'+(a.risk>=3?' <i class="tg r">Cần can thiệp</i>':(a.risk===2?' <i class="tg y">Theo dõi</i>':''))+'</div></div>'
       +(s.blocker?'<div><span>Đang vướng</span><b>'+esc(s.blocker)+'</b></div>':'')
       +(s.mentorNext?'<div><span>Mentor sẽ làm</span><b>'+esc(s.mentorNext)+'</b></div>':'')
@@ -1975,7 +1977,7 @@ function render0(){
   if(m&&m[3]&&!window.STUDENT_MODE&&students.some(function(x){return x.id===m[1]})){
     var id0=m[1], keep=[students,assignments,meetings,reports];
     var st0=students.filter(function(x){return x.id===id0})[0];
-    students=[{id:st0.id,name:st0.name,market:st0.market,pkg:st0.pkg,niche:st0.niche,strength:st0.strength,docs:st0.docs,goal:st0.goal,start:st0.start,steps:st0.steps||{},checks:st0.checks||{},status:st0.status,firstOrder:st0.firstOrder}];
+    students=[{id:st0.id,name:st0.name,market:st0.market,pkg:st0.pkg,niche:st0.niche,strength:st0.strength,docs:st0.docs,goal:st0.goal,start:st0.start,steps:st0.steps||{},checks:st0.checks||{},status:st0.status,firstOrder:st0.firstOrder,extraPrograms:st0.extraPrograms}];
     assignments=keep[1].filter(function(x){return x.studentId===id0}).map(function(x){return {id:x.id,studentId:id0,title:x.title,items:x.items,assignedOn:x.assignedOn,due:x.due,dueTime:x.dueTime,status:x.status,note:x.pubnote,submission:x.submission,reviews:x.reviews}});
     meetings=keep[2].filter(function(x){return x.studentId===id0&&x.status!=="Hủy"}).map(function(x){var h=x.status==="Đã họp";return {id:x.id,studentId:id0,date:x.date,time:x.time,status:x.status,link:x.link,notes:h?x.notes:null,edits:h?x.edits:null,actions:h?x.actions:null,links:h?x.links:null}});
     reports=keep[3].filter(function(x){return x.studentId===id0}).map(function(x){return {id:x.id,studentId:id0,date:x.date,title:x.title,source:x.source,summary:x.summary,verdict:x.verdict,charts:x.charts,body:x.body}});
@@ -2027,6 +2029,16 @@ document.addEventListener("keydown",function(e){if((e.key==="Enter"||e.key===" "
 document.addEventListener("click",async function(e){
   if(openStep(e)) return;
   var t=e.target.closest("button"); if(!t)return; var d=t.dataset||{};
+  if(d.extraprog){
+    var s4=students.filter(function(x){return x.id===d.extraprog})[0]; if(!s4||!db)return;
+    var ot4=s4.market==="US"?"VN":"US", cur4=Array.isArray(s4.extraPrograms)?s4.extraPrograms.filter(function(x){return x==="VN"||x==="US"}):[], on4=cur4.indexOf(ot4)>=0;
+    var next4=on4?cur4.filter(function(x){return x!==ot4}):cur4.concat([ot4]);
+    t.disabled=true;
+    try{await db.collection("students").doc(s4.id).update({extraPrograms:next4});toast(on4?"Đã tắt khoá thêm":"Đã mở thêm "+(ot4==="VN"?"khoá Việt Nam":"khoá Mỹ"))}
+    catch(err){toast("Chưa lưu được: "+((err&&err.message)||err))}
+    finally{t.disabled=false}
+    return;
+  }
   if(d.copyacct){
     var s3=students.filter(function(x){return x.id===d.copyacct})[0]; if(!s3||!s3.account)return;
     return copyMsg("Chào "+s3.name+", đây là tài khoản để bạn theo dõi hành trình mentor của mình:\n\nĐịa chỉ: https://mentor.huytim.com\nEmail: "+s3.email+"\nMật khẩu: "+s3.account.password+"\n\nĐăng nhập là thấy tiến độ, bài tập, nhận xét và lịch họp của bạn.");
@@ -2069,7 +2081,7 @@ window.addEventListener("hashchange",function(){render();window.scrollTo(0,0)});
   db.collection("assignments").onSnapshot(function(q){assignments=q.docs.map(function(d){var o=Object.assign({},d.data());o.id=d.id;return o});safeRender()},function(){});
   db.collection("reports").onSnapshot(function(q){reports=q.docs.map(function(d){var o=Object.assign({},d.data());o.id=d.id;return o});safeRender()},function(){});
   db.collection("logs").onSnapshot(function(q){logs=q.docs.map(function(d){var o=Object.assign({},d.data());o.id=d.id;return o});safeRender()},function(){});
-  if(window.ACAD) ACAD.init({onChange:safeRender});
+  if(window.ACAD) ACAD.init({onChange:safeRender,pbm:PBM});
   db.collection("meetings").onSnapshot(function(q){meetings=q.docs.map(function(d){var o=Object.assign({},d.data());o.id=d.id;return o});safeRender()},function(){});
 })();
 })();

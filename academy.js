@@ -7,11 +7,12 @@
   "use strict";
   var BUCKET = "academy-lessons", SUBS = "academy-submissions", TTL = 3 * 3600;
   var PROG = { VN: "Bán hàng tại Việt Nam", US: "Bán hàng từ Việt Nam sang Mỹ", ALL: "Dùng chung hai chương trình" };
+  var KH = { VN: "Khoá Việt Nam", US: "Khoá Mỹ" };
   var ST = { chua_nop: ["Chưa nộp", ""], da_nop: ["Đã nộp, chờ mentor", "b"], da_xem: ["Mentor đã xem", "gr"], lam_lai: ["Cần làm lại", "r"] };
   var EX = { text: "Trả lời bằng chữ", link: "Dán link (Google Sheet, Drive...)", image: "Nộp ảnh chụp, hoặc gõ chữ" };
   var A = {
     ready: false, err: "", lessons: [], prog: {}, editor: false, me: null,
-    sel: {}, stu: {}, auto: true, autoplay: false, subsOn: true, urls: {}, player: null, onChange: function () {}, saving: {}
+    sel: {}, stu: {}, pbm: null, auto: true, autoplay: false, subsOn: true, urls: {}, player: null, onChange: function () {}, saving: {}
   };
   var MOCK = window.ACAD_MOCK || null;
   function sb() { return window.MENTOR_SB || null; }
@@ -110,35 +111,53 @@
   function laneNext(list, i, p) { var ln = laneOf(list[i], p); for (var j = i + 1; j < list.length; j++) { var lj = laneOf(list[j], p); if (!ln || !lj || lj === ln) return list[j]; } return null; }
   function laneHead(list, n, p) { return list.some(function (x) { return stepOf(x, p) === n && laneOf(x, p); }) ? '<p class="ac-ln-note">Bước này có hai làn: Từng bước (làm tay từng việc) hoặc Tự động (để Claude làm). Chọn một trong hai làn, làn nào cũng ra cùng một kết quả để nộp.</p>' : ''; }
   function laneTag(ln) { return ln ? ' <i class="tg' + (ln === "tu_dong" ? " gr" : "") + '">' + LANE[ln] + '</i>' : ''; }
+  /* khoá thêm: hồ sơ học viên có extraPrograms (mentor bật), ví dụ học viên US xem thêm khoá VN */
+  function extrasOf(s) {
+    var p = progOf(s), x = s && Array.isArray(s.extraPrograms) ? s.extraPrograms : [];
+    return ["VN", "US"].filter(function (k) { return k !== p && x.indexOf(k) >= 0; });
+  }
+  function sortBy(p) { return function (x, y) { return stepOf(x, p) - stepOf(y, p) || (x.sort || 0) - (y.sort || 0) || String(x.episode).localeCompare(String(y.episode), "vi", { numeric: true }); }; }
+  function visible(l) { return l.published || A.editor && !window.STUDENT_MODE; }
+  /* chương trình chính: bài của chương trình mình và bài dùng chung */
   function lessonsFor(s) {
     var p = progOf(s);
-    return A.lessons.filter(function (l) { return (l.program === p || l.program === "ALL") && stepOf(l, p) && (l.published || A.editor && !window.STUDENT_MODE); })
-      .sort(function (x, y) { return stepOf(x, p) - stepOf(y, p) || (x.sort || 0) - (y.sort || 0) || String(x.episode).localeCompare(String(y.episode), "vi", { numeric: true }); });
+    return A.lessons.filter(function (l) { return (l.program === p || l.program === "ALL") && stepOf(l, p) && visible(l); }).sort(sortBy(p));
   }
-  /* tập kế tiếp theo đúng thứ tự lessonsFor(s), chỉ tập đã công bố */
+  /* khoá thêm: chỉ bài riêng của khoá đó (bài dùng chung đã có ở khoá chính), xếp theo bước của khoá đó */
+  function extraFor(s, ep) {
+    return A.lessons.filter(function (l) { return l.program === ep && stepOf(l, ep) && visible(l); }).sort(sortBy(ep));
+  }
+  /* các nhóm hiện trên trang: [{p, list, extra}] */
+  function groupsOf(s) {
+    return [{ p: progOf(s), list: lessonsFor(s), extra: false }].concat(extrasOf(s).map(function (ep) { return { p: ep, list: extraFor(s, ep), extra: true }; }));
+  }
+  function groupOfLesson(gs, lid) { for (var i = 0; i < gs.length; i++) if (gs[i].list.some(function (l) { return l.id === lid; })) return gs[i]; return gs[0]; }
+  function pbOf(p, a, g) { return g && g.extra ? ((A.pbm && A.pbm[p]) || []) : (a.pb || []); }
+  /* tập kế tiếp trong cùng nhóm (khoá chính hoặc khoá thêm), chỉ tập đã công bố */
   function nextOf(s, lid) {
-    var list = lessonsFor(s).filter(function (l) { return l.published; }), i = -1;
+    var g = groupOfLesson(groupsOf(s), lid), list = g.list.filter(function (l) { return l.published; }), i = -1;
     for (var k = 0; k < list.length; k++) if (list[k].id === lid) { i = k; break; }
-    return i >= 0 ? laneNext(list, i, progOf(s)) : null;
+    return i >= 0 ? laneNext(list, i, g.p) : null;
   }
-  function count(s) { return A.ready ? lessonsFor(s).length : ""; }
+  function count(s) { return A.ready ? groupsOf(s).reduce(function (n, g) { return n + g.list.length; }, 0) : ""; }
   function tagSt(p) { var st = ST[(p && p.status) || "chua_nop"]; return '<i class="tg ' + st[1] + '">' + st[0] + '</i>'; }
 
   function view(s, a) {
     if (!A.ready) return '<p class="ntn-mu">Đang tải bài giảng...</p>';
     if (A.err === "nodb") return '<p class="ntn-mu">Chế độ thử: chưa nối Supabase nên chưa có bài giảng.</p>';
     if (A.err) return '<p class="ntn-mu">Chưa đọc được bài giảng: ' + esc(A.err) + '. Tải lại trang, hoặc nhắn mentor.</p>';
-    var p = progOf(s), list = lessonsFor(s);
-    if (!list.length) return '<h2 class="ntn-h2">Bài giảng</h2><p class="ntn-mu">Chưa có video bài giảng cho chương trình ' + esc(PROG[p]) + '. Mentor sẽ báo khi có tập mới.</p>';
-    var sel = list.filter(function (l) { return l.id === A.sel[s.id]; })[0]
+    var p = progOf(s), list = lessonsFor(s), gs = groupsOf(s), all = [];
+    gs.forEach(function (g) { all = all.concat(g.list); });
+    if (!all.length) return '<h2 class="ntn-h2">Bài giảng</h2><p class="ntn-mu">Chưa có video bài giảng cho chương trình ' + esc(PROG[p]) + '. Mentor sẽ báo khi có tập mới.</p>';
+    var sel = all.filter(function (l) { return l.id === A.sel[s.id]; })[0]
       || list.filter(function (l) { return stepOf(l, p) === a.cur; })[0]
-      || list.filter(function (l) { var pr = A.prog[key(s.id, l.id)]; return !(pr && pr.watched_at); })[0] || list[0];
+      || list.filter(function (l) { var pr = A.prog[key(s.id, l.id)]; return !(pr && pr.watched_at); })[0] || list[0] || all[0];
     A.sel[s.id] = sel.id; A.stu[s.id] = s;
-    var nx = nextOf(s, sel.id);
-    var ch = sel.chapters || [], pr = A.prog[key(s.id, sel.id)] || null, step = stepOf(sel, p), pb = a.pb[step - 1];
+    var nx = nextOf(s, sel.id), sg = groupOfLesson(gs, sel.id), sp = sg.p;
+    var ch = sel.chapters || [], pr = A.prog[key(s.id, sel.id)] || null, step = stepOf(sel, sp), pb = pbOf(sp, a, sg)[step - 1];
     var h = '<div class="ac">';
     h += '<div class="ac-pl" id="acad-pl" data-les="' + esc(sel.id) + '" data-sid="' + esc(s.id) + '"></div>';
-    h += '<div class="ac-hd"><div class="ac-k">Tập ' + esc(sel.episode) + ' · Bước ' + step + (pb ? ': ' + esc(pb.name) : '') + (sel.duration_sec ? ' · ' + hms(sel.duration_sec) : '') + (sel.published ? '' : ' · <i class="tg y">Chưa công bố</i>') + '</div>'
+    h += '<div class="ac-hd"><div class="ac-k">' + (gs.length > 1 ? esc(KH[sp]) + (sg.extra ? ' (khoá thêm)' : '') + ' · ' : '') + 'Tập ' + esc(sel.episode) + ' · Bước ' + step + (pb ? ': ' + esc(pb.name) : '') + (sel.duration_sec ? ' · ' + hms(sel.duration_sec) : '') + (sel.published ? '' : ' · <i class="tg y">Chưa công bố</i>') + '</div>'
       + '<h2 class="ac-t">' + esc(sel.title) + '</h2><div class="ac-acts">'
       + (sel.vtt_path ? '<button type="button" class="ntn-bt" data-acad-subs aria-pressed="' + (A.subsOn ? "true" : "false") + '">' + (A.subsOn ? "Tắt phụ đề" : "Bật phụ đề") + '</button>' : '')
       + (sel.pdf_path ? '<button type="button" class="ntn-bt" data-acad-pdf="' + esc(sel.id) + '">Tải tài liệu PDF</button>' : '')
@@ -147,21 +166,29 @@
       + '</div></div>';
     if (ch.length) h += '<details class="ac-ch" open><summary>Mục lục ' + ch.length + ' chương</summary><ol>' + ch.map(function (x) { return '<li><button type="button" data-acad-t="' + x.t + '"><span>' + hms(x.t) + '</span>' + esc(x.title) + '</button></li>'; }).join("") + '</ol></details>';
     h += exerciseHtml(s, sel, pr);
-    h += '<h2 class="ntn-h2">Các tập theo bước</h2><p class="ntn-mu">' + esc(PROG[p]) + '. Bạn đang ở bước ' + Math.min(a.cur, a.ns) + '. Xem trước các bước sau cũng được.</p>';
-    var last = null, lastLn = null;
-    list.forEach(function (l) {
-      var n = stepOf(l, p), ln = laneOf(l, p);
-      if (n !== last) { last = n; lastLn = null; var b = a.pb[n - 1]; h += '<div class="ac-st">Bước ' + n + (b ? ': ' + esc(b.name) : '') + ' ' + (n < a.cur ? '<i class="tg gr">Đã xong</i>' : n === a.cur ? '<i class="tg y">Đang làm</i>' : '<i class="tg">Chưa tới</i>') + '</div>' + laneHead(list, n, p); }
-      if (ln && ln !== lastLn) h += '<div class="ac-ln">Làn ' + LANE[ln] + '</div>';
-      lastLn = ln;
-      var q = A.prog[key(s.id, l.id)];
-      h += '<button type="button" class="ac-row' + (l.id === sel.id ? ' on' : '') + '" data-acad-sel="' + esc(l.id) + '" data-sid="' + esc(s.id) + '"><span class="ac-ep">' + esc(l.episode) + '</span><span class="ac-rt">' + esc(l.title) + laneTag(ln) + (l.published ? '' : ' <i class="tg y">Chưa công bố</i>') + '</span><span class="ac-rs">'
-        + (l.duration_sec ? hms(l.duration_sec) + ' · ' : '') + (q && q.watched_at ? 'Đã xem' : q && q.watched_pct ? 'Xem ' + q.watched_pct + '%' : 'Chưa xem') + (l.exercise ? ' · ' + (ST[(q && q.status) || "chua_nop"][0]) : '') + '</span></button>';
+    gs.forEach(function (g) {
+      if (!g.extra) h += '<h2 class="ntn-h2">' + (gs.length > 1 ? esc(KH[g.p]) + ': các tập theo bước' : 'Các tập theo bước') + '</h2><p class="ntn-mu">' + esc(PROG[g.p]) + '. Bạn đang ở bước ' + Math.min(a.cur, a.ns) + '. Xem trước các bước sau cũng được.</p>';
+      else h += '<h2 class="ntn-h2">' + esc(KH[g.p]) + ' (khoá thêm)</h2><p class="ntn-mu">Mentor mở thêm khoá này cho bạn. Các tập xếp theo bước của khoá này, xem lúc nào cũng được. Tiến độ khoá chính của bạn không đổi.</p>'
+        + (g.list.length ? '' : '<p class="ntn-mu">Khoá này chưa có tập nào.</p>');
+      var last = null, lastLn = null, gpb = pbOf(g.p, a, g);
+      g.list.forEach(function (l) {
+        var n = stepOf(l, g.p), ln = laneOf(l, g.p);
+        if (n !== last) { last = n; lastLn = null; var b = gpb[n - 1]; h += '<div class="ac-st">Bước ' + n + (b ? ': ' + esc(b.name) : '') + (g.extra ? '' : ' ' + (n < a.cur ? '<i class="tg gr">Đã xong</i>' : n === a.cur ? '<i class="tg y">Đang làm</i>' : '<i class="tg">Chưa tới</i>')) + '</div>' + laneHead(g.list, n, g.p); }
+        if (ln && ln !== lastLn) h += '<div class="ac-ln">Làn ' + LANE[ln] + '</div>';
+        lastLn = ln;
+        h += rowHtml(s, l, sel, ln);
+      });
     });
     return h + '</div>';
   }
 
-  /* Mục Quá trình: PDF của các tập đã công bố trong một bước */
+  function rowHtml(s, l, sel, ln) {
+    var q = A.prog[key(s.id, l.id)];
+    return '<button type="button" class="ac-row' + (l.id === sel.id ? ' on' : '') + '" data-acad-sel="' + esc(l.id) + '" data-sid="' + esc(s.id) + '"><span class="ac-ep">' + esc(l.episode) + '</span><span class="ac-rt">' + esc(l.title) + laneTag(ln) + (l.published ? '' : ' <i class="tg y">Chưa công bố</i>') + '</span><span class="ac-rs">'
+      + (l.duration_sec ? hms(l.duration_sec) + ' · ' : '') + (q && q.watched_at ? 'Đã xem' : q && q.watched_pct ? 'Xem ' + q.watched_pct + '%' : 'Chưa xem') + (l.exercise ? ' · ' + (ST[(q && q.status) || "chua_nop"][0]) : '') + '</span></button>';
+  }
+
+  /* Mục Quá trình: PDF của các tập đã công bố trong một bước (chỉ khoá chính) */
   function stepDocs(s, n) {
     if (!s || !A.ready || A.err) return [];
     var p = progOf(s);
@@ -172,16 +199,21 @@
     if (!s || !a) return '';
     if (!A.ready) return '<h2 class="ntn-h2">Tài liệu bài học</h2><p class="ntn-mu">Đang tải tài liệu...</p>';
     if (A.err) return '<h2 class="ntn-h2">Tài liệu bài học</h2><p class="ntn-mu">Chưa đọc được tài liệu. Tải lại trang, hoặc nhắn mentor.</p>';
-    var p = progOf(s), list = lessonsFor(s).filter(function (l) { return l.published && l.pdf_path; });
+    var p = progOf(s), gs = groupsOf(s);
     var h = '<h2 class="ntn-h2">Tài liệu bài học</h2><p class="ntn-mu">Mỗi tập có một tài liệu PDF đi kèm, cùng thứ tự với mục Bài giảng. Bấm thẻ để tải về.</p>';
-    if (!list.length) return h + '<p class="ntn-mu">Chưa có tài liệu cho chương trình ' + esc(PROG[p]) + '.</p>';
-    var last = null;
-    list.forEach(function (l) {
-      var n = stepOf(l, p);
-      if (n !== last) { if (last !== null) h += '</div>'; last = n; var b = a.pb && a.pb[n - 1]; h += '<div class="ac-st">Bước ' + n + (b ? ': ' + esc(b.name) : '') + '</div><div class="dl">'; }
-      h += '<button type="button" class="dl-c ac-dc" data-acad-pdf="' + esc(l.id) + '"><b>' + esc(l.title) + '</b><em><i class="tg">Tập ' + esc(l.episode) + '</i><i class="tg">PDF</i></em></button>';
+    gs.forEach(function (g) {
+      var list = g.list.filter(function (l) { return l.published && l.pdf_path; }), gpb = pbOf(g.p, a, g);
+      if (gs.length > 1) h += '<h3 class="ac-h3">' + esc(KH[g.p]) + (g.extra ? ' (khoá thêm)' : '') + '</h3>';
+      if (!list.length) { h += '<p class="ntn-mu">Chưa có tài liệu cho chương trình ' + esc(PROG[g.p]) + '.</p>'; return; }
+      var last = null;
+      list.forEach(function (l) {
+        var n = stepOf(l, g.p);
+        if (n !== last) { if (last !== null) h += '</div>'; last = n; var b = gpb[n - 1]; h += '<div class="ac-st">Bước ' + n + (b ? ': ' + esc(b.name) : '') + '</div><div class="dl">'; }
+        h += '<button type="button" class="dl-c ac-dc" data-acad-pdf="' + esc(l.id) + '"><b>' + esc(l.title) + '</b><em><i class="tg">Tập ' + esc(l.episode) + '</i><i class="tg">PDF</i></em></button>';
+      });
+      h += '</div>';
     });
-    return h + '</div>';
+    return h;
   }
 
   function exerciseHtml(s, l, pr) {
@@ -309,7 +341,7 @@
     if (A.err === "nodb") return '<div class="empty">Chế độ thử: chưa nối Supabase.</div>';
     if (A.err) return '<div class="empty">Chưa đọc được bài giảng: ' + esc(A.err) + '</div>';
     var ls = A.lessons.slice().sort(function (x, y) { return String(x.program).localeCompare(y.program) || (x.step_vn || x.step_us || 0) - (y.step_vn || y.step_us || 0) || (x.sort || 0) - (y.sort || 0); });
-    var h = '<section class="sec ac-adm"><h2>Bài giảng video</h2><p class="hint">Học viên xem ở tab "Bài giảng" trên trang của mình: mọi tập đã công bố của chương trình mình và tập dùng chung, xếp theo bước.</p>';
+    var h = '<section class="sec ac-adm"><h2>Bài giảng video</h2><p class="hint">Học viên xem ở tab "Bài giảng" trên trang của mình: mọi tập đã công bố của chương trình mình và tập dùng chung, xếp theo bước. Học viên được bật khoá thêm thấy thêm nhóm tập của khoá đó.</p>';
     h += ls.length ? '<div class="tbl"><table><thead><tr><th>Tập</th><th>Tên</th><th>Chương trình</th><th>Bước VN</th><th>Bước US</th><th>Thời lượng</th><th>Bài tập</th><th>Trạng thái</th><th></th></tr></thead><tbody>'
       + ls.map(function (l) {
         return '<tr><td>' + esc(l.episode) + '</td><td>' + esc(l.title) + '</td><td>' + esc(l.program) + '</td><td>' + (l.step_vn || '') + '</td><td>' + (l.step_us || '') + '</td><td>' + hms(l.duration_sec) + '</td><td>' + (l.exercise ? esc(EX[l.exercise_type] || '') : 'Chưa có') + '</td><td>'
@@ -320,9 +352,9 @@
     if (ls.length && act.length) {
       h += '<h3 class="ac-h3">Tiến độ học viên</h3><div class="tbl"><table class="ac-mx"><thead><tr><th>Học viên</th>' + ls.map(function (l) { return '<th title="' + esc(l.title) + '">' + esc(l.episode) + '</th>'; }).join("") + '</tr></thead><tbody>'
         + act.map(function (s) {
-          var p = progOf(s);
-          return '<tr><td><a href="#/' + esc(s.id) + '/bai-giang">' + esc(s.name) + '</a> <span class="ac-mu">' + p + '</span></td>' + ls.map(function (l) {
-            if (!((l.program === p || l.program === "ALL") && stepOf(l, p))) return '<td class="ac-na">không thuộc</td>';
+          var p = progOf(s), ex = extrasOf(s);
+          return '<tr><td><a href="#/' + esc(s.id) + '/bai-giang">' + esc(s.name) + '</a> <span class="ac-mu">' + p + (ex.length ? ' + ' + ex.join(", ") : '') + '</span></td>' + ls.map(function (l) {
+            if (!((l.program === p || l.program === "ALL") && stepOf(l, p)) && !(ex.indexOf(l.program) >= 0 && stepOf(l, l.program))) return '<td class="ac-na">không thuộc</td>';
             var q = A.prog[key(s.id, l.id)];
             var w = q && q.watched_at ? 'Xem xong' : q && q.watched_pct ? 'Xem ' + q.watched_pct + '%' : 'Chưa xem';
             return '<td>' + w + (l.exercise ? '<br>' + tagSt(q) : '') + '</td>';
@@ -473,9 +505,9 @@
   try { A.subsOn = localStorage.getItem("acad-subs") !== "0"; A.auto = localStorage.getItem("acad-auto") !== "0"; } catch (_) {}
 
   window.ACAD = {
-    init: async function (o) { if (o && o.onChange) A.onChange = o.onChange; await load(); changed(); },
+    init: async function (o) { if (o && o.onChange) A.onChange = o.onChange; if (o && o.pbm) A.pbm = o.pbm; await load(); changed(); },
     reload: async function () { await load(); changed(); },
-    view: view, docs: docs, stepDocs: stepDocs, adminView: adminView, mount: mount, count: count,
+    view: view, docs: docs, extrasOf: extrasOf, stepDocs: stepDocs, adminView: adminView, mount: mount, count: count,
     _state: A, _srtToVtt: srtToVtt, _parseChapters: parseChapters
   };
 })();
