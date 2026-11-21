@@ -170,10 +170,11 @@
       if (!g.extra) h += '<h2 class="ntn-h2">' + (gs.length > 1 ? esc(KH[g.p]) + ': các tập theo bước' : 'Các tập theo bước') + '</h2><p class="ntn-mu">' + esc(PROG[g.p]) + '. Bạn đang ở bước ' + Math.min(a.cur, a.ns) + '. Xem trước các bước sau cũng được.</p>';
       else h += '<h2 class="ntn-h2">' + esc(KH[g.p]) + ' (khoá thêm)</h2><p class="ntn-mu">Mentor mở thêm khoá này cho bạn. Các tập xếp theo bước của khoá này, xem lúc nào cũng được. Tiến độ khoá chính của bạn không đổi.</p>'
         + (g.list.length ? '' : '<p class="ntn-mu">Khoá này chưa có tập nào.</p>');
-      var last = null, lastLn = null, gpb = pbOf(g.p, a, g);
+      var last = null, lastLn = null, lastNg = null, gpb = pbOf(g.p, a, g);
       g.list.forEach(function (l) {
         var n = stepOf(l, g.p), ln = laneOf(l, g.p);
-        if (n !== last) { last = n; lastLn = null; var b = gpb[n - 1]; h += '<div class="ac-st">Bước ' + n + (b ? ': ' + esc(b.name) : '') + (g.extra ? '' : ' ' + (n < a.cur ? '<i class="tg gr">Đã xong</i>' : n === a.cur ? '<i class="tg y">Đang làm</i>' : '<i class="tg">Chưa tới</i>')) + '</div>' + laneHead(g.list, n, g.p); }
+        if (n !== last) { last = n; lastLn = null; lastNg = null; var b = gpb[n - 1]; h += '<div class="ac-st">Bước ' + n + (b ? ': ' + esc(b.name) : '') + (g.extra ? '' : ' ' + (n < a.cur ? '<i class="tg gr">Đã xong</i>' : n === a.cur ? '<i class="tg y">Đang làm</i>' : '<i class="tg">Chưa tới</i>')) + '</div>' + laneHead(g.list, n, g.p); }
+        var ng = l.nhom || null; if (ng && ng !== lastNg) h += '<div class="ac-ln ac-ng">' + esc(ng) + '</div>'; lastNg = ng;
         if (ln && ln !== lastLn) h += '<div class="ac-ln">Làn ' + LANE[ln] + '</div>';
         lastLn = ln;
         h += rowHtml(s, l, sel, ln);
@@ -490,7 +491,7 @@
     + ".ac-ch{margin:10px 0;border:1px solid rgba(55,53,47,.16);border-radius:6px;padding:4px 10px}.ac-ch summary{cursor:pointer;padding:6px 0;font-weight:500}"
     + ".ac-ch ol{list-style:none;margin:0;padding:0 0 6px}.ac-ch button{display:grid;grid-template-columns:56px minmax(0,1fr);gap:6px;width:100%;text-align:left;border:0;background:none;padding:6px 4px;border-radius:4px;cursor:pointer;font:inherit;color:inherit}"
     + ".ac-ch button:hover{background:rgba(55,53,47,.06)}.ac-ch button.on{background:rgba(55,53,47,.08);font-weight:600}.ac-ch button span{color:rgba(55,53,47,.65);font-size:13px;padding-top:1px}"
-    + ".ac-ex{border:1px solid rgba(55,53,47,.16);border-radius:6px;padding:12px 14px;margin:12px 0}.ac-exh{display:flex;gap:8px;align-items:center}.ac-ext{margin:6px 0 8px}.ac-ln{margin:10px 0 4px 6px;font-size:13px;font-weight:600;opacity:.8}.ac-ln-note{margin:4px 0 8px;font-size:13px;opacity:.8}"
+    + ".ac-ex{border:1px solid rgba(55,53,47,.16);border-radius:6px;padding:12px 14px;margin:12px 0}.ac-exh{display:flex;gap:8px;align-items:center}.ac-ext{margin:6px 0 8px}.ac-ln{margin:10px 0 4px 6px;font-size:13px;font-weight:600;opacity:.8}.ac-ng{font-weight:700;opacity:1;margin-top:14px;font-size:14px}.ac-ln-note{margin:4px 0 8px;font-size:13px;opacity:.8}"
     + ".ac-f,.ac-rv{display:grid;gap:8px;margin-top:8px}.ac-f label,.ac-rv label,.ac-form label{display:grid;gap:4px;font-size:13.5px;color:rgba(55,53,47,.75)}"
     + ".ac-f input,.ac-f textarea,.ac-rv textarea,.ac-form input,.ac-form select,.ac-form textarea{border:1px solid rgba(55,53,47,.2);border-radius:4px;padding:6px 8px;font:inherit;background:#fff;min-width:0}"
     + ".ac-st{margin:16px 0 4px;font-weight:600;font-size:14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}"
