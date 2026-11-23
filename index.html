@@ -1432,7 +1432,8 @@ function docsView(mk,model,st,ax){
 }
 function ntnView(s,a,asn,ms,rs,tab){
   var mk=a.mk, ns=a.ns, model=stepModel(a), now=new Date(), nm=a.nextM, openN=a.cur<=ns?a.cur:0, MN=!window.STUDENT_MODE;
-  var TB=[["tien-do","Quá trình"],["bai-giang","Bài giảng"],["bai-tap","Bài tập"],["tai-lieu","Tài liệu"]].concat(MN?[["nhat-ky","Nhật ký"]]:[]);
+  if(!tab||tab==="tien-do") tab="bai-giang";
+  var TB=[["bai-giang","Bài giảng"],["bai-tap","Bài tập"],["tai-lieu","Tài liệu"]].concat(MN?[["nhat-ky","Nhật ký"]]:[]);
   var mnProps='';
   if(MN){
     var ac=s.account, hasAc=ac&&ac.password&&s.email, al=a.attn.slice().sort(function(p,q){return q.sev-p.sev}).filter(function(x){return x.sev>=2});
@@ -1448,7 +1449,7 @@ function ntnView(s,a,asn,ms,rs,tab){
       +'<div><span>Tài liệu đã thêm</span><b>'+(Array.isArray(s.docs)&&s.docs.length?esc(s.docs.map(function(k){var L={ngach:"Tìm ngách",sotay:"Sổ tay AI",prompt:"Bộ prompt",tinhgia:"File tính giá",ncc:"Tìm nhà cung cấp",llc:"Đăng ký LLC"};return L[k]||k}).join(", ")):'chưa thêm')+'</b></div>'
       +(s.strength?'<div><span>Thế mạnh</span><b>'+esc(s.strength)+'</b></div>':'')
       +(s.note?'<div><span>Ghi chú</span><b>'+esc(s.note)+'</b></div>':'')
-      +'<div><span>Tài khoản</span><div>'+(hasAc?'<b>'+esc(s.email)+'</b> · <code>'+esc(ac.password)+'</code> <button type="button" class="ntn-bt" data-copyacct="'+esc(s.id)+'">Sao chép gửi học viên</button>':'<b>Chưa có'+(s.email?'':', thiếu email học viên')+'</b>')+' <a href="#/'+esc(s.id)+'/tien-do?xem">Xem như học viên</a></div></div>'
+      +'<div><span>Tài khoản</span><div>'+(hasAc?'<b>'+esc(s.email)+'</b> · <code>'+esc(ac.password)+'</code> <button type="button" class="ntn-bt" data-copyacct="'+esc(s.id)+'">Sao chép gửi học viên</button>':'<b>Chưa có'+(s.email?'':', thiếu email học viên')+'</b>')+' <a href="#/'+esc(s.id)+'/bai-giang?xem">Xem như học viên</a></div></div>'
       +(al.length?'<div><span>Cần xử lý</span><div>'+al.map(function(x){return '<div>'+esc(x.t)+'</div>'}).join("")+'</div></div>':'');
   }
   var head=(MN?'<a class="ntn-bk" href="#/hoc-vien">← Danh sách học viên</a>':'')+'<h1 class="ntn-h1">'+esc(s.name)+'</h1>'
@@ -1795,6 +1796,7 @@ function viewStudent(id,tab){
   var SM=!!window.STUDENT_MODE, TABS=SM?[["tien-do","Quá trình"],["bai-giang","Bài giảng"],["bai-tap","Bài tập"],["tai-lieu","Tài liệu"]]:[["tien-do","Quá trình"],["bai-giang","Bài giảng"],["bai-tap","Bài tập"],["tai-lieu","Tài liệu"],["nhat-ky","Nhật ký"]];
   if((SM&&tab==="phan-tich")||(!SM&&(tab==="lich-hop"||tab==="bao-cao"||tab==="phan-tich"))) tab="bai-tap";
   tab=TABS.some(function(x){return x[0]===tab})?tab:"tien-do";
+  if(tab==="tien-do") tab="bai-giang";
   var back=SM?'':'<a class="back" href="#/hoc-vien">← Danh sách học viên</a>';
   var s=students.filter(function(x){return x.id===id})[0];
   if(!s) return back+'<div class="empty">'+(students.length?'Không tìm thấy học viên này.':'Đang tải dữ liệu...')+'</div>';
@@ -1830,7 +1832,7 @@ function viewStudent(id,tab){
     var ac=s.account, hasAc=ac&&ac.password&&s.email;
     out+='<div class="acct2">'+(hasAc
       ?'<span class="lbl">Tài khoản</span><span>mentor.huytim.com</span><span>'+esc(s.email)+'</span><span class="mono">'+esc(ac.password)+'</span><button class="btn sm" data-copyacct="'+esc(s.id)+'">Sao chép gửi học viên</button>'
-      :'<span class="lbl">Tài khoản</span><span>Chưa có'+(s.email?'':', thiếu email học viên')+'</span>')+'<a class="btn sm" href="#/'+esc(s.id)+'/tien-do?xem" style="'+(hasAc?'margin-left:0':'margin-left:auto')+'">Xem như học viên</a></div>';
+      :'<span class="lbl">Tài khoản</span><span>Chưa có'+(s.email?'':', thiếu email học viên')+'</span>')+'<a class="btn sm" href="#/'+esc(s.id)+'/bai-giang?xem" style="'+(hasAc?'margin-left:0':'margin-left:auto')+'">Xem như học viên</a></div>';
   }
   out+='<nav class="tabs stabs" aria-label="Mục của học viên">'+TABS.map(function(t){
     return '<a href="#/'+esc(s.id)+'/'+t[0]+(window.PREVIEW?'?xem':'')+'"'+(t[0]===tab?' aria-current="page"':'')+'>'+t[1]+(cnt[t[0]]!==""?' <small>'+cnt[t[0]]+'</small>':'')+'</a>'}).join("")+'</nav>';
