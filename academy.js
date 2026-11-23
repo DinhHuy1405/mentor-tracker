@@ -116,11 +116,63 @@
   /* nhóm tập và bước thu gọn được (details). A.open giữ lựa chọn bấm tay của người xem, chỉ trong phiên; không lưu vào đâu */
   function grpKey(s, g, n, name) { return [s.id, g.p, g.extra ? "x" : "m", n, name].join("|"); }
   function isOpen(k, def) { return A.open[k] === undefined ? def : A.open[k]; }
-  function seenTxt(s, ls) { var seen = ls.filter(function (l) { var q = A.prog[key(s.id, l.id)]; return q && q.watched_at; }).length; return '<span class="ac-gc">' + ls.length + ' tập, đã xem ' + seen + '</span>'; }
+  function watched(s, l) { var q = A.prog[key(s.id, l.id)]; return !!(q && q.watched_at); }
+  function seenTxt(s, ls, cx) {
+    var need = ls.filter(function (l) { return !cx.skip[l.id]; });
+    return '<span class="ac-gc">' + (need.length ? need.filter(function (l) { return watched(s, l); }).length + '/' + need.length + ' tập' : 'không bắt buộc') + '</span>';
+  }
+  /* Lộ trình học của khoá chính: tập kế tiếp, tập khoá mềm, làn không bắt buộc. Chỉ đọc tiến độ, không ghi gì.
+   * skip: trong bước có hai làn, làn kia đã xem hết thì các tập chưa xem của làn này không bắt buộc.
+   * next: tập bắt buộc đầu tiên (theo bước, sort) chưa xem; đã xem hết thì tập đầu tiên có bài tập chưa nộp (nop = true).
+   * lock: tập chưa xem đứng sau tập kế tiếp, kèm mã tập phải xem trước. Khoá mềm: chỉ làm mờ, vẫn bấm xem được. */
+  function planOf(s, list, p) {
+    var pub = list.filter(function (l) { return l.published; }), by = {}, P = { skip: {}, lock: {}, next: null, nop: false };
+    pub.forEach(function (l) { var ln = laneOf(l, p); if (ln) { var k = stepOf(l, p) + "|" + ln; (by[k] = by[k] || []).push(l); } });
+    Object.keys(by).forEach(function (k) {
+      var x = k.split("|"), other = by[x[0] + "|" + (x[1] === "tay" ? "tu_dong" : "tay")];
+      if (other && other.every(function (l) { return watched(s, l); })) by[k].forEach(function (l) { if (!watched(s, l)) P.skip[l.id] = true; });
+    });
+    var need = pub.filter(function (l) { return !P.skip[l.id]; }), i = -1;
+    for (var k = 0; k < need.length; k++) if (!watched(s, need[k])) { i = k; break; }
+    if (i >= 0) {
+      P.next = need[i];
+      for (var j = i + 1; j < need.length; j++) if (!watched(s, need[j])) {
+        var lj = laneOf(need[j], p), pv = null;
+        for (var m = j - 1; m >= 0; m--) { var lm = laneOf(need[m], p); if (!lj || !lm || lj === lm) { pv = need[m]; break; } }
+        P.lock[need[j].id] = pv ? pv.episode : "";
+      }
+    } else {
+      P.next = need.filter(function (l) { var st = (A.prog[key(s.id, l.id)] || {}).status || "chua_nop"; return l.exercise && (st === "chua_nop" || st === "lam_lai"); })[0] || null;
+      P.nop = !!P.next;
+    }
+    return P;
+  }
+  var NOP = { image: "ảnh chụp", link: "link", text: "chữ" };
+  function nextCard(s, P, p, a) {
+    var l = P.next, h = '<section class="ac-nxt">';
+    if (!l) return h + '<div class="ac-k">Việc tiếp theo của bạn</div><p class="ac-nt">Bạn đã xem hết các tập đang có. Mentor sẽ báo khi có tập mới.</p></section>';
+    var n = stepOf(l, p);
+    return h + '<div class="ac-k">Việc tiếp theo của bạn · Bước ' + n + '</div><h2 class="ac-t">' + esc(l.episode) + ' ' + esc(l.title) + '</h2>'
+      + (P.nop ? '<p class="ac-nt ac-todo">Bạn đã xem hết video. Tập này còn bài chưa nộp: nộp bài bằng ' + (NOP[l.exercise_type || "text"] || "chữ") + '.</p>'
+        : '<ol class="ac-todo"><li>Xem video' + (l.duration_sec ? ' ' + hms(l.duration_sec) : '') + '</li><li>Làm theo video</li>' + (l.exercise ? '<li>Nộp bài bằng ' + (NOP[l.exercise_type || "text"] || "chữ") + '</li>' : '') + '</ol>')
+      + '<button type="button" class="ntn-bt ac-main" data-acad-go="' + esc(l.id) + '" data-sid="' + esc(s.id) + '">' + (P.nop ? 'Mở tập này' : 'Xem tập này') + '</button></section>';
+  }
+  /* nhãn trạng thái của một tập, bằng chữ */
+  function stLabel(s, l, cx) {
+    var q = A.prog[key(s.id, l.id)], st = (q && q.status) || "chua_nop";
+    if (cx.next && cx.next.id === l.id) return '<b class="ac-nxl">' + (cx.nop ? 'Tiếp theo: nộp bài' : 'Tiếp theo') + '</b>';
+    if (!(q && q.watched_at)) {
+      if (cx.skip[l.id]) return 'Không bắt buộc';
+      if (cx.lock[l.id] !== undefined) return 'Chưa xem' + (cx.lock[l.id] ? ', mở sau khi xem ' + esc(cx.lock[l.id]) : '');
+      return q && q.watched_pct ? 'Xem dở ' + q.watched_pct + '%' : 'Chưa xem';
+    }
+    if (!l.exercise) return 'Đã xem';
+    return st === "da_xem" ? 'Đã duyệt' : st === "da_nop" ? 'Đã nộp' : st === "lam_lai" ? 'Cần làm lại' : 'Đã xem, chưa nộp';
+  }
   function hasId(ls, m) { return ls.some(function (l) { return m[l.id]; }); }
   function grpHtml(s, k, title, note, ls, rows, cx) {
     if (cx.moved && hasId(ls, cx.on)) delete A.open[k];
-    return '<details class="ac-grp"' + (isOpen(k, hasId(ls, cx.focus)) ? ' open' : '') + '><summary class="ac-sm" data-acad-grp="' + esc(k) + '"><b>' + esc(title) + '</b>' + seenTxt(s, ls) + '</summary>'
+    return '<details class="ac-grp"' + (isOpen(k, hasId(ls, cx.focus)) ? ' open' : '') + '><summary class="ac-sm" data-acad-grp="' + esc(k) + '"><b>' + esc(title) + '</b>' + seenTxt(s, ls, cx) + '</summary>'
       + (note ? '<p class="ac-ln-note">' + note + '</p>' : '') + rows + '</details>';
   }
   function laneNext(list, i, p) { var ln = sideOf(list[i], p); for (var j = i + 1; j < list.length; j++) { var lj = sideOf(list[j], p); if (!ln || !lj || lj === ln) return list[j]; } return null; }
@@ -164,16 +216,18 @@
     var p = progOf(s), list = lessonsFor(s), gs = groupsOf(s), all = [];
     gs.forEach(function (g) { all = all.concat(g.list); });
     if (!all.length) return '<h2 class="ntn-h2">Bài giảng</h2><p class="ntn-mu">Chưa có video bài giảng cho chương trình ' + esc(PROG[p]) + '. Mentor sẽ báo khi có tập mới.</p>';
-    var sel = all.filter(function (l) { return l.id === A.sel[s.id]; })[0]
-      || list.filter(function (l) { return stepOf(l, p) === a.cur; })[0]
-      || list.filter(function (l) { var pr = A.prog[key(s.id, l.id)]; return !(pr && pr.watched_at); })[0] || list[0] || all[0];
+    var plan = planOf(s, list, p);
+    var sel = all.filter(function (l) { return l.id === A.sel[s.id]; })[0] || plan.next
+      || list.filter(function (l) { return stepOf(l, p) === a.cur; })[0] || list[0] || all[0];
     A.sel[s.id] = sel.id; A.stu[s.id] = s;
-    /* nhóm mở sẵn: nhóm chứa tập đang chọn hoặc tập chưa xem đầu tiên; đổi tập thì nhóm chứa tập mới tự mở lại */
-    var fu = list.filter(function (l) { var q = A.prog[key(s.id, l.id)]; return !(q && q.watched_at); })[0], cx = { focus: {}, on: {}, moved: A.lastSel[s.id] !== sel.id };
-    cx.focus[sel.id] = cx.on[sel.id] = true; if (fu) cx.focus[fu.id] = true;
+    /* mở sẵn: bước và nhóm chứa tập đang chọn hoặc tập kế tiếp; đổi tập thì nơi chứa tập mới tự mở lại */
+    var moved = A.lastSel[s.id] !== sel.id, on = {}, focus = {};
+    on[sel.id] = focus[sel.id] = true; if (plan.next) focus[plan.next.id] = true;
+    var cxMain = { focus: focus, on: on, moved: moved, skip: plan.skip, lock: plan.lock, next: plan.next, nop: plan.nop };
+    var cxExtra = { focus: on, on: on, moved: moved, skip: {}, lock: {}, next: null, nop: false };
     var nx = nextOf(s, sel.id), sg = groupOfLesson(gs, sel.id), sp = sg.p;
     var ch = sel.chapters || [], pr = A.prog[key(s.id, sel.id)] || null, step = stepOf(sel, sp), pb = pbOf(sp, a, sg)[step - 1];
-    var h = '<div class="ac">';
+    var h = '<div class="ac">' + nextCard(s, plan, p, a);
     h += '<div class="ac-pl" id="acad-pl" data-les="' + esc(sel.id) + '" data-sid="' + esc(s.id) + '"></div>';
     h += '<div class="ac-hd"><div class="ac-k">' + (gs.length > 1 ? esc(KH[sp]) + (sg.extra ? ' (khoá thêm)' : '') + ' · ' : '') + 'Tập ' + esc(sel.episode) + ' · Bước ' + step + (pb ? ': ' + esc(pb.name) : '') + (sel.duration_sec ? ' · ' + hms(sel.duration_sec) : '') + (sel.published ? '' : ' · <i class="tg y">Chưa công bố</i>') + '</div>'
       + '<h2 class="ac-t">' + esc(sel.title) + '</h2><div class="ac-acts">'
@@ -185,10 +239,10 @@
     if (ch.length) h += '<details class="ac-ch" open><summary>Mục lục ' + ch.length + ' chương</summary><ol>' + ch.map(function (x) { return '<li><button type="button" data-acad-t="' + x.t + '"><span>' + hms(x.t) + '</span>' + esc(x.title) + '</button></li>'; }).join("") + '</ol></details>';
     h += exerciseHtml(s, sel, pr);
     gs.forEach(function (g) {
-      if (!g.extra) h += '<h2 class="ntn-h2">' + (gs.length > 1 ? esc(KH[g.p]) + ': các tập theo bước' : 'Các tập theo bước') + '</h2><p class="ntn-mu">' + esc(PROG[g.p]) + '. Bạn đang ở bước ' + Math.min(a.cur, a.ns) + '. Xem trước các bước sau cũng được.</p>';
+      if (!g.extra) h += '<h2 class="ntn-h2">' + (gs.length > 1 ? esc(KH[g.p]) + ': các tập theo bước' : 'Các tập theo bước') + '</h2><p class="ntn-mu">' + esc(PROG[g.p]) + '. Học lần lượt từ trên xuống. Muốn xem trước tập sau, bạn vẫn bấm vào được.</p>';
       else h += '<h2 class="ntn-h2">' + esc(KH[g.p]) + ' (khoá thêm)</h2><p class="ntn-mu">Mentor mở thêm khoá này cho bạn. Các tập xếp theo bước của khoá này, xem lúc nào cũng được. Tiến độ khoá chính của bạn không đổi.</p>'
         + (g.list.length ? '' : '<p class="ntn-mu">Khoá này chưa có tập nào.</p>');
-      var gpb = pbOf(g.p, a, g), order = [], byN = {};
+      var gpb = pbOf(g.p, a, g), order = [], byN = {}, cx = g.extra ? cxExtra : cxMain;
       g.list.forEach(function (l) { var n = stepOf(l, g.p); if (!byN[n]) { byN[n] = []; order.push(n); } byN[n].push(l); });
       order.forEach(function (n) {
         var ls = byN[n], b = gpb[n - 1], body = laneHead(g.list, n, g.p), cols = null, ng = null;
@@ -199,7 +253,7 @@
         }
         function flushNg() { if (!ng) return; body += grpHtml(s, grpKey(s, g, n, "ng:" + ng.name), ng.name, "", ng.ls, ng.h, cx); ng = null; }
         ls.forEach(function (l) {
-          var r = rowHtml(s, l, sel, laneOf(l, g.p)), sd = sideOf(l, g.p);
+          var r = rowHtml(s, l, sel, laneOf(l, g.p), cx), sd = sideOf(l, g.p);
           if (sd) { flushNg(); cols = cols || {}; cols[sd] = cols[sd] || { h: "", ls: [] }; cols[sd].h += r; cols[sd].ls.push(l); return; }
           flushCols();
           if (!l.nhom) { flushNg(); body += r; return; }
@@ -207,21 +261,21 @@
           ng.h += r; ng.ls.push(l);
         });
         flushCols(); flushNg();
-        /* bước chưa tới thu gọn; bước đang làm, đã xong, bước có tập đang học thì mở */
-        var k = grpKey(s, g, n, "step"), future = !g.extra && n > a.cur;
+        /* khoá chính: chỉ bước chứa tập kế tiếp (hoặc tập đang chọn) mở sẵn; trạng thái bước tính theo video đã xem */
+        var k = grpKey(s, g, n, "step"), need = ls.filter(function (l) { return l.published && !cx.skip[l.id]; });
+        var tag = g.extra ? '' : need.length && need.every(function (l) { return watched(s, l); }) ? ' <i class="tg gr">Đã xong</i>' : cx.next && !cx.nop && stepOf(cx.next, g.p) === n ? ' <i class="tg y">Đang học</i>' : ' <i class="tg">Chưa tới</i>';
         if (cx.moved && hasId(ls, cx.on)) delete A.open[k];
-        h += '<details class="ac-stp"' + (isOpen(k, !future || hasId(ls, cx.focus)) ? ' open' : '') + '><summary class="ac-st ac-sm" data-acad-grp="' + esc(k) + '">Bước ' + n + (b ? ': ' + esc(b.name) : '')
-          + (g.extra ? '' : ' ' + (n < a.cur ? '<i class="tg gr">Đã xong</i>' : n === a.cur ? '<i class="tg y">Đang làm</i>' : '<i class="tg">Chưa tới</i>')) + seenTxt(s, ls) + '</summary>' + body + '</details>';
+        h += '<details class="ac-stp"' + (isOpen(k, g.extra || hasId(ls, cx.focus)) ? ' open' : '') + '><summary class="ac-st ac-sm" data-acad-grp="' + esc(k) + '">Bước ' + n + (b ? ': ' + esc(b.name) : '') + tag + seenTxt(s, ls, cx) + '</summary>' + body + '</details>';
       });
     });
     A.lastSel[s.id] = sel.id;
     return h + '</div>';
   }
 
-  function rowHtml(s, l, sel, ln) {
-    var q = A.prog[key(s.id, l.id)];
-    return '<button type="button" class="ac-row' + (l.id === sel.id ? ' on' : '') + '" data-acad-sel="' + esc(l.id) + '" data-sid="' + esc(s.id) + '"><span class="ac-ep">' + esc(l.episode) + '</span><span class="ac-rt">' + esc(l.title) + laneTag(ln) + (l.published ? '' : ' <i class="tg y">Chưa công bố</i>') + '</span><span class="ac-rs">'
-      + (l.duration_sec ? hms(l.duration_sec) + ' · ' : '') + (q && q.watched_at ? 'Đã xem' : q && q.watched_pct ? 'Xem ' + q.watched_pct + '%' : 'Chưa xem') + (l.exercise ? ' · ' + (ST[(q && q.status) || "chua_nop"][0]) : '') + '</span></button>';
+  function rowHtml(s, l, sel, ln, cx) {
+    var lk = cx.lock[l.id] !== undefined || cx.skip[l.id];
+    return '<button type="button" class="ac-row' + (l.id === sel.id ? ' on' : '') + (lk ? ' lk' : '') + '" data-acad-sel="' + esc(l.id) + '" data-sid="' + esc(s.id) + '"><span class="ac-ep">' + esc(l.episode) + '</span><span class="ac-rt">' + esc(l.title) + laneTag(ln) + (l.published ? '' : ' <i class="tg y">Chưa công bố</i>') + '</span><span class="ac-rs">'
+      + (l.duration_sec ? hms(l.duration_sec) + ' · ' : '') + stLabel(s, l, cx) + '</span></button>';
   }
 
   /* Mục Quá trình: PDF của các tập đã công bố trong một bước (chỉ khoá chính) */
@@ -483,6 +537,13 @@
     if (t) { var v = A.player && A.player.el; if (v) { v.currentTime = +t.dataset.acadT; v.play().catch(function () {}); markChapter(); } return; }
     var gp = e.target.closest("summary[data-acad-grp]");
     if (gp) { A.open[gp.dataset.acadGrp] = !gp.parentNode.open; return; }
+    var go = e.target.closest("[data-acad-go]");
+    if (go) {
+      var P = A.player, box = document.getElementById("acad-pl");
+      if (P && P.lid === go.dataset.acadGo && P.sid === go.dataset.sid) { if (box) box.scrollIntoView({ block: "start", behavior: "smooth" }); try { P.el.play().catch(function () {}); } catch (_) {} }
+      else goNext(go.dataset.sid, go.dataset.acadGo);
+      return;
+    }
     var s = e.target.closest("[data-acad-sel]");
     if (s) { A.sel[s.dataset.sid] = s.dataset.acadSel; changed(); var pl = document.getElementById("acad-pl"); if (pl) pl.scrollIntoView({ block: "start", behavior: "smooth" }); return; }
     if (e.target.closest("[data-acad-subs]")) { A.subsOn = !A.subsOn; try { localStorage.setItem("acad-subs", A.subsOn ? "1" : "0"); } catch (_) {} applySubs(); changed(); return; }
@@ -539,6 +600,10 @@
     + ".ac-stp>.ac-st{padding:4px 0;border-radius:4px}.ac-stp>.ac-st:hover,.ac-grp>.ac-sm:hover{background:rgba(55,53,47,.04)}"
     + ".ac-grp{border:1px solid rgba(55,53,47,.16);border-radius:6px;margin:6px 0;min-width:0;padding-top:0}.ac-split .ac-grp{margin:0}.ac-grp>.ac-sm{padding:9px 10px;font-size:14px}.ac-grp[open]>.ac-sm{border-bottom:1px solid rgba(55,53,47,.09)}"
     + ".ac-grp>.ac-row{padding-left:10px;padding-right:10px}.ac-grp>.ac-row:last-child{border-bottom:0}.ac-grp>.ac-ln-note{margin:8px 10px 4px}"
+    + ".ac-nxt{border:1px solid rgba(55,53,47,.16);border-radius:6px;padding:14px 16px;margin:0 0 14px;background:#fff}.ac-nxt .ac-t{margin:2px 0 6px}.ac-nt{margin:6px 0 0}"
+    + ".ac-todo{margin:0 0 12px;padding-left:20px;font-size:14.5px}p.ac-todo{padding-left:0}.ac-todo li{margin:2px 0}"
+    + ".ac-main{background:#37352F;color:#fff;border-color:#37352F;min-height:40px;padding:8px 18px;font-weight:600}.ac-main:hover{background:#2b2a26}@media (max-width:560px){.ac-main{width:100%}}"
+    + ".ac-split .ac-row{grid-template-columns:40px minmax(0,1fr)}.ac-split .ac-rs{grid-column:2;white-space:normal}.ac-row.lk{opacity:.55}.ac-row.lk:hover,.ac-row.lk.on{opacity:.85}.ac-nxl{font-weight:600;color:#37352F}"
     + ".ac-row{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:8px;width:100%;text-align:left;border:0;border-bottom:1px solid rgba(55,53,47,.09);background:none;padding:8px 4px;cursor:pointer;font:inherit;color:inherit;align-items:baseline}"
     + ".ac-row:hover{background:rgba(55,53,47,.04)}.ac-row.on{background:rgba(55,53,47,.08)}.ac-ep{font-weight:600;font-size:13px}.ac-rs{font-size:12.5px;color:rgba(55,53,47,.65);white-space:nowrap}"
     + "@media (max-width:560px){.ac-row{grid-template-columns:40px minmax(0,1fr)}.ac-rs{grid-column:2;white-space:normal}}"
