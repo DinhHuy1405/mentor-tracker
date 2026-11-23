@@ -12,7 +12,7 @@
   var EX = { text: "Trả lời bằng chữ", link: "Dán link (Google Sheet, Drive...)", image: "Nộp ảnh chụp, hoặc gõ chữ" };
   var A = {
     ready: false, err: "", lessons: [], prog: {}, editor: false, me: null,
-    sel: {}, stu: {}, pbm: null, auto: true, autoplay: false, subsOn: true, urls: {}, player: null, onChange: function () {}, saving: {}
+    sel: {}, lastSel: {}, open: {}, stu: {}, pbm: null, auto: true, autoplay: false, subsOn: true, urls: {}, player: null, onChange: function () {}, saving: {}
   };
   var MOCK = window.ACAD_MOCK || null;
   function sb() { return window.MENTOR_SB || null; }
@@ -113,11 +113,15 @@
   var SIDE = { tay: "Làn Từng bước", tu_dong: "Làn Tự động", tiktok: "TikTok Shop", shopee: "Shopee" };
   var SIDE_NOTE = { tu_dong: "Một tập gom cả các việc của làn Từng bước, để Claude làm", tay: "Làm tay từng việc, mỗi việc một tập" };
   var SIDE_ORDER = ["tay", "tu_dong", "tiktok", "shopee"];
-  function splitFlush(st) {
-    if (!st.cols) return "";
-    var ks = SIDE_ORDER.filter(function (k) { return st.cols[k]; });
-    var out = '<div class="ac-split">' + ks.map(function (k) { return '<div class="ac-col"><div class="ac-ln ac-ng">' + SIDE[k] + '</div>' + (SIDE_NOTE[k] ? '<p class="ac-ln-note">' + SIDE_NOTE[k] + '</p>' : '') + st.cols[k] + '</div>'; }).join("") + '</div>';
-    st.cols = null; return out;
+  /* nhóm tập và bước thu gọn được (details). A.open giữ lựa chọn bấm tay của người xem, chỉ trong phiên; không lưu vào đâu */
+  function grpKey(s, g, n, name) { return [s.id, g.p, g.extra ? "x" : "m", n, name].join("|"); }
+  function isOpen(k, def) { return A.open[k] === undefined ? def : A.open[k]; }
+  function seenTxt(s, ls) { var seen = ls.filter(function (l) { var q = A.prog[key(s.id, l.id)]; return q && q.watched_at; }).length; return '<span class="ac-gc">' + ls.length + ' tập, đã xem ' + seen + '</span>'; }
+  function hasId(ls, m) { return ls.some(function (l) { return m[l.id]; }); }
+  function grpHtml(s, k, title, note, ls, rows, cx) {
+    if (cx.moved && hasId(ls, cx.on)) delete A.open[k];
+    return '<details class="ac-grp"' + (isOpen(k, hasId(ls, cx.focus)) ? ' open' : '') + '><summary class="ac-sm" data-acad-grp="' + esc(k) + '"><b>' + esc(title) + '</b>' + seenTxt(s, ls) + '</summary>'
+      + (note ? '<p class="ac-ln-note">' + note + '</p>' : '') + rows + '</details>';
   }
   function laneNext(list, i, p) { var ln = sideOf(list[i], p); for (var j = i + 1; j < list.length; j++) { var lj = sideOf(list[j], p); if (!ln || !lj || lj === ln) return list[j]; } return null; }
   function laneHead(list, n, p) { return list.some(function (x) { return stepOf(x, p) === n && laneOf(x, p); }) ? '<p class="ac-ln-note">Bước này có hai làn: Từng bước (làm tay từng việc) hoặc Tự động (để Claude làm). Chọn một trong hai làn, làn nào cũng ra cùng một kết quả để nộp.</p>' : ''; }
@@ -164,6 +168,9 @@
       || list.filter(function (l) { return stepOf(l, p) === a.cur; })[0]
       || list.filter(function (l) { var pr = A.prog[key(s.id, l.id)]; return !(pr && pr.watched_at); })[0] || list[0] || all[0];
     A.sel[s.id] = sel.id; A.stu[s.id] = s;
+    /* nhóm mở sẵn: nhóm chứa tập đang chọn hoặc tập chưa xem đầu tiên; đổi tập thì nhóm chứa tập mới tự mở lại */
+    var fu = list.filter(function (l) { var q = A.prog[key(s.id, l.id)]; return !(q && q.watched_at); })[0], cx = { focus: {}, on: {}, moved: A.lastSel[s.id] !== sel.id };
+    cx.focus[sel.id] = cx.on[sel.id] = true; if (fu) cx.focus[fu.id] = true;
     var nx = nextOf(s, sel.id), sg = groupOfLesson(gs, sel.id), sp = sg.p;
     var ch = sel.chapters || [], pr = A.prog[key(s.id, sel.id)] || null, step = stepOf(sel, sp), pb = pbOf(sp, a, sg)[step - 1];
     var h = '<div class="ac">';
@@ -181,18 +188,33 @@
       if (!g.extra) h += '<h2 class="ntn-h2">' + (gs.length > 1 ? esc(KH[g.p]) + ': các tập theo bước' : 'Các tập theo bước') + '</h2><p class="ntn-mu">' + esc(PROG[g.p]) + '. Bạn đang ở bước ' + Math.min(a.cur, a.ns) + '. Xem trước các bước sau cũng được.</p>';
       else h += '<h2 class="ntn-h2">' + esc(KH[g.p]) + ' (khoá thêm)</h2><p class="ntn-mu">Mentor mở thêm khoá này cho bạn. Các tập xếp theo bước của khoá này, xem lúc nào cũng được. Tiến độ khoá chính của bạn không đổi.</p>'
         + (g.list.length ? '' : '<p class="ntn-mu">Khoá này chưa có tập nào.</p>');
-      var last = null, lastNg = null, st = {}, gpb = pbOf(g.p, a, g);
-      g.list.forEach(function (l) {
-        var n = stepOf(l, g.p), ln = laneOf(l, g.p), sd = sideOf(l, g.p);
-        if (n !== last) { h += splitFlush(st); last = n; lastNg = null; var b = gpb[n - 1]; h += '<div class="ac-st">Bước ' + n + (b ? ': ' + esc(b.name) : '') + (g.extra ? '' : ' ' + (n < a.cur ? '<i class="tg gr">Đã xong</i>' : n === a.cur ? '<i class="tg y">Đang làm</i>' : '<i class="tg">Chưa tới</i>')) + '</div>' + laneHead(g.list, n, g.p); }
-        var r = rowHtml(s, l, sel, ln);
-        if (sd) { st.cols = st.cols || {}; st.cols[sd] = (st.cols[sd] || '') + r; lastNg = null; return; }
-        h += splitFlush(st);
-        var ng = l.nhom || null; if (ng && ng !== lastNg) h += '<div class="ac-ln ac-ng">' + esc(ng) + '</div>'; lastNg = ng;
-        h += r;
+      var gpb = pbOf(g.p, a, g), order = [], byN = {};
+      g.list.forEach(function (l) { var n = stepOf(l, g.p); if (!byN[n]) { byN[n] = []; order.push(n); } byN[n].push(l); });
+      order.forEach(function (n) {
+        var ls = byN[n], b = gpb[n - 1], body = laneHead(g.list, n, g.p), cols = null, ng = null;
+        function flushCols() {
+          if (!cols) return;
+          body += '<div class="ac-split">' + SIDE_ORDER.filter(function (k) { return cols[k]; }).map(function (k) { return grpHtml(s, grpKey(s, g, n, "side:" + k), SIDE[k], SIDE_NOTE[k], cols[k].ls, cols[k].h, cx); }).join("") + '</div>';
+          cols = null;
+        }
+        function flushNg() { if (!ng) return; body += grpHtml(s, grpKey(s, g, n, "ng:" + ng.name), ng.name, "", ng.ls, ng.h, cx); ng = null; }
+        ls.forEach(function (l) {
+          var r = rowHtml(s, l, sel, laneOf(l, g.p)), sd = sideOf(l, g.p);
+          if (sd) { flushNg(); cols = cols || {}; cols[sd] = cols[sd] || { h: "", ls: [] }; cols[sd].h += r; cols[sd].ls.push(l); return; }
+          flushCols();
+          if (!l.nhom) { flushNg(); body += r; return; }
+          if (!ng || ng.name !== l.nhom) { flushNg(); ng = { name: l.nhom, h: "", ls: [] }; }
+          ng.h += r; ng.ls.push(l);
+        });
+        flushCols(); flushNg();
+        /* bước chưa tới thu gọn; bước đang làm, đã xong, bước có tập đang học thì mở */
+        var k = grpKey(s, g, n, "step"), future = !g.extra && n > a.cur;
+        if (cx.moved && hasId(ls, cx.on)) delete A.open[k];
+        h += '<details class="ac-stp"' + (isOpen(k, !future || hasId(ls, cx.focus)) ? ' open' : '') + '><summary class="ac-st ac-sm" data-acad-grp="' + esc(k) + '">Bước ' + n + (b ? ': ' + esc(b.name) : '')
+          + (g.extra ? '' : ' ' + (n < a.cur ? '<i class="tg gr">Đã xong</i>' : n === a.cur ? '<i class="tg y">Đang làm</i>' : '<i class="tg">Chưa tới</i>')) + seenTxt(s, ls) + '</summary>' + body + '</details>';
       });
-      h += splitFlush(st);
     });
+    A.lastSel[s.id] = sel.id;
     return h + '</div>';
   }
 
@@ -459,6 +481,8 @@
   document.addEventListener("click", async function (e) {
     var t = e.target.closest("[data-acad-t]");
     if (t) { var v = A.player && A.player.el; if (v) { v.currentTime = +t.dataset.acadT; v.play().catch(function () {}); markChapter(); } return; }
+    var gp = e.target.closest("summary[data-acad-grp]");
+    if (gp) { A.open[gp.dataset.acadGrp] = !gp.parentNode.open; return; }
     var s = e.target.closest("[data-acad-sel]");
     if (s) { A.sel[s.dataset.sid] = s.dataset.acadSel; changed(); var pl = document.getElementById("acad-pl"); if (pl) pl.scrollIntoView({ block: "start", behavior: "smooth" }); return; }
     if (e.target.closest("[data-acad-subs]")) { A.subsOn = !A.subsOn; try { localStorage.setItem("acad-subs", A.subsOn ? "1" : "0"); } catch (_) {} applySubs(); changed(); return; }
@@ -508,6 +532,13 @@
     + ".ac-f,.ac-rv{display:grid;gap:8px;margin-top:8px}.ac-f label,.ac-rv label,.ac-form label{display:grid;gap:4px;font-size:13.5px;color:rgba(55,53,47,.75)}"
     + ".ac-f input,.ac-f textarea,.ac-rv textarea,.ac-form input,.ac-form select,.ac-form textarea{border:1px solid rgba(55,53,47,.2);border-radius:4px;padding:6px 8px;font:inherit;background:#fff;min-width:0}"
     + ".ac-st{margin:16px 0 4px;font-weight:600;font-size:14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}"
+    + ".ac-sm{cursor:pointer;list-style:none;display:flex;gap:8px;align-items:center;flex-wrap:wrap}.ac-sm::-webkit-details-marker{display:none}"
+    + ".ac-sm::before{content:'';flex:none;width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(-45deg);opacity:.55;margin:0 4px 0 3px}details[open]>.ac-sm::before{transform:rotate(45deg)}"
+    + ".ac-stp{margin:14px 0 0;border-top:0;padding-top:0}.ac-stp>.ac-st{margin:0 0 4px}.ac-grp{padding-top:0}.ac-sm::after,details[open] .ac-sm::after{content:none!important}"
+    + ".ac-gc{margin-left:auto;font-size:12.5px;font-weight:400;color:rgba(55,53,47,.65);white-space:nowrap}"
+    + ".ac-stp>.ac-st{padding:4px 0;border-radius:4px}.ac-stp>.ac-st:hover,.ac-grp>.ac-sm:hover{background:rgba(55,53,47,.04)}"
+    + ".ac-grp{border:1px solid rgba(55,53,47,.16);border-radius:6px;margin:6px 0;min-width:0;padding-top:0}.ac-split .ac-grp{margin:0}.ac-grp>.ac-sm{padding:9px 10px;font-size:14px}.ac-grp[open]>.ac-sm{border-bottom:1px solid rgba(55,53,47,.09)}"
+    + ".ac-grp>.ac-row{padding-left:10px;padding-right:10px}.ac-grp>.ac-row:last-child{border-bottom:0}.ac-grp>.ac-ln-note{margin:8px 10px 4px}"
     + ".ac-row{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:8px;width:100%;text-align:left;border:0;border-bottom:1px solid rgba(55,53,47,.09);background:none;padding:8px 4px;cursor:pointer;font:inherit;color:inherit;align-items:baseline}"
     + ".ac-row:hover{background:rgba(55,53,47,.04)}.ac-row.on{background:rgba(55,53,47,.08)}.ac-ep{font-weight:600;font-size:13px}.ac-rs{font-size:12.5px;color:rgba(55,53,47,.65);white-space:nowrap}"
     + "@media (max-width:560px){.ac-row{grid-template-columns:40px minmax(0,1fr)}.ac-rs{grid-column:2;white-space:normal}}"
