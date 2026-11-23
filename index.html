@@ -843,7 +843,7 @@ a{color:inherit}
 .mtl .tm{color:var(--muted)}
 .plan li{display:grid;grid-template-columns:230px minmax(0,1fr);gap:12px}
 @media (max-width:640px){.mtl li,.plan li{grid-template-columns:minmax(0,1fr)}}
-.rost{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.5fr) minmax(0,1fr) minmax(0,1.3fr);gap:6px 18px;padding:14px 0;border-top:1px solid var(--line);align-items:start}
+.rost{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) minmax(0,1.3fr);gap:6px 18px;padding:14px 0;border-top:1px solid var(--line);align-items:start}
 .rost.h{font-size:13px;color:var(--soft);padding:8px 0;border-top:0;border-bottom:1px solid var(--line2)}
 .rost .n a{font-weight:600;text-decoration:none;border-bottom:1px solid var(--line2)}.rost .n small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
 .rost .p span{display:block;margin-top:5px;font-size:14px}
@@ -1083,8 +1083,6 @@ function analyze(s){
   if(cur===11){risk=0}
   else{
     if(s.flag==="ket"){risk=3; why.push("Đang kẹt"+(s.blocker?": "+s.blocker:""))}
-    if(ratio>1.5){risk=3; why.push("Đã "+days+" ngày ở bước này, chuẩn "+std+" ngày")}
-    else if(ratio>1){risk=Math.max(risk,2); why.push("Hơi chậm: "+days+" ngày, chuẩn "+std+" ngày")}
     if(s.flag==="cho"||s.flag==="cham"){risk=Math.max(risk,2); why.push(FLAGS[s.flag]+(s.blocker?": "+s.blocker:""))}
     if(gap>10){risk=Math.min(3,risk+1); why.push(gap+" ngày chưa họp")}
   }
@@ -1111,8 +1109,6 @@ function analyze(s){
   if(active&&cur<=ns){
     if(s.flag==="ket") attn.push({sev:3,t:"Đang kẹt"+(s.blocker?": "+s.blocker:"")});
     else if(s.flag==="cho"||s.flag==="cham") attn.push({sev:2,t:FLAGS[s.flag]+(s.blocker?": "+s.blocker:"")});
-    if(ratio>1.5) attn.push({sev:3,t:"Đã "+days+" ngày ở bước "+cur+", chuẩn "+std+" ngày"});
-    else if(ratio>1) attn.push({sev:2,t:"Hơi chậm ở bước "+cur+": "+days+" ngày, chuẩn "+std+" ngày"});
     if(!nextM||nextIn>=7) attn.push({sev:2,t:"Chưa có lịch họp trong 7 ngày tới"});
     if(!lastHeld&&startD&&diff(t,startD)>=3) attn.push({sev:2,t:"Chưa họp lần nào, đã "+diff(t,startD)+" ngày từ khi bắt đầu"});
     else if(gap>10) attn.push({sev:2,t:gap+" ngày chưa họp"});
@@ -1237,7 +1233,6 @@ function todoOf(a){
 function rowT(a){
   var s=a.s, pb=a.cur<=a.ns?a.pb[a.cur-1]:null, td=todoOf(a);
   return '<div class="rost"><div class="n"><a href="#/'+esc(s.id)+'">'+esc(s.name)+'</a><small>'+esc([s.pkg,s.platform].filter(Boolean).join(" · "))+'</small></div>'
-   +'<div class="p">'+ruler(a)+'<span>'+(pb?'Bước '+a.cur+'/'+a.ns+': '+esc(pb.name):'Đã xong '+a.ns+' bước')+'</span></div>'
    +'<div class="m'+(a.meetNone?' none':'')+'">'+esc(a.meet)+'</div>'
    +'<div class="x'+(td.red?' red':'')+'">'+esc(td.t)+'</div></div>';
 }
@@ -1256,7 +1251,7 @@ function viewTrack(tab){
       var list=active.filter(function(a){return a.mk===mk}).sort(function(x,y){
         var rx=x.cur>x.ns?-1:x.risk, ry=y.cur>y.ns?-1:y.risk; return ry-rx||y.days-x.days;});
       out+='<div class="mk-h">'+(mk==="VN"?"Việt Nam":"US")+'<small>'+list.length+' học viên</small></div>'
-        +(list.length?'<div class="rost h"><div>Học viên</div><div>Tiến độ</div><div>Buổi họp</div><div>Việc cần làm</div></div>'+list.map(rowT).join(""):'<p class="hint">Chưa có học viên.</p>');
+        +(list.length?'<div class="rost h"><div>Học viên</div><div>Buổi họp</div><div>Việc cần làm</div></div>'+list.map(rowT).join(""):'<p class="hint">Chưa có học viên.</p>');
     });
     return out+'</section>';
   }
